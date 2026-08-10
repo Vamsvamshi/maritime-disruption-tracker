@@ -1,486 +1,500 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maritime Disruption Tracker — Four Chokepoints 2026</title>
+<title>Maritime &amp; Conflict Disruption Tracker | Deloitte ER&amp;I</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
-  :root {
-    --bg: #0b0f14; --panel: #121820; --panel2: #161f2a; --border: #26323f;
-    --text: #e8edf2; --muted: #8fa1b3; --accent: #3fb6ff;
-    --sev1: #2e7d46; --sev2: #8a9a2e; --sev3: #c98a1f; --sev4: #c9541f; --sev5: #b8283f;
-    --r-hormuz: #3fb6ff; --r-redsea: #ff6b6b; --r-black: #aab4be; --r-caspian: #44ddcc;
-    --sidebar-w: 340px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-
-  #app { display: flex; flex-direction: column; height: 100%; }
-
-  /* ── Header ── */
-  .hdr {
-    flex-shrink: 0; background: var(--panel); border-bottom: 1px solid var(--border);
-    padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 10px; z-index: 10;
-  }
-  .hdr-title { font-size: 1.05rem; font-weight: 700; color: var(--text); }
-  .hdr-title span { color: var(--accent); }
-  .hdr-stats { display: flex; gap: 10px; flex-wrap: wrap; }
-  .hdr-stat {
-    background: var(--panel2); border: 1px solid var(--border); border-radius: 6px;
-    padding: 5px 12px; font-size: 0.78rem;
-  }
-  .hdr-stat .num { font-weight: 700; color: var(--accent); }
-  .hdr-stat .lbl { color: var(--muted); margin-left: 4px; }
-  .last-updated { font-size: 0.72rem; color: var(--muted); }
-
-  /* ── Body ── */
-  .body { flex: 1; display: flex; min-height: 0; }
-
-  /* ── Sidebar ── */
-  .sidebar {
-    width: var(--sidebar-w); flex-shrink: 0; background: var(--panel);
-    border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden;
-  }
-  .filters { padding: 14px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-  .filter-label {
-    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--muted); font-weight: 700; margin-bottom: 8px; display: block;
-  }
-  .region-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 12px; }
-  .region-check {
-    display: flex; align-items: center; gap: 6px; cursor: pointer;
-    font-size: 0.8rem; padding: 5px 8px; border-radius: 5px;
-    border: 1px solid var(--border); background: var(--panel2); user-select: none;
-  }
-  .region-check:hover { border-color: var(--accent); }
-  .region-check input { display: none; }
-  .region-check .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .region-check.checked { border-color: var(--accent); background: rgba(63,182,255,0.08); }
-
-  .sev-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
-  .sev-row label { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
-  .sev-row input[type=range] { flex: 1; accent-color: var(--accent); }
-  .sev-val { font-size: 0.8rem; font-weight: 700; color: var(--text); min-width: 16px; text-align: right; }
-
-  .date-row { display: flex; gap: 8px; margin-bottom: 12px; }
-  .date-row input {
-    flex: 1; background: var(--panel2); border: 1px solid var(--border); border-radius: 5px;
-    color: var(--text); padding: 5px 8px; font-size: 0.78rem;
-  }
-  .date-row input:focus { outline: none; border-color: var(--accent); }
-
-  .filter-actions { display: flex; gap: 8px; }
-  .btn-clear {
-    flex: 1; background: transparent; border: 1px solid var(--border); color: var(--muted);
-    font-size: 0.75rem; padding: 6px 10px; border-radius: 5px; cursor: pointer;
-  }
-  .btn-clear:hover { border-color: var(--r-redsea); color: var(--r-redsea); }
-
-  /* ── Legend ── */
-  .legend {
-    padding: 10px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
-    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
-  }
-  .legend-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase;
-    letter-spacing: 0.06em; font-weight: 700; margin-right: 4px; }
-  .leg-sev {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 0.7rem; color: var(--muted);
-  }
-  .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-
-  /* ── Incident list ── */
-  .list-count { padding: 8px 16px; font-size: 0.75rem; color: var(--muted);
-    border-bottom: 1px solid var(--border); flex-shrink: 0; }
-  .list-count b { color: var(--text); }
-  .inc-list { flex: 1; overflow-y: auto; }
-  .inc-item {
-    padding: 11px 16px; border-bottom: 1px solid var(--border); cursor: pointer;
-    transition: background 0.1s;
-  }
-  .inc-item:hover { background: var(--panel2); }
-  .inc-item.active { background: rgba(63,182,255,0.1); border-left: 3px solid var(--accent); }
-  .inc-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
-  .inc-date { font-size: 0.72rem; color: var(--accent); font-weight: 700; }
-  .inc-region {
-    font-size: 0.65rem; font-weight: 700; padding: 1px 6px; border-radius: 10px;
-    text-transform: uppercase; letter-spacing: 0.04em;
-  }
-  .inc-sev-dot { width: 7px; height: 7px; border-radius: 50%; margin-left: auto; flex-shrink: 0; }
-  .inc-title { font-size: 0.8rem; line-height: 1.4; color: var(--text); }
-  .inc-vessel { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-
-  /* ── Map ── */
-  #map { flex: 1; min-height: 0; }
-
-  /* ── Leaflet popup overrides ── */
-  .leaflet-popup-content-wrapper {
-    background: var(--panel2); border: 1px solid var(--border);
-    border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); color: var(--text);
-    max-width: 320px;
-  }
-  .leaflet-popup-tip { background: var(--panel2); }
-  .leaflet-popup-content { margin: 14px 16px; font-size: 0.82rem; line-height: 1.5; }
-  .popup-date { font-size: 0.7rem; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
-  .popup-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
-  .popup-sev {
-    font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; color: #fff;
-  }
-  .popup-event { font-weight: 600; margin-bottom: 6px; color: var(--text); }
-  .popup-location { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
-  .popup-vessel { font-size: 0.75rem; color: var(--muted); margin-bottom: 6px; }
-  .popup-impact {
-    font-size: 0.77rem; background: var(--panel); border: 1px solid var(--border);
-    border-radius: 5px; padding: 7px 10px; margin-bottom: 8px; color: var(--text);
-  }
-  .popup-impact b { color: var(--muted); }
-  .popup-fuels { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
-  .popup-fuel-tag {
-    font-size: 0.65rem; padding: 2px 7px; border-radius: 10px;
-    background: var(--panel); border: 1px solid var(--border); color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.04em;
-  }
-  .popup-unverified {
-    font-size: 0.72rem; color: var(--sev3); background: rgba(201,138,31,0.1);
-    border: 1px solid rgba(201,138,31,0.3); border-radius: 4px; padding: 4px 8px; margin-bottom: 6px;
-  }
-  .popup-src {
-    display: block; font-size: 0.72rem; color: var(--accent); text-decoration: none;
-    margin-top: 4px;
-  }
-  .popup-src:hover { text-decoration: underline; }
-
-  /* ── Error / loading ── */
-  .overlay {
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    background: var(--panel2); border: 1px solid var(--border); border-radius: 8px;
-    padding: 24px 28px; max-width: 380px; text-align: center; z-index: 1000;
-  }
-  .overlay h2 { font-size: 1rem; margin-bottom: 8px; }
-  .overlay p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
-  .overlay code { background: var(--panel); padding: 2px 6px; border-radius: 3px; font-size: 0.78rem; }
-
-  @media (max-width: 700px) {
-    .body { flex-direction: column; }
-    .sidebar { width: 100%; max-height: 45vh; border-right: none; border-bottom: 1px solid var(--border); }
-  }
+:root {
+  --dl-green:#86BC25; --dl-green-dk:#6b9a1e; --dl-blue:#00A3E0; --dl-blue-dk:#005587;
+  --dl-teal:#0D8390; --dl-purple:#6B2D8B; --dl-gold:#E8B000; --dl-red:#C6281C;
+  --dl-dark:#282728; --dl-gray:#53565A; --dl-gray-lt:#BBBCBC;
+  --dl-border:#E1E1E1; --dl-bg:#F3F3F1; --dl-panel:#FFFFFF;
+  --c-maritime:#00A3E0; --c-nuclear:#C6281C; --c-oilinfra:#E87722;
+  --c-military:#282728; --c-gas:#E8B000; --c-base:#6B2D8B;
+  --c-diplomatic:#86BC25; --c-militia:#0D8390;
+  --s1:#86BC25; --s2:#E8B000; --s3:#E87722; --s4:#C6281C; --s5:#7f1d1d;
+  --hdr-h:56px; --sub-h:30px; --top-h:4px;
+  --above-map:calc(var(--hdr-h) + var(--sub-h) + var(--top-h));
+  --sidebar-w:360px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;font-family:'Open Sans',sans-serif;background:var(--dl-bg);color:var(--dl-dark);}
+#app{display:flex;flex-direction:column;height:100%;}
+a{color:var(--dl-blue-dk);}
+.top-accent{height:var(--top-h);background:linear-gradient(90deg,var(--dl-green),var(--dl-blue));flex-shrink:0;}
+.hdr{height:var(--hdr-h);flex-shrink:0;background:var(--dl-dark);display:flex;align-items:center;padding:0 20px;gap:16px;border-bottom:1px solid rgba(255,255,255,.08);}
+.hdr-brand{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.dl-wordmark{font-size:1.45rem;font-weight:700;color:#fff;letter-spacing:-.02em;}
+.dl-wordmark em{color:var(--dl-green);font-style:normal;}
+.hdr-divider{width:1px;height:28px;background:rgba(255,255,255,.2);flex-shrink:0;}
+.hdr-title{font-size:.95rem;font-weight:600;color:rgba(255,255,255,.9);line-height:1.2;max-width:300px;}
+.hdr-title small{display:block;font-size:.7rem;font-weight:400;color:rgba(255,255,255,.5);margin-top:1px;}
+.hdr-nav{display:flex;gap:4px;margin-left:auto;}
+.nav-tab{background:transparent;border:none;color:rgba(255,255,255,.6);font-family:inherit;font-size:.82rem;font-weight:600;padding:6px 16px;border-radius:4px;cursor:pointer;transition:all .15s;border-bottom:2px solid transparent;}
+.nav-tab:hover{color:#fff;background:rgba(255,255,255,.08);}
+.nav-tab.active{color:var(--dl-green);border-bottom-color:var(--dl-green);}
+.hdr-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.btn-chat{background:var(--dl-green);color:var(--dl-dark);border:none;font-family:inherit;font-size:.78rem;font-weight:700;padding:7px 14px;border-radius:20px;cursor:pointer;}
+.btn-chat:hover{background:var(--dl-green-dk);}
+.btn-refresh{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);font-family:inherit;font-size:.78rem;padding:6px 12px;border-radius:4px;cursor:pointer;}
+.btn-refresh:hover{border-color:var(--dl-green);color:var(--dl-green);}
+.btn-refresh:disabled{opacity:.4;cursor:wait;}
+.subhdr{height:var(--sub-h);flex-shrink:0;background:var(--dl-bg);border-bottom:1px solid var(--dl-border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:.72rem;color:var(--dl-gray);}
+.subhdr strong{color:var(--dl-dark);}
+.subhdr .badge{background:var(--dl-green);color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;}
+.view{flex:1;display:flex;min-height:0;overflow:hidden;}
+.view[hidden]{display:none;}
+.sidebar{width:var(--sidebar-w);flex-shrink:0;background:var(--dl-panel);border-right:1px solid var(--dl-border);display:flex;flex-direction:column;overflow:hidden;box-shadow:2px 0 8px rgba(0,0,0,.05);}
+.search-wrap{padding:12px 14px;border-bottom:1px solid var(--dl-border);flex-shrink:0;}
+.search-input{width:100%;padding:8px 12px 8px 32px;border:1px solid var(--dl-border);border-radius:6px;font-family:inherit;font-size:.82rem;background:#F8F8F6;color:var(--dl-dark);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%2353565A' stroke-width='2' viewBox='0 0 24 24'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:10px center;}
+.search-input:focus{outline:none;border-color:var(--dl-green);}
+.filt-section{padding:10px 14px;border-bottom:1px solid var(--dl-border);flex-shrink:0;}
+.filt-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--dl-gray);margin-bottom:7px;display:block;}
+.cat-chips{display:flex;flex-wrap:wrap;gap:5px;}
+.cat-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:100px;border:1px solid var(--dl-border);background:var(--dl-bg);font-size:.72rem;font-weight:600;color:var(--dl-gray);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.cat-chip:hover{border-color:var(--dl-green);}
+.cat-chip.on{background:var(--dl-green);color:var(--dl-dark);border-color:var(--dl-green);}
+.cat-all-btn{font-size:.7rem;color:var(--dl-blue-dk);background:none;border:none;cursor:pointer;font-family:inherit;font-weight:600;padding:2px 0;}
+.cat-all-btn:hover{text-decoration:underline;}
+.sev-row{display:flex;align-items:center;gap:8px;}
+.sev-row label{font-size:.75rem;color:var(--dl-gray);}
+.sev-row input[type=range]{flex:1;accent-color:var(--dl-green);}
+.sev-val{font-size:.82rem;font-weight:700;color:var(--dl-dark);min-width:14px;text-align:right;}
+.date-row{display:flex;gap:6px;}
+.date-row input{flex:1;padding:6px 8px;border:1px solid var(--dl-border);border-radius:5px;font-family:inherit;font-size:.75rem;color:var(--dl-dark);background:var(--dl-bg);}
+.date-row input:focus{outline:none;border-color:var(--dl-green);}
+.btn-clear-all{width:100%;margin-top:8px;background:transparent;border:1px solid var(--dl-border);color:var(--dl-gray);font-family:inherit;font-size:.75rem;padding:6px;border-radius:5px;cursor:pointer;}
+.btn-clear-all:hover{border-color:var(--dl-red);color:var(--dl-red);}
+.legend-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.leg-item{display:flex;align-items:center;gap:4px;font-size:.68rem;color:var(--dl-gray);}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.list-meta{padding:8px 14px;font-size:.72rem;color:var(--dl-gray);border-bottom:1px solid var(--dl-border);flex-shrink:0;display:flex;justify-content:space-between;align-items:center;}
+.list-meta b{color:var(--dl-dark);}
+.inc-list{flex:1;overflow-y:auto;}
+.inc-item{padding:10px 14px;border-bottom:1px solid var(--dl-border);cursor:pointer;border-left:3px solid transparent;transition:background .1s,border-color .1s;}
+.inc-item:hover{background:#F8F8F6;}
+.inc-item.active{background:#F0F8E8;border-left-color:var(--dl-green);}
+.inc-meta{display:flex;align-items:center;gap:5px;margin-bottom:3px;flex-wrap:wrap;}
+.inc-date{font-size:.7rem;color:var(--dl-blue-dk);font-weight:700;}
+.inc-cat-badge{font-size:.62rem;font-weight:700;padding:1px 6px;border-radius:10px;color:#fff;text-transform:uppercase;letter-spacing:.04em;}
+.inc-sev-pip{width:6px;height:6px;border-radius:50%;margin-left:auto;flex-shrink:0;}
+.inc-title{font-size:.79rem;line-height:1.4;color:var(--dl-dark);}
+.inc-loc{font-size:.68rem;color:var(--dl-gray);margin-top:2px;}
+#map{flex:1;min-height:0;}
+.map-pin{border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer;transition:transform .12s;}
+.map-pin:hover{transform:scale(1.3);}
+.leaflet-div-icon{background:transparent!important;border:none!important;}
+.leaflet-popup-content-wrapper{background:#fff;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.18);border:1px solid var(--dl-border);padding:0;}
+.leaflet-popup-content{margin:0;line-height:1;}
+.leaflet-popup-tip{background:#fff;}
+.dl-popup{padding:14px 16px;font-family:'Open Sans',sans-serif;}
+.dp-head{display:flex;align-items:center;gap:5px;margin-bottom:7px;flex-wrap:wrap;}
+.dp-date{font-size:.7rem;color:var(--dl-blue-dk);font-weight:700;}
+.dp-sev,.dp-cat{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:4px;color:#fff;}
+.dp-event{font-size:.84rem;font-weight:700;color:var(--dl-dark);margin-bottom:5px;line-height:1.4;}
+.dp-loc,.dp-vessel{font-size:.72rem;color:var(--dl-gray);margin-bottom:3px;}
+.dp-impact{background:#F5F8EC;border:1px solid rgba(134,188,37,.3);border-left:3px solid var(--dl-green);border-radius:4px;padding:7px 10px;margin:6px 0;font-size:.75rem;line-height:1.5;color:var(--dl-dark);}
+.dp-fuels{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;}
+.dp-fuel{font-size:.62rem;padding:2px 7px;border-radius:10px;background:var(--dl-bg);border:1px solid var(--dl-border);color:var(--dl-gray);text-transform:uppercase;}
+.dp-unverified{font-size:.7rem;color:#b45309;background:#fef3c7;border-radius:4px;padding:3px 8px;margin-bottom:5px;}
+.dp-src{display:block;font-size:.7rem;color:var(--dl-blue-dk);text-decoration:none;margin-top:4px;}
+.dp-src:hover{text-decoration:underline;}
+/* About */
+.about-view{flex:1;overflow-y:auto;background:var(--dl-bg);padding:40px 20px 80px;}
+.about-inner{max-width:900px;margin:0 auto;}
+.about-hero{background:var(--dl-dark);border-radius:10px;padding:36px;margin-bottom:28px;background-image:linear-gradient(135deg,var(--dl-dark) 60%,rgba(134,188,37,.15));}
+.about-hero .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dl-green);margin-bottom:8px;}
+.about-hero h1{font-size:1.8rem;font-weight:700;color:#fff;margin-bottom:8px;line-height:1.2;}
+.about-hero p{font-size:.9rem;color:rgba(255,255,255,.7);line-height:1.6;max-width:640px;}
+.about-hero .built-by{margin-top:18px;font-size:.75rem;color:rgba(255,255,255,.5);}
+.about-hero .built-by strong{color:var(--dl-green);}
+.about-section{margin-bottom:26px;}
+.about-section h2{font-size:1rem;font-weight:700;color:var(--dl-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.about-section h2::after{content:'';flex:1;height:1px;background:var(--dl-border);}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
+.cat-card{background:var(--dl-panel);border:1px solid var(--dl-border);border-radius:8px;padding:14px 16px;border-top:3px solid;}
+.cat-card .icon{font-size:1.4rem;margin-bottom:5px;}
+.cat-card h3{font-size:.82rem;font-weight:700;color:var(--dl-dark);margin-bottom:3px;}
+.cat-card p{font-size:.74rem;color:var(--dl-gray);line-height:1.5;}
+.src-list{column-count:2;column-gap:24px;font-size:.8rem;color:var(--dl-dark);line-height:2;}
+.src-list li{list-style:none;padding-left:12px;position:relative;}
+.src-list li::before{content:'·';position:absolute;left:0;color:var(--dl-green);}
+.chokepoint-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.cp-card{background:var(--dl-panel);border:1px solid var(--dl-border);border-radius:8px;padding:14px 16px;}
+.cp-card .cp-title{font-size:.85rem;font-weight:700;color:var(--dl-dark);margin-bottom:4px;}
+.cp-card .cp-stat{font-size:1.2rem;font-weight:700;color:var(--dl-green);margin-bottom:3px;}
+.cp-card p{font-size:.74rem;color:var(--dl-gray);line-height:1.5;}
+.disclaimer{background:#FFF8E1;border:1px solid #E8B000;border-left:4px solid #E8B000;border-radius:6px;padding:12px 16px;font-size:.78rem;color:var(--dl-dark);line-height:1.6;}
+.about-dl-footer{display:flex;align-items:center;gap:16px;margin-top:28px;padding-top:20px;border-top:1px solid var(--dl-border);}
+.dl-logo-lg{font-size:2rem;font-weight:700;color:var(--dl-dark);letter-spacing:-.02em;flex-shrink:0;}
+.dl-logo-lg em{color:var(--dl-green);font-style:normal;}
+.about-dl-footer p{font-size:.78rem;color:var(--dl-gray);line-height:1.6;}
+/* Chat */
+.chat-fab{position:fixed;bottom:24px;right:24px;z-index:2001;background:var(--dl-green);color:var(--dl-dark);border:none;font-family:inherit;font-size:.82rem;font-weight:700;padding:10px 18px;border-radius:100px;cursor:pointer;box-shadow:0 4px 20px rgba(134,188,37,.45);transition:transform .1s;}
+.chat-fab:hover{transform:translateY(-2px);}
+.chat-panel{position:fixed;bottom:76px;right:24px;width:380px;height:520px;background:var(--dl-panel);border-radius:12px;box-shadow:0 8px 40px rgba(0,0,0,.18);border:1px solid var(--dl-border);z-index:2000;display:flex;flex-direction:column;overflow:hidden;}
+.chat-panel[hidden]{display:none;}
+.chat-hdr{background:var(--dl-dark);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.chat-hdr-left{display:flex;align-items:center;gap:10px;}
+.chat-hdr-icon{width:34px;height:34px;background:var(--dl-green);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.chat-hdr-title{font-size:.82rem;font-weight:700;color:#fff;}
+.chat-hdr-sub{font-size:.66rem;color:rgba(255,255,255,.5);}
+.chat-close{background:none;border:none;color:rgba(255,255,255,.6);font-size:1.1rem;cursor:pointer;}
+.chat-close:hover{color:#fff;}
+.chat-setup{padding:20px 16px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;}
+.chat-setup p{font-size:.78rem;color:var(--dl-gray);line-height:1.6;}
+.chat-setup input{width:100%;padding:8px 10px;border:1px solid var(--dl-border);border-radius:6px;font-family:inherit;font-size:.82rem;color:var(--dl-dark);}
+.chat-setup input:focus{outline:none;border-color:var(--dl-green);}
+.chat-key-actions{display:flex;gap:6px;}
+.btn-save-key{flex:1;background:var(--dl-green);color:var(--dl-dark);border:none;font-family:inherit;font-size:.78rem;font-weight:700;padding:8px;border-radius:5px;cursor:pointer;}
+.btn-clear-key{background:transparent;border:1px solid var(--dl-border);color:var(--dl-gray);font-family:inherit;font-size:.78rem;padding:8px 12px;border-radius:5px;cursor:pointer;}
+.chat-privacy{font-size:.66rem;color:var(--dl-gray);background:#F8F8F6;border-radius:4px;padding:6px 8px;line-height:1.5;}
+.chat-body{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;}
+.chat-msg{display:flex;flex-direction:column;max-width:88%;}
+.chat-msg.user{align-self:flex-end;align-items:flex-end;}
+.chat-msg.assistant{align-self:flex-start;align-items:flex-start;}
+.chat-bubble{padding:9px 12px;border-radius:12px;font-size:.8rem;line-height:1.55;}
+.user .chat-bubble{background:var(--dl-green);color:var(--dl-dark);border-radius:12px 12px 3px 12px;}
+.assistant .chat-bubble{background:var(--dl-bg);border:1px solid var(--dl-border);color:var(--dl-dark);border-radius:12px 12px 12px 3px;}
+.chat-typing{display:flex;align-items:center;gap:4px;padding:8px 10px;background:var(--dl-bg);border:1px solid var(--dl-border);border-radius:12px;width:56px;}
+.chat-typing span{width:6px;height:6px;border-radius:50%;background:var(--dl-gray);animation:bounce .9s infinite;}
+.chat-typing span:nth-child(2){animation-delay:.15s;}.chat-typing span:nth-child(3){animation-delay:.3s;}
+@keyframes bounce{0%,80%,100%{transform:translateY(0);}40%{transform:translateY(-5px);}}
+.chat-error{font-size:.75rem;color:var(--dl-red);background:#fff0ef;border:1px solid rgba(198,40,28,.2);border-radius:8px;padding:8px 10px;}
+.chat-welcome{font-size:.78rem;color:var(--dl-gray);text-align:center;padding:10px 0;line-height:1.6;}
+.chat-footer{padding:10px 12px;border-top:1px solid var(--dl-border);display:flex;gap:6px;flex-shrink:0;}
+.chat-input{flex:1;border:1px solid var(--dl-border);border-radius:6px;padding:8px 10px;font-family:inherit;font-size:.82rem;resize:none;max-height:80px;color:var(--dl-dark);}
+.chat-input:focus{outline:none;border-color:var(--dl-green);}
+.chat-send{background:var(--dl-green);border:none;border-radius:6px;padding:8px 12px;cursor:pointer;font-size:1rem;}
+.chat-send:disabled{background:var(--dl-gray-lt);cursor:wait;}
+.chat-key-hint{font-size:.66rem;color:var(--dl-blue-dk);cursor:pointer;text-align:center;padding:3px;flex-shrink:0;border:none;background:none;font-family:inherit;width:100%;}
+.chat-key-hint:hover{text-decoration:underline;}
+@media(max-width:720px){.sidebar{width:100%;max-height:42vh;border-right:none;border-bottom:1px solid var(--dl-border);}.view{flex-direction:column;}.chat-panel{width:calc(100vw - 32px);right:16px;}.hdr-title small{display:none;}.chokepoint-grid,.card-grid{grid-template-columns:1fr;}.src-list{column-count:1;}}
 </style>
 </head>
 <body>
 <div id="app">
+  <div class="top-accent"></div>
   <header class="hdr">
-    <div>
-      <div class="hdr-title">Maritime Disruption Tracker — <span>Four Chokepoints</span></div>
-      <div class="last-updated" id="lastUpdated">Loading…</div>
+    <div class="hdr-brand">
+      <div class="dl-wordmark">Deloitte<em>.</em></div>
+      <div class="hdr-divider"></div>
+      <div class="hdr-title">Maritime &amp; Conflict Disruption Tracker<small>Energy, Resources &amp; Industrials &middot; Middle East &amp; Four Chokepoints</small></div>
     </div>
-    <div class="hdr-stats">
-      <div class="hdr-stat"><span class="num" id="stat-total">—</span><span class="lbl">total incidents</span></div>
-      <div class="hdr-stat" style="border-left:3px solid var(--r-hormuz)"><span class="num" id="stat-hormuz">—</span><span class="lbl">Hormuz</span></div>
-      <div class="hdr-stat" style="border-left:3px solid var(--r-redsea)"><span class="num" id="stat-redsea">—</span><span class="lbl">Red Sea</span></div>
-      <div class="hdr-stat" style="border-left:3px solid var(--r-black)"><span class="num" id="stat-blacksea">—</span><span class="lbl">Black Sea</span></div>
-      <div class="hdr-stat" style="border-left:3px solid var(--r-caspian)"><span class="num" id="stat-caspian">—</span><span class="lbl">Caspian</span></div>
+    <nav class="hdr-nav">
+      <button class="nav-tab active" data-tab="map">&#128506; Map</button>
+      <button class="nav-tab" data-tab="about">&#8505; About</button>
+    </nav>
+    <div class="hdr-actions">
+      <button class="btn-chat" id="chatFab">&#128172; ER&amp;I Analyst</button>
+      <button class="btn-refresh" id="refreshBtn">&#8635; Refresh</button>
     </div>
   </header>
-
-  <div class="body">
+  <div class="subhdr">
+    <span>Built by <strong>Deloitte Center for Energy, Resources &amp; Industrials</strong><span class="badge">ER&amp;I</span></span>
+    <span id="lastUpdated">Loading data...</span>
+    <span><strong id="statTotal">--</strong> incidents &middot; Feb 28 &ndash; Aug 10, 2026</span>
+  </div>
+  <div class="view" id="mapView">
     <aside class="sidebar">
-      <div class="filters">
-        <span class="filter-label">Region</span>
-        <div class="region-checks">
-          <label class="region-check checked" data-region="hormuz">
-            <input type="checkbox" checked> <span class="dot" style="background:var(--r-hormuz)"></span> Hormuz
-          </label>
-          <label class="region-check checked" data-region="redsea">
-            <input type="checkbox" checked> <span class="dot" style="background:var(--r-redsea)"></span> Red Sea
-          </label>
-          <label class="region-check checked" data-region="blacksea">
-            <input type="checkbox" checked> <span class="dot" style="background:var(--r-black)"></span> Black Sea
-          </label>
-          <label class="region-check checked" data-region="caspian">
-            <input type="checkbox" checked> <span class="dot" style="background:var(--r-caspian)"></span> Caspian
-          </label>
+      <div class="search-wrap"><input class="search-input" id="searchBox" type="text" placeholder="Search incidents, vessels, locations..."></div>
+      <div class="filt-section">
+        <span class="filt-label">Category</span>
+        <div class="cat-chips" id="catChips">
+          <button class="cat-chip on" data-cat="maritime">&#128674; Maritime</button>
+          <button class="cat-chip on" data-cat="nuclear">&#9762;&#65039; Nuclear</button>
+          <button class="cat-chip on" data-cat="oilinfra">&#128722;&#65039; Oil Infra</button>
+          <button class="cat-chip on" data-cat="military">&#128165; Military</button>
+          <button class="cat-chip on" data-cat="gas">&#128293; Gas</button>
+          <button class="cat-chip on" data-cat="base">&#127919; Base Attack</button>
+          <button class="cat-chip on" data-cat="diplomatic">&#128203; Diplomatic</button>
+          <button class="cat-chip on" data-cat="militia">&#9889; Militia</button>
         </div>
-
-        <span class="filter-label">Minimum Severity</span>
-        <div class="sev-row">
-          <label>1</label>
-          <input type="range" id="sevSlider" min="1" max="5" value="1" step="1">
-          <label>5</label>
-          <span class="sev-val" id="sevVal">1</span>
-        </div>
-
-        <span class="filter-label">Date Range</span>
-        <div class="date-row">
-          <input type="date" id="dateFrom" placeholder="From" value="2026-02-28">
-          <input type="date" id="dateTo"   placeholder="To">
-        </div>
-
-        <div class="filter-actions">
-          <button class="btn-clear" id="btnClear">Clear filters</button>
-        </div>
+        <div style="margin-top:6px;display:flex;gap:10px;"><button class="cat-all-btn" id="catAll">Select all</button><button class="cat-all-btn" id="catNone">Clear all</button></div>
       </div>
-
-      <div class="legend">
-        <span class="legend-label">Severity</span>
-        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev1)"></span>1 Low</span>
-        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev2)"></span>2</span>
-        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev3)"></span>3</span>
-        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev4)"></span>4</span>
-        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev5)"></span>5 Critical</span>
-        <span style="font-size:0.68rem;color:var(--muted);margin-left:4px">· larger = higher severity · border = region</span>
+      <div class="filt-section">
+        <span class="filt-label">Minimum Severity</span>
+        <div class="sev-row"><label>1</label><input type="range" id="sevSlider" min="1" max="5" value="1"><label>5</label><span class="sev-val" id="sevVal">1</span></div>
       </div>
-
-      <div class="list-count" id="listCount">Loading…</div>
+      <div class="filt-section">
+        <span class="filt-label">Date Range</span>
+        <div class="date-row"><input type="date" id="dateFrom" value="2026-02-28"><input type="date" id="dateTo"></div>
+        <button class="btn-clear-all" id="btnClear">&#8634; Reset all filters</button>
+      </div>
+      <div class="filt-section">
+        <span class="filt-label">Severity</span>
+        <div class="legend-row">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--s1)"></div>1 Low</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--s2)"></div>2</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--s3)"></div>3</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--s4)"></div>4</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--s5)"></div>5 Critical</div>
+        </div>
+        <div style="font-size:.65rem;color:var(--dl-gray);margin-top:4px;">Size = severity &middot; Color = category</div>
+      </div>
+      <div class="list-meta"><span id="listCount">Loading...</span><span style="font-size:.65rem;color:var(--dl-gray);">newest first</span></div>
       <div class="inc-list" id="incList"></div>
     </aside>
-
     <div id="map"></div>
   </div>
+  <div class="view about-view" id="aboutView" hidden>
+    <div class="about-inner">
+      <div class="about-hero">
+        <div class="eyebrow">Deloitte Center for Energy, Resources &amp; Industrials</div>
+        <h1>Maritime &amp; Conflict Disruption Tracker</h1>
+        <p>An intelligence-grade situational awareness dashboard tracking oil, gas, nuclear, and military incidents across strategic maritime chokepoints and the broader Middle East conflict zone. Covers the 2026 US&ndash;Israel&ndash;Iran war from February 28 to present.</p>
+        <div class="built-by">Built by <strong>Deloitte Center for Energy, Resources &amp; Industrials (ER&amp;I)</strong> &middot; Data refreshed 3&times; daily via CENTCOM RSS, UKMTO advisories, and public news sources</div>
+      </div>
+      <div class="about-section"><h2>Geographic Coverage</h2>
+        <div class="chokepoint-grid">
+          <div class="cp-card"><div class="cp-title">&#128738; Persian Gulf / Strait of Hormuz</div><div class="cp-stat">20&ndash;25% of world seaborne oil</div><p>~20% of global LNG. Pre-war: 130 tanker transits/day. Hormuz declared closed Feb 28, 2026. MOU June 17 collapsed by July 6. Attacks ongoing.</p></div>
+          <div class="cp-card"><div class="cp-title">&#128308; Red Sea / Bab el-Mandeb</div><div class="cp-stat">~10% of world oil</div><p>Houthi campaign reactivated Feb 28, 2026. Saudi Arabia's workaround closed July 23 when Houthis struck 2 Saudi tankers.</p></div>
+          <div class="cp-card"><div class="cp-title">&#9899; Black Sea / Sea of Azov</div><div class="cp-stat">150+ vessels attacked</div><p>Ukraine's campaign against Russia's oil shadow fleet. 105+ vessels struck in 8 days. Campaign expanded into the open Black Sea July 15.</p></div>
+          <div class="cp-card"><div class="cp-title">&#128998; Caspian Sea (via CPC)</div><div class="cp-stat">~1.5 mbd (80% of Kazakhstan exports)</div><p>Disruption via the CPC pipeline's Black Sea outlet at Novorossiysk. 5+ tanker attacks in July 2026. BTC Middle Corridor activated.</p></div>
+        </div>
+      </div>
+      <div class="about-section"><h2>Incident Categories</h2>
+        <div class="card-grid">
+          <div class="cat-card" style="border-top-color:var(--c-maritime)"><div class="icon">&#128674;</div><h3>Maritime / Shipping</h3><p>Vessel attacks, port closures, tanker strikes, transit disruptions across all chokepoints.</p></div>
+          <div class="cat-card" style="border-top-color:var(--c-nuclear)"><div class="icon">&#9762;&#65039;</div><h3>Nuclear Infrastructure</h3><p>US/Israeli strikes on Iranian nuclear facilities: Natanz, Fordow, Isfahan, Arak, Parchin, Bushehr.</p></div>
+          <div class="cat-card" style="border-top-color:var(--c-oilinfra)"><div class="icon">&#128722;&#65039;</div><h3>Oil Infrastructure</h3><p>Refinery, terminal, and oil hub attacks: Kharg Island, Fujairah, Abadan, Abqaiq.</p></div>
+          <div class="cat-card" style="border-top-color:var(--c-military)"><div class="icon">&#128165;</div><h3>Military Strike</h3><p>US/coalition strikes on IRGC command, missile sites, and Iran-backed military infrastructure.</p></div>
+          <div class="cat-card" style="border-top-color:var(--c-gas)"><div class="icon">&#128293;</div><h3>Gas Infrastructure</h3><p>LNG/LPG facility attacks: Ras Laffan (world's largest gas plant) and South Pars gas field.</p></div>
+          <div class="cat-card" style="border-top-color:var(--c-base)"><div class="icon">&#127919;</div><h3>Base / Force Attack</h3><p>Iranian strikes on US/Allied bases: Tower 22, Al Asad, NSA Bahrain, Ali Al Salem, Al Udeid.</p></div>
+          <div class="cat-card" style="border-top-color:var(--c-diplomatic)"><div class="icon">&#128203;</div><h3>Diplomatic Events</h3><p>Ceasefire attempts, MOUs, naval blockade declarations, G7/IEA emergency coordination.</p></div>
+          <div class="cat-card" style="border-top-color:var(--c-militia)"><div class="icon">&#9889;</div><h3>Militia Operations</h3><p>Iran-backed proxy operations by Houthi and Iraqi militia targeting Saudi oil and US positions.</p></div>
+        </div>
+      </div>
+      <div class="about-section"><h2>How to Use</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:.82rem;color:var(--dl-dark);line-height:1.7;">
+          <div><strong style="color:var(--dl-green)">&#128269; Search</strong> &mdash; Type any vessel name, location, or keyword.<br><br><strong style="color:var(--dl-green)">&#127991; Categories</strong> &mdash; Toggle chips to filter by incident type.</div>
+          <div><strong style="color:var(--dl-green)">&#9888; Severity</strong> &mdash; Drag slider to show only high-severity events.<br><br><strong style="color:var(--dl-green)">&#128172; ER&amp;I Analyst</strong> &mdash; AI chatbot (requires your own OpenAI API key) for energy impact questions.</div>
+        </div>
+      </div>
+      <div class="about-section"><h2>Data Sources</h2>
+        <ul class="src-list">
+          <li>CENTCOM press releases (public RSS)</li><li>UKMTO vessel advisories (public)</li>
+          <li>Reuters / Reuters Factbox</li><li>Bloomberg News</li>
+          <li>S&amp;P Global / CERA</li><li>BBC News</li>
+          <li>CNBC Energy</li><li>NPR International</li>
+          <li>Wikipedia conflict trackers</li><li>Trading Economics</li>
+          <li>OilPrice.com</li><li>Astana Times</li>
+          <li>Moscow Times</li><li>Kyiv Post</li>
+          <li>Euronews</li><li>UN Security Council Report</li>
+        </ul>
+      </div>
+      <div class="about-section"><h2>Update Methodology</h2>
+        <p style="font-size:.82rem;color:var(--dl-dark);line-height:1.7;">Refreshed <strong>3 times daily</strong> at 06:00, 14:00, and 22:00 UTC via GitHub Actions polling CENTCOM RSS and UKMTO. Auto-detected incidents are flagged <em>unverified</em> until manually reviewed. All verified incidents link to the original source report.</p>
+      </div>
+      <div class="disclaimer"><strong>&#9888; Disclaimer:</strong> For situational awareness and analytical purposes only. Casualty and vessel counts vary between sources and are subject to revision. Coordinates are approximate. Not a real-time operational tool.</div>
+      <div class="about-dl-footer">
+        <div class="dl-logo-lg">Deloitte<em>.</em></div>
+        <div><p><strong>Deloitte Center for Energy, Resources &amp; Industrials (ER&amp;I)</strong><br>Developed by Deloitte's ER&amp;I practice to provide integrated geopolitical and commodity intelligence for energy sector clients. Contact your Deloitte ER&amp;I engagement team for enquiries.</p></div>
+      </div>
+    </div>
+  </div>
 </div>
-
+<div class="chat-panel" id="chatPanel" hidden>
+  <div class="chat-hdr">
+    <div class="chat-hdr-left">
+      <div class="chat-hdr-icon">&#129302;</div>
+      <div><div class="chat-hdr-title">ER&amp;I Analyst AI</div><div class="chat-hdr-sub">GPT-4o-mini &middot; Deloitte ER&amp;I</div></div>
+    </div>
+    <button class="chat-close" id="chatClose">&#10005;</button>
+  </div>
+  <div class="chat-setup" id="chatSetup">
+    <p>Enter your <strong>OpenAI API key</strong> to activate the ER&amp;I Analyst AI. The chatbot is pre-loaded with all <span id="setupCount">54</span> incidents and can answer questions about energy impacts, supply chains, and geopolitical context.</p>
+    <input type="password" id="apiKeyInput" placeholder="sk-proj-...  paste your OpenAI key here">
+    <div class="chat-key-actions">
+      <button class="btn-save-key" id="saveKeyBtn">Activate Analyst</button>
+      <button class="btn-clear-key" id="clearKeyBtn">Clear</button>
+    </div>
+    <div class="chat-privacy">&#128274; Key stored only in your browser localStorage &mdash; sent directly to OpenAI, never through any Deloitte server. Get a free key at <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com</a>.</div>
+  </div>
+  <div class="chat-body" id="chatBody" style="display:none">
+    <div class="chat-welcome"><strong>ER&amp;I Analyst AI ready.</strong><br>Ask about energy impacts, supply chain risks,<br>price movements, or any incident on the map.</div>
+  </div>
+  <div id="chatInputArea" style="display:none;flex-direction:column;">
+    <button class="chat-key-hint" id="changeKeyBtn">Change API key</button>
+    <div class="chat-footer">
+      <textarea class="chat-input" id="chatInput" rows="1" placeholder="Ask about Hormuz, oil prices, nuclear strikes..."></textarea>
+      <button class="chat-send" id="chatSend">&#10148;</button>
+    </div>
+  </div>
+</div>
+<button class="chat-fab" id="chatFabFixed">&#128172; ER&amp;I Analyst</button>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 'use strict';
-
-// ── Config ───────────────────────────────────────────────────────────────────
 const DATA_URL = './data/incidents.json';
-
-const SEV_COLOR  = { 1:'#2e7d46', 2:'#8a9a2e', 3:'#c98a1f', 4:'#c9541f', 5:'#b8283f' };
-const SEV_LABEL  = { 1:'Low', 2:'Elevated', 3:'High', 4:'Severe', 5:'Critical' };
-const REG_COLOR  = { hormuz:'#3fb6ff', redsea:'#ff6b6b', blacksea:'#aab4be', caspian:'#44ddcc' };
-const REG_LABEL  = { hormuz:'Hormuz', redsea:'Red Sea', blacksea:'Black Sea', caspian:'Caspian' };
-const REG_BG     = { hormuz:'rgba(63,182,255,0.15)', redsea:'rgba(255,107,107,0.15)',
-                     blacksea:'rgba(170,180,190,0.15)', caspian:'rgba(68,221,204,0.15)' };
-
-// ── State ─────────────────────────────────────────────────────────────────────
-let allIncidents = [];
-let markers   = {};  // id → L.circleMarker
-let listEls   = {};  // id → DOM element
-let activeId  = null;
-let filters   = {
-  regions: new Set(['hormuz','redsea','blacksea','caspian']),
-  minSev: 1,
-  dateFrom: '2026-02-28',
-  dateTo: ''
+const CATS = {
+  maritime:   { label:'Maritime',    emoji:'🚢', color:'#00A3E0' },
+  nuclear:    { label:'Nuclear',     emoji:'☢️', color:'#C6281C' },
+  oilinfra:   { label:'Oil Infra',   emoji:'🛢️', color:'#E87722' },
+  military:   { label:'Military',    emoji:'💥', color:'#282728' },
+  gas:        { label:'Gas Infra',   emoji:'🔥', color:'#E8B000' },
+  base:       { label:'Base Attack', emoji:'🎯', color:'#6B2D8B' },
+  diplomatic: { label:'Diplomatic',  emoji:'📋', color:'#86BC25' },
+  militia:    { label:'Militia',     emoji:'⚡', color:'#0D8390' },
 };
-
-// ── Map setup ─────────────────────────────────────────────────────────────────
-const map = L.map('map', { zoomControl: true }).setView([33, 47], 4);
-
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  subdomains: 'abcd', maxZoom: 18
-}).addTo(map);
-
-// dismiss active selection on blank map click
-map.on('click', () => deselect());
-
-// ── Data loading ──────────────────────────────────────────────────────────────
-async function loadData() {
-  try {
-    const res = await fetch(DATA_URL);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    allIncidents = data.incidents || [];
-
-    // Update header meta
-    const updated = data.meta?.last_updated
-      ? new Date(data.meta.last_updated).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
-      : 'unknown';
-    document.getElementById('lastUpdated').textContent = `Data as of ${updated}`;
-
-    // Header counts (all incidents, unfiltered)
-    document.getElementById('stat-total').textContent = allIncidents.length;
-    for (const r of ['hormuz','redsea','blacksea','caspian']) {
-      document.getElementById(`stat-${r}`).textContent =
-        allIncidents.filter(i => i.region === r).length;
-    }
-
+const SEV_COLOR={1:'#86BC25',2:'#E8B000',3:'#E87722',4:'#C6281C',5:'#7f1d1d'};
+const SEV_LABEL={1:'Low',2:'Elevated',3:'High',4:'Severe',5:'Critical'};
+let allIncidents=[],markers={},listEls={},activeId=null;
+let filters={cats:new Set(Object.keys(CATS)),minSev:1,dateFrom:'2026-02-28',dateTo:'',search:''};
+const map=L.map('map',{zoomControl:true}).setView([33,50],4);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',subdomains:'abcd',maxZoom:18}).addTo(map);
+map.on('click',()=>deselect());
+function makeMarker(inc){
+  const cat=CATS[inc.category]||CATS.maritime;
+  const size=20+inc.severity*4,fs=Math.round(size*.5);
+  const icon=L.divIcon({html:`<div class="map-pin" style="width:${size}px;height:${size}px;background:${cat.color};font-size:${fs}px">${cat.emoji}</div>`,className:'leaflet-div-icon',iconSize:[size,size],iconAnchor:[size/2,size/2],popupAnchor:[0,-size/2-4]});
+  const m=L.marker([inc.lat,inc.lon],{icon});
+  m.bindPopup(buildPopup(inc),{maxWidth:340});
+  m.on('click',e=>{L.DomEvent.stopPropagation(e);selectIncident(inc.id,false);});
+  return m;
+}
+function buildPopup(inc){
+  const cat=CATS[inc.category]||CATS.maritime;
+  const fuels=(inc.fuel_type||[]).map(f=>`<span class="dp-fuel">${f}</span>`).join('');
+  const unv=inc.verified===false?'<div class="dp-unverified">⚠ Auto-fetched — pending manual verification</div>':'';
+  return`<div class="dl-popup"><div class="dp-head"><span class="dp-date">${inc.date}</span><span class="dp-cat" style="background:${cat.color}">${cat.emoji} ${cat.label}</span><span class="dp-sev" style="background:${SEV_COLOR[inc.severity]}">${inc.severity}·${SEV_LABEL[inc.severity]}</span></div><div class="dp-event">${inc.event}</div><div class="dp-loc">📍 ${inc.location}</div>${inc.vessel?`<div class="dp-vessel">🚢 ${inc.vessel}</div>`:''}<div class="dp-impact"><b>Flow impact:</b><br>${inc.flow_impact}</div>${fuels?`<div class="dp-fuels">${fuels}</div>`:''}${unv}<a class="dp-src" href="${inc.source_url}" target="_blank" rel="noopener">↗ ${inc.source_label}</a></div>`;
+}
+async function loadData(){
+  try{
+    const r=await fetch(DATA_URL+'?_='+Date.now());
+    if(!r.ok)throw new Error(r.status);
+    const data=await r.json();
+    allIncidents=data.incidents||[];
+    const upd=data.meta?.last_updated?new Date(data.meta.last_updated).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+' UTC':'unknown';
+    document.getElementById('lastUpdated').textContent='Updated '+upd;
+    document.getElementById('statTotal').textContent=allIncidents.length;
+    document.getElementById('setupCount').textContent=allIncidents.length;
+    if(bot)bot.buildPrompt(allIncidents);
     renderAll();
-  } catch (err) {
-    document.getElementById('listCount').textContent = 'Error loading data';
-    document.getElementById('lastUpdated').textContent = 'Failed to load incidents.json';
-    console.error('Failed to load incidents:', err);
-
-    // Show helpful message on file:// access
-    if (location.protocol === 'file:') {
-      showOverlay('Serve via a web server',
-        'Browsers block <code>fetch()</code> on <code>file://</code> URLs. ' +
-        'Run <code>python -m http.server 8080</code> in this folder and open ' +
-        '<code>http://localhost:8080</code>, or deploy to GitHub Pages.');
-    }
-  }
+  }catch(e){document.getElementById('lastUpdated').textContent='Error: '+e.message;}
 }
-
-function showOverlay(title, html) {
-  const el = document.createElement('div');
-  el.className = 'overlay';
-  el.innerHTML = `<h2>${title}</h2><p>${html}</p>`;
-  document.getElementById('map').style.position = 'relative';
-  document.getElementById('map').appendChild(el);
-}
-
-// ── Filter & render ───────────────────────────────────────────────────────────
-function applyFilters() {
-  return allIncidents.filter(inc => {
-    if (!filters.regions.has(inc.region)) return false;
-    if (inc.severity < filters.minSev) return false;
-    if (filters.dateFrom && inc.date < filters.dateFrom) return false;
-    if (filters.dateTo   && inc.date > filters.dateTo)   return false;
+function applyFilters(){
+  const q=filters.search.toLowerCase();
+  return allIncidents.filter(i=>{
+    if(!filters.cats.has(i.category||'maritime'))return false;
+    if(i.severity<filters.minSev)return false;
+    if(filters.dateFrom&&i.date<filters.dateFrom)return false;
+    if(filters.dateTo&&i.date>filters.dateTo)return false;
+    if(q&&!`${i.event} ${i.location} ${i.vessel||''}`.toLowerCase().includes(q))return false;
     return true;
-  }).sort((a, b) => a.date < b.date ? -1 : 1);
+  }).sort((a,b)=>a.date<b.date?-1:1);
 }
-
-function renderAll() {
-  const visible = applyFilters();
-  renderMarkers(visible);
-  renderList(visible);
-  document.getElementById('listCount').innerHTML =
-    `<b>${visible.length}</b> of <b>${allIncidents.length}</b> incidents`;
+function renderAll(){
+  const vis=applyFilters();
+  renderMarkers(vis);renderList(vis);
+  document.getElementById('listCount').innerHTML=`<b>${vis.length}</b> of <b>${allIncidents.length}</b> incidents`;
 }
-
-function renderMarkers(incidents) {
-  // remove markers not in current set
-  const visibleIds = new Set(incidents.map(i => i.id));
-  for (const [id, m] of Object.entries(markers)) {
-    if (!visibleIds.has(id)) { map.removeLayer(m); delete markers[id]; }
-  }
-  // add/update
-  for (const inc of incidents) {
-    if (!inc.lat || !inc.lon) continue;
-    if (markers[inc.id]) continue;  // already on map
-    const radius = 5 + inc.severity * 2.5;
-    const m = L.circleMarker([inc.lat, inc.lon], {
-      radius,
-      fillColor: SEV_COLOR[inc.severity],
-      fillOpacity: 0.85,
-      color: REG_COLOR[inc.region],
-      weight: 2,
-      opacity: 1
-    }).addTo(map);
-    m.bindPopup(buildPopup(inc), { maxWidth: 340, className: 'custom-popup' });
-    m.on('click', e => { L.DomEvent.stopPropagation(e); selectIncident(inc.id, false); });
-    markers[inc.id] = m;
+function renderMarkers(visible){
+  const ids=new Set(visible.map(i=>i.id));
+  for(const[id,m]of Object.entries(markers)){if(!ids.has(id)){map.removeLayer(m);delete markers[id];}}
+  for(const inc of visible){if(!inc.lat||!inc.lon)continue;if(markers[inc.id])continue;markers[inc.id]=makeMarker(inc).addTo(map);}
+}
+function renderList(visible){
+  const list=document.getElementById('incList');list.innerHTML='';listEls={};
+  for(const inc of[...visible].reverse()){
+    const cat=CATS[inc.category]||CATS.maritime;
+    const el=document.createElement('div');el.className='inc-item'+(inc.id===activeId?' active':'');
+    el.innerHTML=`<div class="inc-meta"><span class="inc-date">${inc.date}</span><span class="inc-cat-badge" style="background:${cat.color}">${cat.emoji} ${cat.label}</span><span class="inc-sev-pip" style="background:${SEV_COLOR[inc.severity]}"></span></div><div class="inc-title">${inc.event.length>95?inc.event.slice(0,95)+'...':inc.event}</div><div class="inc-loc">📍 ${inc.location}</div>`;
+    el.addEventListener('click',()=>selectIncident(inc.id,true));
+    list.appendChild(el);listEls[inc.id]=el;
   }
 }
-
-function renderList(incidents) {
-  const list = document.getElementById('incList');
-  list.innerHTML = '';
-  listEls = {};
-  for (const inc of [...incidents].reverse()) {  // newest first
-    const el = document.createElement('div');
-    el.className = 'inc-item' + (inc.id === activeId ? ' active' : '');
-    el.innerHTML = `
-      <div class="inc-meta">
-        <span class="inc-date">${inc.date}</span>
-        <span class="inc-region" style="background:${REG_BG[inc.region]};color:${REG_COLOR[inc.region]};border:1px solid ${REG_COLOR[inc.region]}40">${REG_LABEL[inc.region]}</span>
-        <span class="inc-sev-dot" style="background:${SEV_COLOR[inc.severity]}" title="Severity ${inc.severity}: ${SEV_LABEL[inc.severity]}"></span>
-      </div>
-      <div class="inc-title">${inc.event.length > 90 ? inc.event.slice(0,90) + '…' : inc.event}</div>
-      ${inc.vessel ? `<div class="inc-vessel">${inc.vessel}</div>` : ''}
-    `;
-    el.addEventListener('click', () => selectIncident(inc.id, true));
-    list.appendChild(el);
-    listEls[inc.id] = el;
-  }
+function selectIncident(id,panFromList){
+  deselect();activeId=id;
+  const inc=allIncidents.find(i=>i.id===id);if(!inc)return;
+  if(listEls[id]){listEls[id].classList.add('active');listEls[id].scrollIntoView({behavior:'smooth',block:'nearest'});}
+  const m=markers[id];
+  if(m){if(panFromList&&inc.lat&&inc.lon)map.setView([inc.lat,inc.lon],Math.max(map.getZoom(),6),{animate:true});m.openPopup();}
 }
-
-// ── Selection ─────────────────────────────────────────────────────────────────
-function selectIncident(id, panFromList) {
-  deselect();
-  activeId = id;
-  const inc = allIncidents.find(i => i.id === id);
-  if (!inc) return;
-
-  // highlight list item
-  if (listEls[id]) {
-    listEls[id].classList.add('active');
-    listEls[id].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-
-  // open/pan marker
-  const m = markers[id];
-  if (m) {
-    if (panFromList) map.setView(m.getLatLng(), Math.max(map.getZoom(), 6), { animate: true });
-    m.openPopup();
-  }
-}
-
-function deselect() {
-  if (activeId && listEls[activeId]) listEls[activeId].classList.remove('active');
-  activeId = null;
-}
-
-// ── Popup HTML ────────────────────────────────────────────────────────────────
-function buildPopup(inc) {
-  const fuelTags = (inc.fuel_type || [])
-    .map(f => `<span class="popup-fuel-tag">${f}</span>`).join('');
-  const unverified = inc.verified === false
-    ? '<div class="popup-unverified">⚠ Auto-fetched — pending manual verification</div>' : '';
-  return `
-    <div class="popup-date">${inc.date}</div>
-    <div class="popup-head">
-      <span class="popup-sev" style="background:${SEV_COLOR[inc.severity]}">${inc.severity} · ${SEV_LABEL[inc.severity]}</span>
-      <span style="font-size:0.72rem;color:${REG_COLOR[inc.region]};font-weight:700">${REG_LABEL[inc.region]}</span>
-    </div>
-    <div class="popup-event">${inc.event}</div>
-    <div class="popup-location">📍 ${inc.location}</div>
-    ${inc.vessel ? `<div class="popup-vessel">🚢 ${inc.vessel}</div>` : ''}
-    <div class="popup-impact"><b>Flow impact:</b><br>${inc.flow_impact}</div>
-    ${fuelTags ? `<div class="popup-fuels">${fuelTags}</div>` : ''}
-    ${unverified}
-    <a class="popup-src" href="${inc.source_url}" target="_blank" rel="noopener noreferrer">↗ ${inc.source_label}</a>
-  `;
-}
-
-// ── Filter controls ───────────────────────────────────────────────────────────
-document.querySelectorAll('.region-check').forEach(label => {
-  label.addEventListener('click', e => {
-    e.preventDefault();
-    const region = label.dataset.region;
-    const cb = label.querySelector('input');
-    cb.checked = !cb.checked;
-    label.classList.toggle('checked', cb.checked);
-    if (cb.checked) filters.regions.add(region);
-    else            filters.regions.delete(region);
-    renderAll();
+function deselect(){if(activeId&&listEls[activeId])listEls[activeId].classList.remove('active');activeId=null;}
+document.querySelectorAll('.cat-chip').forEach(btn=>{
+  btn.addEventListener('click',()=>{const cat=btn.dataset.cat;const on=btn.classList.toggle('on');if(on)filters.cats.add(cat);else filters.cats.delete(cat);renderAll();});
+});
+document.getElementById('catAll').addEventListener('click',()=>{document.querySelectorAll('.cat-chip').forEach(b=>{b.classList.add('on');filters.cats.add(b.dataset.cat);});renderAll();});
+document.getElementById('catNone').addEventListener('click',()=>{document.querySelectorAll('.cat-chip').forEach(b=>{b.classList.remove('on');filters.cats.delete(b.dataset.cat);});renderAll();});
+document.getElementById('sevSlider').addEventListener('input',function(){filters.minSev=+this.value;document.getElementById('sevVal').textContent=this.value;renderAll();});
+document.getElementById('dateFrom').addEventListener('change',e=>{filters.dateFrom=e.target.value;renderAll();});
+document.getElementById('dateTo').addEventListener('change',e=>{filters.dateTo=e.target.value;renderAll();});
+document.getElementById('searchBox').addEventListener('input',e=>{filters.search=e.target.value;renderAll();});
+document.getElementById('btnClear').addEventListener('click',()=>{
+  filters={cats:new Set(Object.keys(CATS)),minSev:1,dateFrom:'2026-02-28',dateTo:'',search:''};
+  document.getElementById('sevSlider').value=1;document.getElementById('sevVal').textContent='1';
+  document.getElementById('dateFrom').value='2026-02-28';document.getElementById('dateTo').value='';
+  document.getElementById('searchBox').value='';
+  document.querySelectorAll('.cat-chip').forEach(b=>b.classList.add('on'));
+  renderAll();
+});
+document.getElementById('refreshBtn').addEventListener('click',()=>{
+  const btn=document.getElementById('refreshBtn');btn.disabled=true;btn.textContent='... Refreshing';
+  loadData().finally(()=>{btn.disabled=false;btn.textContent='↻ Refresh';});
+});
+document.querySelectorAll('.nav-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');
+    const t=tab.dataset.tab;
+    document.getElementById('mapView').hidden=t!=='map';
+    document.getElementById('aboutView').hidden=t!=='about';
+    if(t==='map')map.invalidateSize();
   });
 });
-
-const sevSlider = document.getElementById('sevSlider');
-const sevVal    = document.getElementById('sevVal');
-sevSlider.addEventListener('input', () => {
-  filters.minSev = parseInt(sevSlider.value, 10);
-  sevVal.textContent = sevSlider.value;
-  renderAll();
+class ERIBot{
+  constructor(){this.key=localStorage.getItem('dl_eri_key')||'';this.hist=[];this.sys='';}
+  buildPrompt(incidents){
+    const rows=incidents.map(i=>`[${i.date}] ${(i.category||'?').toUpperCase()} | ${i.location} | Sev ${i.severity} | ${i.event.slice(0,100)}`).join('\n');
+    this.sys=`You are an expert energy markets and geopolitical analyst at Deloitte's Center for Energy, Resources & Industrials (ER&I). You are embedded in the Maritime & Conflict Disruption Tracker dashboard.\n\nCurrent date: ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}.\n\nThe dashboard tracks ${incidents.length} incidents from 28 Feb 2026 (US-Israel-Iran war) to present.\n\nINCIDENT INDEX:\n${rows}\n\nAnswer questions about energy impacts, supply chain risks, price implications, specific incidents, and geopolitical context. Be concise and analytical.`;
+  }
+  async send(msg){
+    if(!this.key)throw new Error('no_key');
+    this.hist.push({role:'user',content:msg});
+    const res=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Authorization':`Bearer ${this.key}`,'Content-Type':'application/json'},body:JSON.stringify({model:'gpt-4o-mini',messages:[{role:'system',content:this.sys},...this.hist],max_tokens:600,temperature:0.7})});
+    if(!res.ok){const e=await res.json().catch(()=>({error:{message:`HTTP ${res.status}`}}));throw new Error(e.error?.message||`API error ${res.status}`);}
+    const data=await res.json();const reply=data.choices[0].message.content;
+    this.hist.push({role:'assistant',content:reply});return reply;
+  }
+}
+const bot=new ERIBot();bot.buildPrompt([]);
+function chatShowSetup(){document.getElementById('chatSetup').style.display='flex';document.getElementById('chatBody').style.display='none';document.getElementById('chatInputArea').style.display='none';}
+function chatShowChat(){document.getElementById('chatSetup').style.display='none';document.getElementById('chatBody').style.display='flex';document.getElementById('chatInputArea').style.display='flex';}
+function chatCheckKey(){bot.key?chatShowChat():chatShowSetup();}
+function toggleChat(){const p=document.getElementById('chatPanel');p.hidden=!p.hidden;if(!p.hidden)chatCheckKey();}
+document.getElementById('chatFab').addEventListener('click',toggleChat);
+document.getElementById('chatFabFixed').addEventListener('click',toggleChat);
+document.getElementById('chatClose').addEventListener('click',()=>{document.getElementById('chatPanel').hidden=true;});
+document.getElementById('saveKeyBtn').addEventListener('click',()=>{
+  const k=document.getElementById('apiKeyInput').value.trim();
+  if(!k.startsWith('sk-')){alert("That doesn't look like a valid OpenAI key (should start with sk-).");return;}
+  bot.key=k;localStorage.setItem('dl_eri_key',k);chatShowChat();
 });
-
-document.getElementById('dateFrom').addEventListener('change', e => {
-  filters.dateFrom = e.target.value;
-  renderAll();
-});
-document.getElementById('dateTo').addEventListener('change', e => {
-  filters.dateTo = e.target.value;
-  renderAll();
-});
-
-document.getElementById('btnClear').addEventListener('click', () => {
-  filters = { regions: new Set(['hormuz','redsea','blacksea','caspian']), minSev: 1, dateFrom: '2026-02-28', dateTo: '' };
-  sevSlider.value = 1; sevVal.textContent = '1';
-  document.getElementById('dateFrom').value = '2026-02-28';
-  document.getElementById('dateTo').value   = '';
-  document.querySelectorAll('.region-check').forEach(l => {
-    l.querySelector('input').checked = true;
-    l.classList.add('checked');
-  });
-  renderAll();
-});
-
-// ── Boot ──────────────────────────────────────────────────────────────────────
+document.getElementById('clearKeyBtn').addEventListener('click',()=>{bot.key='';localStorage.removeItem('dl_eri_key');document.getElementById('apiKeyInput').value='';});
+document.getElementById('changeKeyBtn').addEventListener('click',()=>chatShowSetup());
+function appendMsg(role,text){
+  const body=document.getElementById('chatBody');
+  const div=document.createElement('div');div.className=`chat-msg ${role}`;
+  div.innerHTML=`<div class="chat-bubble">${text.replace(/\n/g,'<br>')}</div>`;
+  body.appendChild(div);body.scrollTop=body.scrollHeight;
+}
+function showTyping(){const body=document.getElementById('chatBody');const div=document.createElement('div');div.className='chat-msg assistant';div.id='typingBubble';div.innerHTML='<div class="chat-typing"><span></span><span></span><span></span></div>';body.appendChild(div);body.scrollTop=body.scrollHeight;}
+function removeTyping(){document.getElementById('typingBubble')?.remove();}
+async function doSend(){
+  const inp=document.getElementById('chatInput');const msg=inp.value.trim();if(!msg)return;
+  inp.value='';inp.style.height='auto';appendMsg('user',msg);showTyping();
+  document.getElementById('chatSend').disabled=true;
+  try{const reply=await bot.send(msg);removeTyping();appendMsg('assistant',reply);}
+  catch(e){removeTyping();if(e.message==='no_key'){chatShowSetup();}else{const err=document.createElement('div');err.className='chat-error';err.textContent='⚠ '+e.message;document.getElementById('chatBody').appendChild(err);}}
+  finally{document.getElementById('chatSend').disabled=false;}
+}
+document.getElementById('chatSend').addEventListener('click',doSend);
+document.getElementById('chatInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSend();}});
+document.getElementById('chatInput').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,80)+'px';});
 loadData();
 </script>
 </body>
