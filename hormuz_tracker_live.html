@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strait of Hormuz Tracker — Supply, Demand &amp; Flow Signals</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --dl-green:#86BC25;
+    --dl-neon:#86EB22;
+    --dl-blue:#00A3E0;
+    --dl-blue-dark:#005587;
+    --dl-dark:#282728;
+    --dl-gray-border:#E1E1E1;
+    --dl-text:#282728;
+    --dl-text-sec:#5B5B5B;
+    --amber:#E8A317;
+    --red:#C6281C;
+    --bg:#F3F3F1;
+    --card:#FFFFFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; font-family:'Open Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    background:var(--bg); color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+  .topbar{height:5px; background:linear-gradient(90deg,#86BC25,#00A3E0);}
+  header.masthead{
+    background:var(--card); border-bottom:1px solid var(--dl-gray-border);
+    padding:22px 32px 18px;
+  }
+  .masthead-inner{max-width:1280px; margin:0 auto; display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px;}
+  .masthead-title h1{margin:0; font-size:1.65rem; font-weight:700; color:var(--dl-dark); letter-spacing:-.01em;}
+  .masthead-title .eyebrow{font-size:.72rem; text-transform:uppercase; letter-spacing:.12em; color:var(--dl-green); font-weight:700; margin-bottom:4px; display:block;}
+  .masthead-title p{margin:4px 0 0; color:var(--dl-text-sec); font-size:.92rem;}
+  .masthead-meta{text-align:right; font-size:.8rem; color:var(--dl-text-sec); line-height:1.5;}
+  .phase-badge{
+    display:inline-flex; align-items:center; gap:6px; background:#FCEFE4; color:var(--red);
+    border:1px solid rgba(198,40,28,.25); font-weight:700; font-size:.72rem; letter-spacing:.06em;
+    text-transform:uppercase; padding:5px 12px; border-radius:100px; margin-bottom:6px;
+  }
+  .phase-badge .dot{width:7px; height:7px; border-radius:50%; background:var(--red); animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+  main{max-width:1280px; margin:0 auto; padding:28px 32px 60px;}
+
+  .status-strip{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px;}
+  .kpi{background:var(--card); border:1px solid var(--dl-gray-border); border-radius:8px; padding:18px 20px; border-top:3px solid var(--dl-green);}
+  .kpi.warn{border-top-color:var(--amber);}
+  .kpi.alert{border-top-color:var(--red);}
+  .kpi.info{border-top-color:var(--dl-blue);}
+  .kpi .label{font-size:.72rem; text-transform:uppercase; letter-spacing:.07em; color:var(--dl-text-sec); font-weight:700;}
+  .kpi .value{font-size:1.7rem; font-weight:700; color:var(--dl-dark); margin:6px 0 2px; line-height:1.1;}
+  .kpi .sub{font-size:.78rem; color:var(--dl-text-sec);}
+  .kpi .sub.neg{color:var(--red); font-weight:600;}
+  .kpi .sub.pos{color:var(--dl-green); font-weight:600;}
+
+  .section-head{display:flex; align-items:center; gap:10px; margin:36px 0 14px;}
+  .section-head .tag{
+    font-size:.68rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+    color:#fff; background:var(--dl-dark); padding:3px 10px; border-radius:4px;
+  }
+  .section-head h2{font-size:1.15rem; margin:0; color:var(--dl-dark); font-weight:700;}
+  .section-head .rule{flex:1; height:1px; background:var(--dl-gray-border);}
+
+  .steo-intro{
+    background:#F5F8EC; border:1px solid rgba(134,188,37,.3); border-left:4px solid var(--dl-green);
+    border-radius:6px; padding:16px 20px; margin-bottom:20px;
+  }
+  .steo-intro p{margin:0; font-size:.88rem; line-height:1.6; color:var(--dl-text);}
+  .steo-intro .cite-inline{display:block; margin-top:8px; font-size:.72rem; color:var(--dl-text-sec); font-style:italic;}
+
+  .price-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:14px;}
+  .price-card{background:var(--card); border:1px solid var(--dl-gray-border); border-radius:8px; padding:16px 16px 14px; text-align:center; position:relative;}
+  .price-card .p-market{font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:var(--dl-text-sec); font-weight:700;}
+  .price-card .p-name{font-size:.82rem; color:var(--dl-dark); font-weight:700; margin:2px 0 8px;}
+  .price-card .p-value{font-size:1.35rem; font-weight:700; color:var(--dl-dark);}
+  .price-card .p-unit{font-size:.68rem; color:var(--dl-text-sec);}
+  .price-card .p-change{font-size:.74rem; font-weight:700; margin-top:6px;}
+  .price-card .p-change.up{color:var(--red);}
+  .price-card .p-change.down{color:var(--dl-green);}
+  .price-card .p-date{font-size:.65rem; color:#9A9A9A; margin-top:4px;}
+  .price-card.oil{border-top:3px solid var(--dl-dark);}
+  .price-card.gas{border-top:3px solid var(--dl-blue);}
+  .price-card{position:relative;}
+  .live-tag{position:absolute; top:8px; right:8px; font-size:.6rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:2px 6px; border-radius:100px;}
+  .live-tag.live{background:#E7F3FB; color:var(--dl-blue-dark);}
+  .live-tag.manual{background:#F0F0EE; color:var(--dl-text-sec);}
+  .live-tag.stale{background:#FCEFE4; color:var(--red);}
+
+  .refresh-bar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+  .refresh-btn{
+    display:inline-flex; align-items:center; gap:6px; background:var(--dl-dark); color:#fff; border:none;
+    font-size:.78rem; font-weight:700; padding:7px 14px; border-radius:6px; cursor:pointer; letter-spacing:.02em;
+  }
+  .refresh-btn:hover{background:#3a3939;}
+  .refresh-btn:disabled{background:#9A9A9A; cursor:wait;}
+  .refresh-btn .spin{display:inline-block; animation:spin 0.9s linear infinite;}
+  @keyframes spin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+  .settings-btn{
+    background:#fff; border:1px solid var(--dl-gray-border); color:var(--dl-text-sec); font-size:.78rem;
+    font-weight:700; padding:7px 12px; border-radius:6px; cursor:pointer;
+  }
+  .settings-btn:hover{background:#F5F5F3;}
+  .refresh-status{font-size:.72rem; color:var(--dl-text-sec);}
+  .refresh-status.err{color:var(--red); font-weight:600;}
+
+  .key-panel{
+    display:none; background:#FFFDF5; border:1px solid rgba(232,163,23,.35); border-left:4px solid var(--amber);
+    border-radius:6px; padding:16px 20px; margin-bottom:20px; font-size:.85rem; color:var(--dl-text);
+  }
+  .key-panel.open{display:block;}
+  .key-panel p{margin:0 0 10px; line-height:1.55;}
+  .key-panel a{color:var(--dl-blue-dark);}
+  .key-row{display:flex; gap:8px; flex-wrap:wrap;}
+  .key-row input{
+    flex:1; min-width:220px; padding:8px 10px; border:1px solid var(--dl-gray-border); border-radius:6px; font-size:.85rem;
+  }
+  .key-row button{
+    background:var(--dl-green); color:#fff; border:none; font-weight:700; font-size:.82rem;
+    padding:8px 16px; border-radius:6px; cursor:pointer;
+  }
+  .key-row button.clear{background:#fff; color:var(--red); border:1px solid rgba(198,40,28,.3);}
+
+  .cadence-panel{background:var(--card); border:1px solid var(--dl-gray-border); border-radius:8px; padding:22px 24px; margin-top:20px;}
+  .cadence-panel p.lead{font-size:.85rem; color:var(--dl-text-sec); margin:0 0 16px; line-height:1.55;}
+  table.cadence-table{width:100%; border-collapse:collapse; font-size:.83rem;}
+  table.cadence-table th{
+    text-align:left; background:var(--dl-dark); color:#fff; padding:9px 14px;
+    font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; font-weight:700;
+  }
+  table.cadence-table th:first-child{border-radius:6px 0 0 0;}
+  table.cadence-table th:last-child{border-radius:0 6px 0 0;}
+  table.cadence-table td{padding:9px 14px; border-bottom:1px solid #F0F0EE; color:var(--dl-text);}
+  table.cadence-table tr:nth-child(even) td{background:#FAFAF8;}
+  table.cadence-table .cad-tag{
+    display:inline-block; font-size:.68rem; font-weight:700; padding:2px 8px; border-radius:100px;
+  }
+  .cad-tag.daily{background:#E7F3FB; color:var(--dl-blue-dark);}
+  .cad-tag.weekly{background:#F5F8EC; color:#5A8A1B;}
+  .cad-tag.monthly{background:#FDF3E3; color:#9A6E0A;}
+  .cad-tag.adhoc{background:#FCEFE4; color:var(--red);}
+
+  .panel-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .panel{background:var(--card); border:1px solid var(--dl-gray-border); border-radius:8px; padding:22px 24px;}
+  .panel h3{font-size:.95rem; margin:0 0 14px; color:var(--dl-dark); font-weight:700; display:flex; align-items:center; gap:8px;}
+  .panel h3 .swatch{width:9px; height:9px; border-radius:50%;}
+  .data-row{display:flex; justify-content:space-between; align-items:baseline; padding:10px 0; border-bottom:1px solid #F0F0EE;}
+  .data-row:last-child{border-bottom:none;}
+  .data-row .dr-label{font-size:.85rem; color:var(--dl-text); max-width:62%;}
+  .data-row .dr-value{font-size:.85rem; font-weight:700; color:var(--dl-dark); text-align:right;}
+  .data-row .dr-value .cite{font-weight:400; color:var(--dl-text-sec); font-size:.72rem; display:block;}
+
+  .flow-panel{background:var(--card); border:1px solid var(--dl-gray-border); border-radius:8px; padding:24px 28px; margin-top:20px;}
+  .gauge-wrap{margin:18px 0 8px;}
+  .gauge-label-row{display:flex; justify-content:space-between; font-size:.75rem; color:var(--dl-text-sec); margin-bottom:6px;}
+  .gauge-track{position:relative; height:34px; background:#F0F0EE; border-radius:6px; overflow:hidden; border:1px solid var(--dl-gray-border);}
+  .gauge-segment{position:absolute; top:0; bottom:0;}
+  .gauge-baseline{left:0; width:100%; background:repeating-linear-gradient(45deg,#EDEDEA,#EDEDEA 8px,#E4E4E0 8px,#E4E4E0 16px);}
+  .gauge-bypass{left:0; background:linear-gradient(90deg,#86BC25,#63C631); width:23%;}
+  .gauge-actual{left:0; background:linear-gradient(90deg,#C6281C,#E8A317); width:2%;}
+  .gauge-legend{display:flex; gap:22px; margin-top:14px; flex-wrap:wrap;}
+  .gauge-legend .item{display:flex; align-items:center; gap:7px; font-size:.78rem; color:var(--dl-text-sec);}
+  .gauge-legend .sw{width:12px; height:12px; border-radius:3px;}
+
+  .flow-metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:22px;}
+  .flow-metric{border-left:3px solid var(--dl-green); padding-left:12px;}
+  .flow-metric.alert{border-left-color:var(--red);}
+  .flow-metric .fm-label{font-size:.72rem; color:var(--dl-text-sec); text-transform:uppercase; letter-spacing:.05em; font-weight:700;}
+  .flow-metric .fm-value{font-size:1.15rem; font-weight:700; color:var(--dl-dark); margin-top:3px;}
+  .flow-metric .fm-sub{font-size:.75rem; color:var(--dl-text-sec); margin-top:2px;}
+
+  .timeline{background:var(--card); border:1px solid var(--dl-gray-border); border-radius:8px; padding:22px 24px; margin-top:20px;}
+  .tl-item{display:grid; grid-template-columns:88px 1fr; gap:16px; padding:11px 0; border-bottom:1px solid #F0F0EE;}
+  .tl-item:last-child{border-bottom:none;}
+  .tl-date{font-size:.75rem; font-weight:700; color:var(--dl-blue-dark); white-space:nowrap;}
+  .tl-text{font-size:.86rem; color:var(--dl-text); line-height:1.5;}
+
+  footer{margin-top:32px; padding-top:18px; border-top:1px solid var(--dl-gray-border);}
+  footer .src-title{font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; font-weight:700; color:var(--dl-text-sec); margin-bottom:8px;}
+  footer .src-list{font-size:.74rem; color:var(--dl-text-sec); line-height:1.9; columns:2; column-gap:32px;}
+  footer .disclaimer{font-size:.72rem; color:#8A8A8A; margin-top:16px; font-style:italic;}
+
+  @media (max-width:900px){
+    .status-strip{grid-template-columns:repeat(2,1fr);}
+    .price-grid{grid-template-columns:repeat(2,1fr);}
+    .panel-grid{grid-template-columns:1fr;}
+    .flow-metrics{grid-template-columns:repeat(2,1fr);}
+    footer .src-list{columns:1;}
+  }
+</style>
+</head>
+<body>
+<div class="topbar"></div>
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-title">
+      <span class="eyebrow">Deloitte ER&amp;I — Energy &amp; Chemicals</span>
+      <h1>Strait of Hormuz Tracker</h1>
+      <p>Supply, demand &amp; flow signals across the Gulf chokepoint — internal briefing snapshot</p>
+    </div>
+    <div class="masthead-meta">
+      <div class="phase-badge"><span class="dot"></span>Active escalation — post July 7 strikes</div><br>
+      <div class="refresh-bar">
+        <button class="settings-btn" id="settingsToggle" type="button">EIA API key</button>
+        <button class="refresh-btn" id="refreshBtn" type="button">
+          <span id="refreshIcon">&#8635;</span> Refresh live data
+        </button>
+      </div>
+      <div class="refresh-status" id="refreshStatus" style="margin-top:6px;">Snapshot as of July 10, 2026 · Brent/WTI/Henry Hub refreshable via EIA API</div>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="key-panel" id="keyPanel">
+    <p><strong>Live data uses your own free EIA API key</strong> — nothing is sent to any third party, and the key is stored only in this browser (localStorage). Brent, WTI, and Henry Hub are published by EIA and can refresh live. TTF, JKM, Baker Hughes rig counts, and transit/flow signals sit behind paid feeds (Trading Economics, Kpler, Lloyd's List) with no free API, so those stay as manually-verified snapshots — refreshing won't change them.</p>
+    <p>Get a free key (instant, no cost) at <a href="https://www.eia.gov/opendata/register.php" target="_blank" rel="noopener">eia.gov/opendata/register.php</a>.</p>
+    <div class="key-row">
+      <input type="text" id="apiKeyInput" placeholder="Paste your EIA API key here">
+      <button type="button" id="saveKeyBtn">Save key</button>
+      <button type="button" class="clear" id="clearKeyBtn">Clear</button>
+    </div>
+  </div>
+  <div class="status-strip">
+    <div class="kpi alert">
+      <div class="label">Transit Status</div>
+      <div class="value">Southern Highway halted</div>
+      <div class="sub neg">No vessel &gt;10,000 dwt on AIS since Jul 7¹</div>
+    </div>
+    <div class="kpi">
+      <div class="label">Brent Spot</div>
+      <div class="value">$76.58/bbl</div>
+      <div class="sub pos">+$4 vs. last week, still -32% vs. Apr peak¹</div>
+    </div>
+    <div class="kpi warn">
+      <div class="label">MOU Framework</div>
+      <div class="value">Operationally collapsed</div>
+      <div class="sub neg">Jun 18 MOU superseded by Jul 7-8 strikes²</div>
+    </div>
+    <div class="kpi info">
+      <div class="label">Seafarers Exposed</div>
+      <div class="value">~6,000 stranded</div>
+      <div class="sub">Down from peak; pre-crisis pace 130 transits/day³</div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="tag">00</span><h2>Price Signals — Oil &amp; LNG Benchmarks</h2><div class="rule"></div></div>
+  <div class="price-grid">
+    <div class="price-card oil" id="card-brent">
+      <span class="live-tag manual" id="tag-brent">Manual</span>
+      <div class="p-market">Crude — Global</div>
+      <div class="p-name">Brent</div>
+      <div class="p-value" id="val-brent">$76.19</div>
+      <div class="p-unit">$/bbl</div>
+      <div class="p-change down" id="chg-brent">-32% vs. Apr peak</div>
+      <div class="p-date" id="date-brent">Jul 10, 2026¹⁷</div>
+    </div>
+    <div class="price-card oil" id="card-wti">
+      <span class="live-tag manual" id="tag-wti">Manual</span>
+      <div class="p-market">Crude — U.S.</div>
+      <div class="p-name">WTI</div>
+      <div class="p-value" id="val-wti">$71.17</div>
+      <div class="p-unit">$/bbl</div>
+      <div class="p-change down" id="chg-wti">$4.54 spread to Brent</div>
+      <div class="p-date" id="date-wti">Jul 10, 2026¹⁸</div>
+    </div>
+    <div class="price-card gas">
+      <span class="live-tag manual">Manual</span>
+      <div class="p-market">LNG — Europe</div>
+      <div class="p-name">TTF</div>
+      <div class="p-value">$13.66</div>
+      <div class="p-unit">$/MMBtu (~€49.78/MWh)</div>
+      <div class="p-change up">Highest since Jun 2026</div>
+      <div class="p-date">Jul 9, 2026¹⁹</div>
+    </div>
+    <div class="price-card gas">
+      <span class="live-tag manual">Manual</span>
+      <div class="p-market">LNG — Asia</div>
+      <div class="p-name">JKM</div>
+      <div class="p-value">$16.58</div>
+      <div class="p-unit">$/MMBtu</div>
+      <div class="p-change up">+26% vs. year ago</div>
+      <div class="p-date">Jul 9, 2026²⁰</div>
+    </div>
+    <div class="price-card gas" id="card-hh">
+      <span class="live-tag manual" id="tag-hh">Manual</span>
+      <div class="p-market">Gas — U.S.</div>
+      <div class="p-name">Henry Hub</div>
+      <div class="p-value" id="val-hh">$3.01</div>
+      <div class="p-unit">$/MMBtu</div>
+      <div class="p-change down" id="chg-hh">6-week low; Freeport LNG maintenance</div>
+      <div class="p-date" id="date-hh">Jul 9, 2026²¹</div>
+    </div>
+  </div>
+  <p style="font-size:.78rem; color:var(--dl-text-sec); margin:10px 2px 0;">TTF and JKM continue to trade at a $10–14/MMBtu premium to Henry Hub — the structural gap that keeps U.S. LNG cargoes economically pulled toward Europe and Asia even amid Hormuz-related freight and insurance risk.</p>
+
+  <div class="section-head"><span class="tag">01</span><h2>Supply &amp; Demand Signals</h2><div class="rule"></div></div>
+  <div class="steo-intro">
+    <p><strong>EIA global oil balance (July STEO, released Jul 7, data cut-off Jul 1):</strong> global liquid fuels production is forecast at 99.0 mb/d in 2026 before rising to 109.3 mb/d in 2027, as most Gulf shut-ins unwind; global consumption is forecast to <em>fall</em> by 1.2 mb/d in 2026 to roughly 102.9 mb/d before rebounding in 2027 — the first annual demand contraction of the crisis, driven almost entirely by Asia's exposure to Middle East barrels. That combination (supply recovering faster than demand) is what is pulling Brent down from a $95–105/bbl operating range in May-June to the $74–82/bbl range now baked into the forecast.<span class="cite-inline">EIA STEO, Global Oil Markets, Jul 2026¹⁶</span></p>
+  </div>
+  <div class="panel-grid">
+    <div class="panel">
+      <h3><span class="swatch" style="background:var(--dl-green)"></span>Supply — Gulf Producer Status</h3>
+      <div class="data-row"><span class="dr-label">Saudi Arabia — East-West Pipeline (Petroline) utilization</span><span class="dr-value">Ramped to ~2.9 mb/d in Mar; capacity ~5–7 mb/d<span class="cite">Kpler / Al Jazeera⁴</span></span></div>
+      <div class="data-row"><span class="dr-label">UAE — ADCOP / Habshan–Fujairah utilization</span><span class="dr-value">~71% of 1.5 mb/d nameplate (~440 kb/d spare)<span class="cite">Kpler via CNBC⁵</span></span></div>
+      <div class="data-row"><span class="dr-label">Combined bypass ceiling vs. normal Hormuz transit</span><span class="dr-value">3.5–5.5 mb/d vs. ~20 mb/d<span class="cite">IEA⁶</span></span></div>
+      <div class="data-row"><span class="dr-label">Iraq — southern (Basra) export exposure</span><span class="dr-value">No meaningful bypass; Kirkuk-Ceyhan ~250 kb/d only<span class="cite">The Conversation⁷</span></span></div>
+      <div class="data-row"><span class="dr-label">Global production shut-ins (peak, Gulf producers)</span><span class="dr-value">Reached ~11.3 mb/d in June per EIA<span class="cite">EIA STEO Jun⁸</span></span></div>
+      <div class="data-row"><span class="dr-label">EIA outlook: shut-in production normalization</span><span class="dr-value">Near pre-conflict levels by YE26; most back online 1Q27<span class="cite">EIA STEO Jul 7⁹</span></span></div>
+    </div>
+    <div class="panel">
+      <h3><span class="swatch" style="background:var(--dl-blue)"></span>Demand — Global Response &amp; Pricing</h3>
+      <div class="data-row"><span class="dr-label">2026 global oil demand forecast (EIA)</span><span class="dr-value">-1.2 mb/d y/y; ~0.8 mb/d of cut from non-OECD Asia<span class="cite">EIA STEO Jul⁹</span></span></div>
+      <div class="data-row"><span class="dr-label">Global inventory draw, 3Q26 forecast</span><span class="dr-value">2.2 mb/d, down from 7.0 mb/d in June forecast<span class="cite">EIA STEO Jul⁹</span></span></div>
+      <div class="data-row"><span class="dr-label">Brent — full-year 2026 forecast (revised)</span><span class="dr-value">$81.91/bbl, cut from $95.39/bbl in June STEO<span class="cite">Rigzone / EIA¹⁰</span></span></div>
+      <div class="data-row"><span class="dr-label">Brent — 3Q26 / 2027 forecast</span><span class="dr-value">$74.03/bbl 3Q26; $64.76/bbl 2027<span class="cite">EIA STEO Jul⁹</span></span></div>
+      <div class="data-row"><span class="dr-label">U.S. retail gasoline, 2H26 forecast</span><span class="dr-value">~$3.60/gal, down from $4.48/gal in May<span class="cite">Hydrocarbon Eng.¹¹</span></span></div>
+      <div class="data-row"><span class="dr-label">Baker Hughes U.S. oil rig count (wk. Jul 2)</span><span class="dr-value">445 rigs, +5 w/w, +20 y/y<span class="cite">Baker Hughes¹²</span></span></div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="tag">02</span><h2>Flow Signals — Transit &amp; Freight Risk</h2><div class="rule"></div></div>
+  <div class="flow-panel">
+    <h3 style="margin-top:0;">Daily throughput vs. pre-crisis baseline</h3>
+    <div class="gauge-wrap">
+      <div class="gauge-label-row"><span>0 mb/d</span><span>Pre-crisis baseline: ~20 mb/d (25% of seaborne oil trade)</span></div>
+      <div class="gauge-track">
+        <div class="gauge-segment gauge-baseline"></div>
+        <div class="gauge-segment gauge-bypass" title="Combined Saudi + UAE bypass capacity, ~4.5 mb/d midpoint"></div>
+        <div class="gauge-segment gauge-actual" title="No AIS-tracked large vessel transits since Jul 7"></div>
+      </div>
+    </div>
+    <div class="gauge-legend">
+      <div class="item"><span class="sw" style="background:repeating-linear-gradient(45deg,#EDEDEA,#EDEDEA 4px,#E4E4E0 4px,#E4E4E0 8px)"></span>Pre-crisis Hormuz baseline (~20 mb/d)</div>
+      <div class="item"><span class="sw" style="background:var(--dl-green)"></span>Overland bypass capacity in use (~3.5–5.5 mb/d ceiling)</div>
+      <div class="item"><span class="sw" style="background:var(--red)"></span>Current tracked strait transit (near zero, large vessels)</div>
+    </div>
+    <div class="flow-metrics">
+      <div class="flow-metric alert">
+        <div class="fm-label">Southern Highway Transits</div>
+        <div class="fm-value">0 since Jul 7</div>
+        <div class="fm-sub">Vessels &gt;10,000 dwt, AIS-tracked¹</div>
+      </div>
+      <div class="flow-metric">
+        <div class="fm-label">Pre-crisis Transit Rate</div>
+        <div class="fm-value">~178 ships/day</div>
+        <div class="fm-sub">Now down ~95% at prior trough³</div>
+      </div>
+      <div class="flow-metric alert">
+        <div class="fm-label">War Risk Premium (peak, Mar)</div>
+        <div class="fm-value">2.5–5% of hull value</div>
+        <div class="fm-sub">vs. 0.1–0.15% pre-war baseline¹³</div>
+      </div>
+      <div class="flow-metric">
+        <div class="fm-label">Est. Cost per VLCC Transit</div>
+        <div class="fm-value">$2.5–7.5M</div>
+        <div class="fm-sub">War risk cover, charterer's account¹⁴</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head"><span class="tag">03</span><h2>Latest Developments</h2><div class="rule"></div></div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-date">Jul 10</div><div class="tl-text">Lloyd's List: no large vessel transits on the Oman-hugging "Southern Highway" route since Jul 7, with at least two ships believed to have crossed dark (AIS off).¹</div></div>
+    <div class="tl-item"><div class="tl-date">Jul 8-9</div><div class="tl-text">U.S. CENTCOM launches renewed strikes on Iranian military targets after three commercial tankers were hit near Hormuz; Iran claims retaliatory strikes on U.S.-linked sites in Bahrain, Kuwait, Qatar, Jordan, Iraq.²</div></div>
+    <div class="tl-item"><div class="tl-date">Jul 8</div><div class="tl-text">UN IMO Secretary-General condemns attacks on shipping and calls for "maximum restraint"; UN Secretary-General warns of catastrophic consequences if full-scale hostilities resume.²</div></div>
+    <div class="tl-item"><div class="tl-date">Jul 7</div><div class="tl-text">EIA's July STEO (data cut-off Jul 1) still assumes the Jun 18 MOU holds — Brent forecast cut to $74/bbl for 3Q26; now overtaken by the Jul 7-8 escalation.⁹</div></div>
+    <div class="tl-item"><div class="tl-date">Jun 19</div><div class="tl-text">Three Saudi VLCCs (~6 million bbl combined) transit the strait and reactivate AIS in the Gulf of Oman — the clearest test signal of post-MOU normalization before the relapse.¹⁵</div></div>
+    <div class="tl-item"><div class="tl-date">Jun 18</div><div class="tl-text">U.S. and Iran sign MOU to end the conflict and reopen the strait, triggering the EIA's sharp upward revision to production and downward revision to price forecasts.⁹</div></div>
+  </div>
+
+  <div class="section-head"><span class="tag">04</span><h2>How This Dashboard Refreshes</h2><div class="rule"></div></div>
+  <div class="cadence-panel">
+    <p class="lead">This is a point-in-time snapshot, not a live feed — figures are pulled and verified against source on request. Each signal has its own natural release cadence; use this table to know when a re-pull is actually worth doing versus when the underlying source hasn't moved yet.</p>
+    <table class="cadence-table">
+      <thead><tr><th>Signal</th><th>Source</th><th>Cadence</th><th>Best time to refresh</th></tr></thead>
+      <tbody>
+        <tr><td>Brent / WTI spot</td><td>EIA, ICE, NYMEX market data</td><td><span class="cad-tag daily">Daily</span></td><td>Anytime; most current at U.S. market close</td></tr>
+        <tr><td>TTF / JKM / Henry Hub</td><td>Trading Economics, ICIS Heren, CME</td><td><span class="cad-tag daily">Daily</span></td><td>Anytime; TTF/JKM settle ~4:30pm Singapore / London close</td></tr>
+        <tr><td>Baker Hughes rig count</td><td>Baker Hughes</td><td><span class="cad-tag weekly">Weekly</span></td><td>Thursday/Friday after release</td></tr>
+        <tr><td>U.S. natural gas storage</td><td>EIA Weekly Natural Gas Storage Report</td><td><span class="cad-tag weekly">Weekly</span></td><td>Thursday after 10:30am ET release</td></tr>
+        <tr><td>Transit / flow signals (AIS, dark shipping)</td><td>Lloyd's List Intelligence, Kpler-sourced reporting</td><td><span class="cad-tag adhoc">Ad hoc</span></td><td>After any reported strike, incident, or ceasefire shift</td></tr>
+        <tr><td>War risk premiums / freight rates</td><td>Lloyd's List, S&amp;P Global, Baltic Exchange (TD3C)</td><td><span class="cad-tag adhoc">Ad hoc</span></td><td>Weekly during active escalation; monthly if calm</td></tr>
+        <tr><td>Global supply/demand balance, price forecast</td><td>EIA Short-Term Energy Outlook (STEO)</td><td><span class="cad-tag monthly">Monthly</span></td><td>Day of release, typically 2nd week of month</td></tr>
+        <tr><td>Global oil/gas market balance, LNG trade</td><td>IEA Oil Market Report / Gas Market Report</td><td><span class="cad-tag monthly">Monthly / Quarterly</span></td><td>Within a few days of release</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer>
+    <div class="src-title">Sources &amp; Vintage</div>
+    <div class="src-list">
+      <div>1. Al Jazeera, "Strait of Hormuz traffic plunges," Jul 10, 2026 (Lloyd's List Intelligence data)</div>
+      <div>2. UN News / CNN, Jul 8, 2026</div>
+      <div>3. UN News (IMO/Guterres briefing), Jul 8, 2026</div>
+      <div>4. Al Jazeera, "Can three pipelines help oil escape Hormuz," Mar 31, 2026 (Kpler data)</div>
+      <div>5. CNBC, "Two oil pipelines helping Saudi/UAE bypass Hormuz," Mar 12, 2026 (Kpler)</div>
+      <div>6. IEA, "Strait of Hormuz" topic page, accessed Jul 2026</div>
+      <div>7. The Conversation, "What alternatives do Gulf states have," Apr 30, 2026</div>
+      <div>8. EIA STEO, June 2026 edition</div>
+      <div>9. EIA STEO, July 2026 edition (released Jul 7, forecast cut-off Jul 1, 2026)</div>
+      <div>10. Rigzone, "EIA Reveals Latest Oil Price Forecast," Jul 9, 2026</div>
+      <div>11. Hydrocarbon Engineering, Jul 9, 2026</div>
+      <div>12. Anadolu Agency / Baker Hughes, week ending Jul 2, 2026</div>
+      <div>13. Lloyd's List, "Gulf war risk premiums," Mar 11, 2026; S&amp;P Global, Mar 30, 2026</div>
+      <div>14. Hormuz Strait Monitor, war risk insurance explainer (methodology reference)</div>
+      <div>15. Discovery Alert, "Saudi Oil Tankers Cross the Strait of Hormuz," Jun 2026 (Kpler)</div>
+      <div>16. EIA, Short-Term Energy Outlook, Global Oil Markets, July 2026 (eia.gov/outlooks/steo/report/global_oil.php)</div>
+      <div>17. Investing.com, Brent Oil Futures, Jul 10, 2026</div>
+      <div>18. CrudeOilPrices.today, WTI/Brent live spot, Jul 10, 2026, 3:45pm ET</div>
+      <div>19. Trading Economics, EU Natural Gas (TTF), Jul 9, 2026; TradingView ICIS Heren TTF USD/MMBtu quote</div>
+      <div>20. Trading Economics, LNG Japan Korea Marker, Jul 9, 2026</div>
+      <div>21. Trading Economics, Henry Hub Natural Gas, Jul 9-10, 2026</div>
+    </div>
+    <div class="disclaimer">Internal briefing snapshot only — not for external distribution. Figures are point-in-time estimates drawn from named sources above and should be re-verified against EIA STEO, IEA OMR, and Baker Hughes releases before use in client-facing content. War risk premium and bypass-utilization figures pre-date the Jul 7-8 escalation and are directionally indicative pending updated underwriter and Kpler data.</div>
+  </footer>
+</main>
+<script>
+(function(){
+  var KEY_STORAGE = 'hormuz_tracker_eia_api_key';
+  var settingsBtn = document.getElementById('settingsToggle');
+  var keyPanel = document.getElementById('keyPanel');
+  var apiKeyInput = document.getElementById('apiKeyInput');
+  var saveKeyBtn = document.getElementById('saveKeyBtn');
+  var clearKeyBtn = document.getElementById('clearKeyBtn');
+  var refreshBtn = document.getElementById('refreshBtn');
+  var refreshIcon = document.getElementById('refreshIcon');
+  var refreshStatus = document.getElementById('refreshStatus');
+
+  var savedKey = localStorage.getItem(KEY_STORAGE);
+  if (savedKey) { apiKeyInput.value = savedKey; }
+
+  settingsBtn.addEventListener('click', function(){
+    keyPanel.classList.toggle('open');
+  });
+  saveKeyBtn.addEventListener('click', function(){
+    var v = apiKeyInput.value.trim();
+    if (v) {
+      localStorage.setItem(KEY_STORAGE, v);
+      refreshStatus.textContent = 'API key saved. Click "Refresh live data" to pull current prices.';
+      refreshStatus.classList.remove('err');
+    }
+  });
+  clearKeyBtn.addEventListener('click', function(){
+    localStorage.removeItem(KEY_STORAGE);
+    apiKeyInput.value = '';
+    refreshStatus.textContent = 'API key cleared.';
+    refreshStatus.classList.remove('err');
+  });
+
+  function fmtMoney(v, decimals){
+    return '$' + Number(v).toFixed(decimals);
+  }
+  function pctChange(latest, prev){
+    var d = ((latest - prev) / prev) * 100;
+    var sign = d >= 0 ? '+' : '';
+    return sign + d.toFixed(1) + '% vs. prior session';
+  }
+  function setTag(id, state, label){
+    var el = document.getElementById(id);
+    el.className = 'live-tag ' + state;
+    el.textContent = label;
+  }
+
+  async function fetchSeries(route, seriesId, key){
+    var url = 'https://api.eia.gov/v2/' + route + '/data/?api_key=' + encodeURIComponent(key) +
+      '&frequency=daily&data[0]=value&facets[series][]=' + seriesId +
+      '&sort[0][column]=period&sort[0][direction]=desc&offset=0&length=2';
+    var res = await fetch(url);
+    if (!res.ok) {
+      var text = await res.text().catch(function(){ return ''; });
+      throw new Error('EIA API error (' + res.status + ') for ' + seriesId + (text ? ': ' + text.slice(0,150) : ''));
+    }
+    var json = await res.json();
+    var rows = json && json.response && json.response.data;
+    if (!rows || rows.length === 0) {
+      throw new Error('No data returned for ' + seriesId + '. Series may have no recent reading (e.g. weekend/holiday).');
+    }
+    return rows;
+  }
+
+  async function refreshLiveData(){
+    var key = localStorage.getItem(KEY_STORAGE);
+    if (!key) {
+      keyPanel.classList.add('open');
+      refreshStatus.textContent = 'Add your free EIA API key above to enable live refresh.';
+      refreshStatus.classList.add('err');
+      return;
+    }
+    refreshBtn.disabled = true;
+    refreshIcon.classList.add('spin');
+    refreshStatus.classList.remove('err');
+    refreshStatus.textContent = 'Refreshing Brent, WTI, and Henry Hub from EIA…';
+
+    var errors = [];
+    var now = new Date();
+    var stamp = now.toLocaleString(undefined, { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' });
+
+    try {
+      var brentRows = await fetchSeries('petroleum/pri/spt', 'RBRTE', key);
+      var latest = brentRows[0], prev = brentRows[1];
+      document.getElementById('val-brent').textContent = fmtMoney(latest.value, 2);
+      document.getElementById('date-brent').textContent = latest.period + ' · live via EIA';
+      if (prev) {
+        var chg = latest.value - prev.value;
+        var el = document.getElementById('chg-brent');
+        el.textContent = pctChange(latest.value, prev.value);
+        el.className = 'p-change ' + (chg >= 0 ? 'up' : 'down');
+      }
+      setTag('tag-brent', 'live', 'Live · EIA');
+    } catch(e) { errors.push(e.message); setTag('tag-brent', 'stale', 'Refresh failed'); }
+
+    try {
+      var wtiRows = await fetchSeries('petroleum/pri/spt', 'RWTC', key);
+      var latestW = wtiRows[0], prevW = wtiRows[1];
+      document.getElementById('val-wti').textContent = fmtMoney(latestW.value, 2);
+      document.getElementById('date-wti').textContent = latestW.period + ' · live via EIA';
+      if (prevW) {
+        var chgW = latestW.value - prevW.value;
+        var elW = document.getElementById('chg-wti');
+        elW.textContent = pctChange(latestW.value, prevW.value);
+        elW.className = 'p-change ' + (chgW >= 0 ? 'up' : 'down');
+      }
+      setTag('tag-wti', 'live', 'Live · EIA');
+    } catch(e) { errors.push(e.message); setTag('tag-wti', 'stale', 'Refresh failed'); }
+
+    try {
+      var hhRows = await fetchSeries('natural-gas/pri/fut', 'RNGWHHD', key);
+      var latestH = hhRows[0], prevH = hhRows[1];
+      document.getElementById('val-hh').textContent = fmtMoney(latestH.value, 2);
+      document.getElementById('date-hh').textContent = latestH.period + ' · live via EIA';
+      if (prevH) {
+        var chgH = latestH.value - prevH.value;
+        var elH = document.getElementById('chg-hh');
+        elH.textContent = pctChange(latestH.value, prevH.value);
+        elH.className = 'p-change ' + (chgH >= 0 ? 'up' : 'down');
+      }
+      setTag('tag-hh', 'live', 'Live · EIA');
+    } catch(e) { errors.push(e.message); setTag('tag-hh', 'stale', 'Refresh failed'); }
+
+    refreshBtn.disabled = false;
+    refreshIcon.classList.remove('spin');
+    if (errors.length === 0) {
+      refreshStatus.textContent = 'Live Brent/WTI/Henry Hub refreshed ' + stamp + '. TTF, JKM, rig count, and flow signals remain manual (no free API).';
+      refreshStatus.classList.remove('err');
+    } else {
+      refreshStatus.textContent = 'Refreshed with errors: ' + errors.join(' | ');
+      refreshStatus.classList.add('err');
+    }
+  }
+
+  refreshBtn.addEventListener('click', refreshLiveData);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+name: Update Incident Data
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # 06:00 UTC daily
+  workflow_dispatch:        # allow manual trigger from the Actions tab
+
+permissions:
+  contents: write           # needed to commit the updated JSON
+
+jobs:
+  fetch-and-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      # The fetch script uses only stdlib — no pip install needed.
+      # Add a requirements.txt and uncomment below if you later add dependencies.
+      # - run: pip install -r scripts/requirements.txt
+
+      - name: Fetch new incidents
+        run: python scripts/fetch_incidents.py
+
+      - name: Commit updated data (if changed)
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/incidents.json
+          if git diff --cached --quiet; then
+            echo "No changes — nothing to commit."
+          else
+            git commit -m "chore(data): auto-update incidents $(date -u +%Y-%m-%d)"
+            git push
+          fi

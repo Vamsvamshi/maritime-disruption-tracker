@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maritime Disruption Tracker — Four Chokepoints 2026</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root {
+    --bg: #0b0f14; --panel: #121820; --panel2: #161f2a; --border: #26323f;
+    --text: #e8edf2; --muted: #8fa1b3; --accent: #3fb6ff;
+    --sev1: #2e7d46; --sev2: #8a9a2e; --sev3: #c98a1f; --sev4: #c9541f; --sev5: #b8283f;
+    --r-hormuz: #3fb6ff; --r-redsea: #ff6b6b; --r-black: #aab4be; --r-caspian: #44ddcc;
+    --sidebar-w: 340px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+  #app { display: flex; flex-direction: column; height: 100%; }
+
+  /* ── Header ── */
+  .hdr {
+    flex-shrink: 0; background: var(--panel); border-bottom: 1px solid var(--border);
+    padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px; z-index: 10;
+  }
+  .hdr-title { font-size: 1.05rem; font-weight: 700; color: var(--text); }
+  .hdr-title span { color: var(--accent); }
+  .hdr-stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hdr-stat {
+    background: var(--panel2); border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 12px; font-size: 0.78rem;
+  }
+  .hdr-stat .num { font-weight: 700; color: var(--accent); }
+  .hdr-stat .lbl { color: var(--muted); margin-left: 4px; }
+  .last-updated { font-size: 0.72rem; color: var(--muted); }
+
+  /* ── Body ── */
+  .body { flex: 1; display: flex; min-height: 0; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: var(--sidebar-w); flex-shrink: 0; background: var(--panel);
+    border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden;
+  }
+  .filters { padding: 14px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .filter-label {
+    font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--muted); font-weight: 700; margin-bottom: 8px; display: block;
+  }
+  .region-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-bottom: 12px; }
+  .region-check {
+    display: flex; align-items: center; gap: 6px; cursor: pointer;
+    font-size: 0.8rem; padding: 5px 8px; border-radius: 5px;
+    border: 1px solid var(--border); background: var(--panel2); user-select: none;
+  }
+  .region-check:hover { border-color: var(--accent); }
+  .region-check input { display: none; }
+  .region-check .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .region-check.checked { border-color: var(--accent); background: rgba(63,182,255,0.08); }
+
+  .sev-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .sev-row label { font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
+  .sev-row input[type=range] { flex: 1; accent-color: var(--accent); }
+  .sev-val { font-size: 0.8rem; font-weight: 700; color: var(--text); min-width: 16px; text-align: right; }
+
+  .date-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .date-row input {
+    flex: 1; background: var(--panel2); border: 1px solid var(--border); border-radius: 5px;
+    color: var(--text); padding: 5px 8px; font-size: 0.78rem;
+  }
+  .date-row input:focus { outline: none; border-color: var(--accent); }
+
+  .filter-actions { display: flex; gap: 8px; }
+  .btn-clear {
+    flex: 1; background: transparent; border: 1px solid var(--border); color: var(--muted);
+    font-size: 0.75rem; padding: 6px 10px; border-radius: 5px; cursor: pointer;
+  }
+  .btn-clear:hover { border-color: var(--r-redsea); color: var(--r-redsea); }
+
+  /* ── Legend ── */
+  .legend {
+    padding: 10px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+    display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+  }
+  .legend-label { font-size: 0.68rem; color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.06em; font-weight: 700; margin-right: 4px; }
+  .leg-sev {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.7rem; color: var(--muted);
+  }
+  .leg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── Incident list ── */
+  .list-count { padding: 8px 16px; font-size: 0.75rem; color: var(--muted);
+    border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .list-count b { color: var(--text); }
+  .inc-list { flex: 1; overflow-y: auto; }
+  .inc-item {
+    padding: 11px 16px; border-bottom: 1px solid var(--border); cursor: pointer;
+    transition: background 0.1s;
+  }
+  .inc-item:hover { background: var(--panel2); }
+  .inc-item.active { background: rgba(63,182,255,0.1); border-left: 3px solid var(--accent); }
+  .inc-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
+  .inc-date { font-size: 0.72rem; color: var(--accent); font-weight: 700; }
+  .inc-region {
+    font-size: 0.65rem; font-weight: 700; padding: 1px 6px; border-radius: 10px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .inc-sev-dot { width: 7px; height: 7px; border-radius: 50%; margin-left: auto; flex-shrink: 0; }
+  .inc-title { font-size: 0.8rem; line-height: 1.4; color: var(--text); }
+  .inc-vessel { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  /* ── Map ── */
+  #map { flex: 1; }
+
+  /* ── Leaflet popup overrides ── */
+  .leaflet-popup-content-wrapper {
+    background: var(--panel2); border: 1px solid var(--border);
+    border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); color: var(--text);
+    max-width: 320px;
+  }
+  .leaflet-popup-tip { background: var(--panel2); }
+  .leaflet-popup-content { margin: 14px 16px; font-size: 0.82rem; line-height: 1.5; }
+  .popup-date { font-size: 0.7rem; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  .popup-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .popup-sev {
+    font-size: 0.7rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; color: #fff;
+  }
+  .popup-event { font-weight: 600; margin-bottom: 6px; color: var(--text); }
+  .popup-location { font-size: 0.75rem; color: var(--muted); margin-bottom: 4px; }
+  .popup-vessel { font-size: 0.75rem; color: var(--muted); margin-bottom: 6px; }
+  .popup-impact {
+    font-size: 0.77rem; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 5px; padding: 7px 10px; margin-bottom: 8px; color: var(--text);
+  }
+  .popup-impact b { color: var(--muted); }
+  .popup-fuels { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 8px; }
+  .popup-fuel-tag {
+    font-size: 0.65rem; padding: 2px 7px; border-radius: 10px;
+    background: var(--panel); border: 1px solid var(--border); color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .popup-unverified {
+    font-size: 0.72rem; color: var(--sev3); background: rgba(201,138,31,0.1);
+    border: 1px solid rgba(201,138,31,0.3); border-radius: 4px; padding: 4px 8px; margin-bottom: 6px;
+  }
+  .popup-src {
+    display: block; font-size: 0.72rem; color: var(--accent); text-decoration: none;
+    margin-top: 4px;
+  }
+  .popup-src:hover { text-decoration: underline; }
+
+  /* ── Error / loading ── */
+  .overlay {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    background: var(--panel2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 24px 28px; max-width: 380px; text-align: center; z-index: 1000;
+  }
+  .overlay h2 { font-size: 1rem; margin-bottom: 8px; }
+  .overlay p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .overlay code { background: var(--panel); padding: 2px 6px; border-radius: 3px; font-size: 0.78rem; }
+
+  @media (max-width: 700px) {
+    .body { flex-direction: column; }
+    .sidebar { width: 100%; max-height: 45vh; border-right: none; border-bottom: 1px solid var(--border); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header class="hdr">
+    <div>
+      <div class="hdr-title">Maritime Disruption Tracker — <span>Four Chokepoints</span></div>
+      <div class="last-updated" id="lastUpdated">Loading…</div>
+    </div>
+    <div class="hdr-stats">
+      <div class="hdr-stat"><span class="num" id="stat-total">—</span><span class="lbl">total incidents</span></div>
+      <div class="hdr-stat" style="border-left:3px solid var(--r-hormuz)"><span class="num" id="stat-hormuz">—</span><span class="lbl">Hormuz</span></div>
+      <div class="hdr-stat" style="border-left:3px solid var(--r-redsea)"><span class="num" id="stat-redsea">—</span><span class="lbl">Red Sea</span></div>
+      <div class="hdr-stat" style="border-left:3px solid var(--r-black)"><span class="num" id="stat-blacksea">—</span><span class="lbl">Black Sea</span></div>
+      <div class="hdr-stat" style="border-left:3px solid var(--r-caspian)"><span class="num" id="stat-caspian">—</span><span class="lbl">Caspian</span></div>
+    </div>
+  </header>
+
+  <div class="body">
+    <aside class="sidebar">
+      <div class="filters">
+        <span class="filter-label">Region</span>
+        <div class="region-checks">
+          <label class="region-check checked" data-region="hormuz">
+            <input type="checkbox" checked> <span class="dot" style="background:var(--r-hormuz)"></span> Hormuz
+          </label>
+          <label class="region-check checked" data-region="redsea">
+            <input type="checkbox" checked> <span class="dot" style="background:var(--r-redsea)"></span> Red Sea
+          </label>
+          <label class="region-check checked" data-region="blacksea">
+            <input type="checkbox" checked> <span class="dot" style="background:var(--r-black)"></span> Black Sea
+          </label>
+          <label class="region-check checked" data-region="caspian">
+            <input type="checkbox" checked> <span class="dot" style="background:var(--r-caspian)"></span> Caspian
+          </label>
+        </div>
+
+        <span class="filter-label">Minimum Severity</span>
+        <div class="sev-row">
+          <label>1</label>
+          <input type="range" id="sevSlider" min="1" max="5" value="1" step="1">
+          <label>5</label>
+          <span class="sev-val" id="sevVal">1</span>
+        </div>
+
+        <span class="filter-label">Date Range</span>
+        <div class="date-row">
+          <input type="date" id="dateFrom" placeholder="From" value="2026-02-28">
+          <input type="date" id="dateTo"   placeholder="To">
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn-clear" id="btnClear">Clear filters</button>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span class="legend-label">Severity</span>
+        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev1)"></span>1 Low</span>
+        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev2)"></span>2</span>
+        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev3)"></span>3</span>
+        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev4)"></span>4</span>
+        <span class="leg-sev"><span class="leg-dot" style="background:var(--sev5)"></span>5 Critical</span>
+        <span style="font-size:0.68rem;color:var(--muted);margin-left:4px">· larger = higher severity · border = region</span>
+      </div>
+
+      <div class="list-count" id="listCount">Loading…</div>
+      <div class="inc-list" id="incList"></div>
+    </aside>
+
+    <div id="map"></div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV/XN/WLs=" crossorigin=""></script>
+<script>
+'use strict';
+
+// ── Config ───────────────────────────────────────────────────────────────────
+const DATA_URL = './data/incidents.json';
+
+const SEV_COLOR  = { 1:'#2e7d46', 2:'#8a9a2e', 3:'#c98a1f', 4:'#c9541f', 5:'#b8283f' };
+const SEV_LABEL  = { 1:'Low', 2:'Elevated', 3:'High', 4:'Severe', 5:'Critical' };
+const REG_COLOR  = { hormuz:'#3fb6ff', redsea:'#ff6b6b', blacksea:'#aab4be', caspian:'#44ddcc' };
+const REG_LABEL  = { hormuz:'Hormuz', redsea:'Red Sea', blacksea:'Black Sea', caspian:'Caspian' };
+const REG_BG     = { hormuz:'rgba(63,182,255,0.15)', redsea:'rgba(255,107,107,0.15)',
+                     blacksea:'rgba(170,180,190,0.15)', caspian:'rgba(68,221,204,0.15)' };
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let allIncidents = [];
+let markers   = {};  // id → L.circleMarker
+let listEls   = {};  // id → DOM element
+let activeId  = null;
+let filters   = {
+  regions: new Set(['hormuz','redsea','blacksea','caspian']),
+  minSev: 1,
+  dateFrom: '2026-02-28',
+  dateTo: ''
+};
+
+// ── Map setup ─────────────────────────────────────────────────────────────────
+const map = L.map('map', { zoomControl: true }).setView([33, 47], 4);
+
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  subdomains: 'abcd', maxZoom: 18
+}).addTo(map);
+
+// dismiss active selection on blank map click
+map.on('click', () => deselect());
+
+// ── Data loading ──────────────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const res = await fetch(DATA_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    allIncidents = data.incidents || [];
+
+    // Update header meta
+    const updated = data.meta?.last_updated
+      ? new Date(data.meta.last_updated).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' })
+      : 'unknown';
+    document.getElementById('lastUpdated').textContent = `Data as of ${updated}`;
+
+    // Header counts (all incidents, unfiltered)
+    document.getElementById('stat-total').textContent = allIncidents.length;
+    for (const r of ['hormuz','redsea','blacksea','caspian']) {
+      document.getElementById(`stat-${r}`).textContent =
+        allIncidents.filter(i => i.region === r).length;
+    }
+
+    renderAll();
+  } catch (err) {
+    document.getElementById('listCount').textContent = 'Error loading data';
+    document.getElementById('lastUpdated').textContent = 'Failed to load incidents.json';
+    console.error('Failed to load incidents:', err);
+
+    // Show helpful message on file:// access
+    if (location.protocol === 'file:') {
+      showOverlay('Serve via a web server',
+        'Browsers block <code>fetch()</code> on <code>file://</code> URLs. ' +
+        'Run <code>python -m http.server 8080</code> in this folder and open ' +
+        '<code>http://localhost:8080</code>, or deploy to GitHub Pages.');
+    }
+  }
+}
+
+function showOverlay(title, html) {
+  const el = document.createElement('div');
+  el.className = 'overlay';
+  el.innerHTML = `<h2>${title}</h2><p>${html}</p>`;
+  document.getElementById('map').style.position = 'relative';
+  document.getElementById('map').appendChild(el);
+}
+
+// ── Filter & render ───────────────────────────────────────────────────────────
+function applyFilters() {
+  return allIncidents.filter(inc => {
+    if (!filters.regions.has(inc.region)) return false;
+    if (inc.severity < filters.minSev) return false;
+    if (filters.dateFrom && inc.date < filters.dateFrom) return false;
+    if (filters.dateTo   && inc.date > filters.dateTo)   return false;
+    return true;
+  }).sort((a, b) => a.date < b.date ? -1 : 1);
+}
+
+function renderAll() {
+  const visible = applyFilters();
+  renderMarkers(visible);
+  renderList(visible);
+  document.getElementById('listCount').innerHTML =
+    `<b>${visible.length}</b> of <b>${allIncidents.length}</b> incidents`;
+}
+
+function renderMarkers(incidents) {
+  // remove markers not in current set
+  const visibleIds = new Set(incidents.map(i => i.id));
+  for (const [id, m] of Object.entries(markers)) {
+    if (!visibleIds.has(id)) { map.removeLayer(m); delete markers[id]; }
+  }
+  // add/update
+  for (const inc of incidents) {
+    if (!inc.lat || !inc.lon) continue;
+    if (markers[inc.id]) continue;  // already on map
+    const radius = 5 + inc.severity * 2.5;
+    const m = L.circleMarker([inc.lat, inc.lon], {
+      radius,
+      fillColor: SEV_COLOR[inc.severity],
+      fillOpacity: 0.85,
+      color: REG_COLOR[inc.region],
+      weight: 2,
+      opacity: 1
+    }).addTo(map);
+    m.bindPopup(buildPopup(inc), { maxWidth: 340, className: 'custom-popup' });
+    m.on('click', e => { L.DomEvent.stopPropagation(e); selectIncident(inc.id, false); });
+    markers[inc.id] = m;
+  }
+}
+
+function renderList(incidents) {
+  const list = document.getElementById('incList');
+  list.innerHTML = '';
+  listEls = {};
+  for (const inc of [...incidents].reverse()) {  // newest first
+    const el = document.createElement('div');
+    el.className = 'inc-item' + (inc.id === activeId ? ' active' : '');
+    el.innerHTML = `
+      <div class="inc-meta">
+        <span class="inc-date">${inc.date}</span>
+        <span class="inc-region" style="background:${REG_BG[inc.region]};color:${REG_COLOR[inc.region]};border:1px solid ${REG_COLOR[inc.region]}40">${REG_LABEL[inc.region]}</span>
+        <span class="inc-sev-dot" style="background:${SEV_COLOR[inc.severity]}" title="Severity ${inc.severity}: ${SEV_LABEL[inc.severity]}"></span>
+      </div>
+      <div class="inc-title">${inc.event.length > 90 ? inc.event.slice(0,90) + '…' : inc.event}</div>
+      ${inc.vessel ? `<div class="inc-vessel">${inc.vessel}</div>` : ''}
+    `;
+    el.addEventListener('click', () => selectIncident(inc.id, true));
+    list.appendChild(el);
+    listEls[inc.id] = el;
+  }
+}
+
+// ── Selection ─────────────────────────────────────────────────────────────────
+function selectIncident(id, panFromList) {
+  deselect();
+  activeId = id;
+  const inc = allIncidents.find(i => i.id === id);
+  if (!inc) return;
+
+  // highlight list item
+  if (listEls[id]) {
+    listEls[id].classList.add('active');
+    listEls[id].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // open/pan marker
+  const m = markers[id];
+  if (m) {
+    if (panFromList) map.setView(m.getLatLng(), Math.max(map.getZoom(), 6), { animate: true });
+    m.openPopup();
+  }
+}
+
+function deselect() {
+  if (activeId && listEls[activeId]) listEls[activeId].classList.remove('active');
+  activeId = null;
+}
+
+// ── Popup HTML ────────────────────────────────────────────────────────────────
+function buildPopup(inc) {
+  const fuelTags = (inc.fuel_type || [])
+    .map(f => `<span class="popup-fuel-tag">${f}</span>`).join('');
+  const unverified = inc.verified === false
+    ? '<div class="popup-unverified">⚠ Auto-fetched — pending manual verification</div>' : '';
+  return `
+    <div class="popup-date">${inc.date}</div>
+    <div class="popup-head">
+      <span class="popup-sev" style="background:${SEV_COLOR[inc.severity]}">${inc.severity} · ${SEV_LABEL[inc.severity]}</span>
+      <span style="font-size:0.72rem;color:${REG_COLOR[inc.region]};font-weight:700">${REG_LABEL[inc.region]}</span>
+    </div>
+    <div class="popup-event">${inc.event}</div>
+    <div class="popup-location">📍 ${inc.location}</div>
+    ${inc.vessel ? `<div class="popup-vessel">🚢 ${inc.vessel}</div>` : ''}
+    <div class="popup-impact"><b>Flow impact:</b><br>${inc.flow_impact}</div>
+    ${fuelTags ? `<div class="popup-fuels">${fuelTags}</div>` : ''}
+    ${unverified}
+    <a class="popup-src" href="${inc.source_url}" target="_blank" rel="noopener noreferrer">↗ ${inc.source_label}</a>
+  `;
+}
+
+// ── Filter controls ───────────────────────────────────────────────────────────
+document.querySelectorAll('.region-check').forEach(label => {
+  label.addEventListener('click', e => {
+    e.preventDefault();
+    const region = label.dataset.region;
+    const cb = label.querySelector('input');
+    cb.checked = !cb.checked;
+    label.classList.toggle('checked', cb.checked);
+    if (cb.checked) filters.regions.add(region);
+    else            filters.regions.delete(region);
+    renderAll();
+  });
+});
+
+const sevSlider = document.getElementById('sevSlider');
+const sevVal    = document.getElementById('sevVal');
+sevSlider.addEventListener('input', () => {
+  filters.minSev = parseInt(sevSlider.value, 10);
+  sevVal.textContent = sevSlider.value;
+  renderAll();
+});
+
+document.getElementById('dateFrom').addEventListener('change', e => {
+  filters.dateFrom = e.target.value;
+  renderAll();
+});
+document.getElementById('dateTo').addEventListener('change', e => {
+  filters.dateTo = e.target.value;
+  renderAll();
+});
+
+document.getElementById('btnClear').addEventListener('click', () => {
+  filters = { regions: new Set(['hormuz','redsea','blacksea','caspian']), minSev: 1, dateFrom: '2026-02-28', dateTo: '' };
+  sevSlider.value = 1; sevVal.textContent = '1';
+  document.getElementById('dateFrom').value = '2026-02-28';
+  document.getElementById('dateTo').value   = '';
+  document.querySelectorAll('.region-check').forEach(l => {
+    l.querySelector('input').checked = true;
+    l.classList.add('checked');
+  });
+  renderAll();
+});
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+loadData();
+</script>
+</body>
+</html>

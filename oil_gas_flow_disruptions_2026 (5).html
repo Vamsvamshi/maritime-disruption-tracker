@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Oil & Gas Flow Disruptions — Red Sea, Black Sea, Caspian Sea, Persian Gulf (2026)</title>
+<style>
+  :root{
+    --bg:#0b0f14; --panel:#121820; --panel2:#161f2a; --border:#26323f;
+    --text:#e8edf2; --muted:#8fa1b3; --accent:#3fb6ff;
+    --sev1:#2e7d46; --sev2:#8a9a2e; --sev3:#c98a1f; --sev4:#c9541f; --sev5:#b8283f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px;}
+  h1{font-size:1.7rem;margin:0 0 6px;}
+  .subtitle{color:var(--muted);font-size:0.95rem;margin-bottom:22px;}
+  .caveat{
+    background:var(--panel2);border:1px solid var(--border);border-left:4px solid var(--accent);
+    border-radius:6px;padding:12px 16px;font-size:0.88rem;color:var(--muted);margin-bottom:28px;
+  }
+  .caveat b{color:var(--text);}
+  nav{
+    display:flex;gap:8px;flex-wrap:wrap;margin-bottom:30px;position:sticky;top:0;
+    background:var(--bg);padding:10px 0;z-index:5;border-bottom:1px solid var(--border);
+  }
+  nav a{
+    color:var(--text);background:var(--panel);border:1px solid var(--border);
+    padding:7px 14px;border-radius:20px;text-decoration:none;font-size:0.85rem;
+  }
+  nav a:hover{border-color:var(--accent);color:var(--accent);}
+  section{margin-bottom:52px;}
+  .region-head{
+    display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:10px;
+    border-bottom:2px solid var(--border);padding-bottom:10px;margin-bottom:14px;
+  }
+  h2{font-size:1.35rem;margin:0;}
+  .stat-row{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
+  .stat{
+    background:var(--panel);border:1px solid var(--border);border-radius:8px;
+    padding:10px 14px;min-width:150px;
+  }
+  .stat .num{font-size:1.25rem;font-weight:700;color:var(--accent);}
+  .stat .lbl{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.03em;}
+  table{
+    width:100%;border-collapse:collapse;background:var(--panel);
+    border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:0.86rem;
+  }
+  thead th{
+    background:var(--panel2);color:var(--muted);text-align:left;padding:10px 12px;
+    font-size:0.72rem;text-transform:uppercase;letter-spacing:0.04em;border-bottom:1px solid var(--border);
+  }
+  tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+  tbody tr:hover{background:var(--panel2);}
+  tbody tr:last-child td{border-bottom:none;}
+  td.date{white-space:nowrap;color:var(--accent);font-weight:600;}
+  .sev{
+    display:inline-block;min-width:64px;text-align:center;border-radius:5px;
+    padding:3px 8px;font-size:0.75rem;font-weight:700;color:#fff;
+  }
+  .sev1{background:var(--sev1);} .sev2{background:var(--sev2);}
+  .sev3{background:var(--sev3);} .sev4{background:var(--sev4);} .sev5{background:var(--sev5);}
+  a.src{color:var(--accent);text-decoration:none;font-size:0.8rem;}
+  a.src:hover{text-decoration:underline;}
+  .legend{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 20px;font-size:0.8rem;color:var(--muted);align-items:center;}
+  .legend span.sev{margin-right:4px;}
+  .note{font-size:0.8rem;color:var(--muted);margin-top:10px;}
+  footer{border-top:1px solid var(--border);padding-top:18px;color:var(--muted);font-size:0.8rem;}
+  .backtotop{font-size:0.78rem;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Oil &amp; Gas Flow Disruption Tracker — Four Maritime Chokepoints</h1>
+  <div class="subtitle">Red Sea &amp; Bab el-Mandeb · Persian Gulf &amp; Strait of Hormuz · Black Sea &amp; Sea of Azov · Caspian Sea (via CPC/Novorossiysk)</div>
+
+  <div class="caveat">
+    <b>Scope:</b> This tracker covers <b>28 February 2026 (start of the US–Israel–Iran war) to present (27 July 2026)</b> only.
+    Earlier incidents (e.g. the original 2023–2025 Houthi campaign, pre-war CPC strikes) are excluded to keep focus on the current five-month window.
+    Every row is sourced to a specific news report, wire factbox, or industry tracker — click "source" to verify or check for updates.
+    Casualty/vessel counts vary between outlets and often get revised. This is a live conflict situation and figures change daily;
+    treat this as a structured summary of public reporting, not a real-time feed. Figures on casualties are presented factually, without embellishment.
+  </div>
+
+  <nav>
+    <a href="#summary">⚡ Summary</a>
+    <a href="#redsea">🔴 Red Sea</a>
+    <a href="#hormuz">🛢️ Persian Gulf / Hormuz</a>
+    <a href="#blacksea">⚫ Black Sea / Sea of Azov</a>
+    <a href="#caspian">🟦 Caspian Sea / CPC</a>
+    <a href="#compare">📊 Cross-Region Comparison</a>
+  </nav>
+
+  <div class="legend">
+    <b>Intensity scale:</b>
+    <span class="sev sev1">1 · Low</span>
+    <span class="sev sev2">2 · Elevated</span>
+    <span class="sev sev3">3 · High</span>
+    <span class="sev sev4">4 · Severe</span>
+    <span class="sev sev5">5 · Critical</span>
+  </div>
+
+  <!-- ================= SUMMARY ================= -->
+  <section id="summary">
+    <div class="region-head"><h2>⚡ Summary — At a Glance (28 Feb – 27 Jul 2026)</h2></div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">~45%</div><div class="lbl">of world oil trade transits the 4 chokepoints combined</div></div>
+      <div class="stat"><div class="num">$100+</div><div class="lbl">Brent, briefly, week of Jul 20 2026</div></div>
+      <div class="stat"><div class="num">4</div><div class="lbl">regions simultaneously disrupted — unprecedented overlap</div></div>
+      <div class="stat"><div class="num">190+</div><div class="lbl">total vessels attacked/struck across all 4 regions</div></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Region</th>
+          <th># Vessel Attacks</th>
+          <th>Capacity Impacted, by Fuel Type</th>
+          <th>% of Regular Traffic Disrupted</th>
+          <th>Intensity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>🛢️ Persian Gulf / Hormuz</b></td>
+          <td><b>~20+ vessels</b><br><span class="note" style="margin:0;">17 damaged (7 abandoned) · 1 tugboat sunk · 2 tankers captured · 12 seafarers killed/missing</span></td>
+          <td><b>Crude oil:</b> ~18–20 mbd normally transits (20–25% of world seaborne oil); ~10 mbd shut in at peak (Mar 2026)<br><b>LNG:</b> ~20% of world LNG at risk; Qatar's Ras Laffan (world's largest gas plant) directly struck Mar 19</td>
+          <td><b>Up to 90%</b> of typical tanker traffic at peak disruption (Mar 2026), per maritime risk analysts; partial rebound after Jun 17 MOU, then renewed sharp drop after Jul 6 attacks resumed</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+        </tr>
+        <tr>
+          <td><b>🔴 Red Sea / Bab el-Mandeb</b></td>
+          <td><b>2 vessels</b><br><span class="note" style="margin:0;">2 Saudi oil tankers struck Jul 23, one set ablaze — first shipping attacks of this war-period window</span></td>
+          <td><b>Crude oil:</b> ~10% of world oil normally transits Bab el-Mandeb; this was specifically Saudi Arabia's <b>workaround route</b> while Hormuz was disrupted</td>
+          <td><b>Effectively impassable</b> for Saudi crude shipments per analysts — Houthis declared a formal naval blockade on Saudi-linked tankers same day</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+        </tr>
+        <tr>
+          <td><b>⚫ Black Sea / Sea of Azov</b></td>
+          <td><b>150+ vessels</b><br><span class="note" style="margin:0;">incl. 22+ oil tankers, 3+ gas carriers, dry cargo &amp; tugs in named strikes since Jul 14; 105+ in one 8-day Azov window</span></td>
+          <td><b>Crude oil &amp; refined products:</b> Russian shadow-fleet tankers plus CPC-loading vessels (Kazakh crude)<br><b>Gas:</b> multiple gas carriers hit alongside oil tankers<br><b>Grain</b> (non-energy but same chokepoint): ~25% of Russian exports routed via Azov, now restricted</td>
+          <td>Sea of Azov shipping <b>formally restricted</b> by Russia since mid-Jul; Black Sea campaign newly expanding from Azov — % of normal Black Sea flow affected not yet quantified by trackers</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+        </tr>
+        <tr>
+          <td><b>🟦 Caspian Sea (via CPC)</b></td>
+          <td><b>5+ tanker attacks</b><br><span class="note" style="margin:0;">4 distinct tankers hit in 4 consecutive days (Jul 19–21) while loading/approaching CPC's Novorossiysk terminal</span></td>
+          <td><b>Crude oil only:</b> ~1.5 million bpd of Kazakh + Russian crude (≈1% of global oil supply); 80% of Kazakhstan's total export capacity runs through this single pipeline</td>
+          <td>Loading <b>suspended entirely</b> multiple times in one week (100% halt during each suspension window); partial rerouting via BTC/Middle Corridor absorbs only a fraction of volume</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">Figures above are aggregated from the sourced rows in each detailed table below — see those sections for date-by-date breakdowns and citations. "% of regular traffic disrupted" is reported unevenly across regions (some outlets give hard percentages, others only describe suspensions or blockades qualitatively), so treat these as best-available estimates, not a standardized metric.</div>
+    <div class="note">The headline story of this window: for the first time, all four chokepoints are disrupted <b>simultaneously</b>. Historically a Red Sea or Black Sea incident alone nudged Brent 1–4%; this overlap pushed it above $100/bbl in July 2026.</div>
+  </section>
+
+  <!-- ================= RED SEA ================= -->
+  <section id="redsea">
+    <div class="region-head">
+      <h2>🔴 Red Sea &amp; Bab el-Mandeb Strait</h2>
+      <span class="note">Houthi (Yemen) threats resume in parallel with the Iran war, then strike shipping again on 23 Jul 2026</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">~10%</div><div class="lbl">of world oil normally via Bab el-Mandeb</div></div>
+      <div class="stat"><div class="num">2</div><div class="lbl">Saudi tankers hit, July 23 2026</div></div>
+      <div class="stat"><div class="num">Cape route</div><div class="lbl">main workaround (+10–14 days transit)</div></div>
+      <div class="stat"><div class="num">6.96%</div><div class="lbl">Brent jump on day of Jul 23 attack</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Date</th><th>Event</th><th>Ships / Infrastructure</th><th>Flow &amp; Capacity Impact</th><th>Intensity</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="date">28 Feb 2026</td>
+          <td>US–Israel war on Iran begins. Houthis resume attacks on Israel in solidarity; Red Sea threat reactivated.</td>
+          <td>—</td>
+          <td>Shippers grow wary of Red Sea approach as Gulf war escalates in parallel.</td>
+          <td><span class="sev sev3">3 · High</span></td>
+          <td><a class="src" href="https://www.securitycouncilreport.org/monthly-forecast/2026-07/the-red-sea.php" target="_blank">UN SCR ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">8–9 Jun 2026</td>
+          <td>Houthis threaten to resume targeting Israeli-linked ships; IRGC Quds Force commander issues supporting warning.</td>
+          <td>—</td>
+          <td>Insurance premiums for Red Sea transits begin climbing again on threat alone.</td>
+          <td><span class="sev sev2">2 · Elevated</span></td>
+          <td><a class="src" href="https://www.securitycouncilreport.org/monthly-forecast/2026-07/the-red-sea.php" target="_blank">UN SCR ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">23 Jul 2026</td>
+          <td>Houthis claim first commercial-ship attack in months: strike two Saudi Arabian oil tankers with missiles/drones; declare a naval blockade on Saudi crude shipments via Bab el-Mandeb.</td>
+          <td>2 Saudi oil tankers hit, one set ablaze</td>
+          <td>Critical because Saudi Arabia had been using the Red Sea as its <b>workaround route</b> while Hormuz was disrupted — this closes the backup option simultaneously with the primary one. Brent jumps 6.96% to $100.65/bbl.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://www.bloomberg.com/news/articles/2026-07-23/houthis-open-new-front-in-iran-war-by-targeting-ships-in-red-sea" target="_blank">Bloomberg ↗</a> · <a class="src" href="https://www.aljazeera.com/economy/2026/7/24/as-oil-soars-experts-watch-red-sea-tankers-for-clarity-on-houthi-blockade" target="_blank">Al Jazeera ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">24 Jul 2026</td>
+          <td>Trump warns of "major military punishment" against Iran/Houthis over further Red Sea attacks; threatens "massive attack" on Iran.</td>
+          <td>—</td>
+          <td>Brent eases slightly to below $98 but remains +12% week-on-week as market prices in compounding risk from two chokepoints at once.</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+          <td><a class="src" href="https://tradingeconomics.com/commodity/brent-crude-oil" target="_blank">Trading Economics ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ================= PERSIAN GULF / HORMUZ ================= -->
+  <section id="hormuz">
+    <div class="region-head">
+      <h2>🛢️ Persian Gulf &amp; Strait of Hormuz</h2>
+      <span class="note">2026 Iran War — by far the most severe and sustained disruption of the four</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">~20–25%</div><div class="lbl">of world seaborne oil, pre-war</div></div>
+      <div class="stat"><div class="num">~20%</div><div class="lbl">of world LNG, pre-war</div></div>
+      <div class="stat"><div class="num">17+</div><div class="lbl">merchant ships damaged (7 abandoned)</div></div>
+      <div class="stat"><div class="num">12</div><div class="lbl">seafarers killed or missing</div></div>
+      <div class="stat"><div class="num">1</div><div class="lbl">tugboat sunk; 2 ships captured</div></div>
+      <div class="stat"><div class="num">~10 mbd</div><div class="lbl">Gulf producer output cut at peak (Mar 2026)</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Date</th><th>Vessel / Site</th><th>Location</th><th>What Happened</th><th>Flow/Capacity Impact</th><th>Intensity</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="date">28 Feb 2026</td>
+          <td>War begins</td>
+          <td>Strait-wide</td>
+          <td>US/Israel strike Iran (incl. killing of Supreme Leader Khamenei). Iran declares Strait of Hormuz closed to all foreign shipping; IRGC broadcasts "no ship is allowed to pass."</td>
+          <td>Immediate flight of shipping; many vessels stay in port or reverse course.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_campaign" target="_blank">Wikipedia ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">1 Mar 2026</td>
+          <td>MKD Vyom, Hercules Star, Skylight</td>
+          <td>Off Muscat / Ras Al Khaimah / Kumzar</td>
+          <td>Crude tanker hit by projectile (1 crew killed); bunkering tanker Hercules Star struck (fire); sanctioned tanker Skylight evacuated.</td>
+          <td>3 vessels hit in a single day — signals sustained campaign, not isolated incident.</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">2 Mar 2026</td>
+          <td>Stena Imperative</td>
+          <td>Port of Bahrain</td>
+          <td>US-flagged products tanker struck by two projectiles; fire, crew evacuates.</td>
+          <td>Bahrain port operations disrupted.</td>
+          <td><span class="sev sev3">3 · High</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">3 Mar 2026</td>
+          <td>Libra Trader, Gold Oak</td>
+          <td>Off Fujairah, UAE</td>
+          <td>Crude tanker and bulker sustain minor damage 7–10nm off Fujairah.</td>
+          <td>Fujairah is a key UAE bunkering/storage hub — early warning of terminal risk.</td>
+          <td><span class="sev sev2">2 · Elevated</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">4–6 Mar 2026</td>
+          <td>Safeen Prestige + tugboat</td>
+          <td>Off Oman</td>
+          <td>Container ship hit, engine-room fire, crew abandons ship; tugboat assisting it is hit two days later.</td>
+          <td>Rescue/salvage operations themselves become targets.</td>
+          <td><span class="sev sev3">3 · High</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">5 Mar 2026</td>
+          <td>Sonangol Namibe</td>
+          <td>Khor al-Zubair port, Iraq</td>
+          <td>Crude tanker hit at anchor, allegedly by Iranian remote-controlled explosive boat.</td>
+          <td>First direct hit on Iraqi crude-loading infrastructure.</td>
+          <td><span class="sev sev3">3 · High</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">9 Mar 2026</td>
+          <td>Fujairah Oil Terminal</td>
+          <td>Fujairah, UAE</td>
+          <td>Terminal suspends flows entirely; Brent futures spike intraday toward $120/bbl.</td>
+          <td>~17 million bpd less crude/products departing Persian Gulf that week (S&amp;P Global CERA est.); Kuwait, Iraq begin shut-ins as storage nears capacity.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://www.spglobal.com/energy/en/news-research/latest-news/electric-power/030926-factbox-g7-holds-off-on-oil-stock-release-as-prices-hover-around-100b" target="_blank">S&amp;P Global ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">11 Mar 2026</td>
+          <td>Mayuree Naree, One Majesty, Star Gwyneth, Safesea Vishnu, Zefyros</td>
+          <td>Strait of Hormuz / Iraqi waters</td>
+          <td>5 vessels hit in one day. Safesea Vishnu &amp; Zefyros attack forces <b>complete halt of Iraq's oil ports</b>; a crew body recovered from the water.</td>
+          <td>Iraq's entire seaborne crude export capacity (~3.4 mbd pre-war) offline, even if briefly.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">13 Mar 2026</td>
+          <td>New Supreme Leader statement</td>
+          <td>Strait-wide</td>
+          <td>Iran's new Supreme Leader Mojtaba Khamenei declares the waterway will remain shut; Brent holds above $100.</td>
+          <td>Blockade removes ~20% of global oil trade; Gulf producers cut output by ~10 mbd combined; storage capacity reaches "critical limits."</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://tradingeconomics.com/commodity/brent-crude-oil/news/533397" target="_blank">Trading Economics ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">16 Mar 2026</td>
+          <td>Fujairah (2nd hit in 3 days)</td>
+          <td>Fujairah, UAE</td>
+          <td>Second drone attack on Fujairah in 3 days; loading suspended pending damage assessment. US strikes Iran's Kharg Island oil export hub.</td>
+          <td>IEA coordinates a record 400-million-barrel emergency reserve release.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://tradingeconomics.com/commodity/brent-crude-oil/news/533693" target="_blank">Trading Economics ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">17 Mar 2026</td>
+          <td>Gas Al Ahmadiah (LPG)</td>
+          <td>Off Fujairah</td>
+          <td>Kuwait-flagged LPG tanker struck at anchor, minor structural damage.</td>
+          <td>First direct hit on an LPG (gas) carrier — widens disruption from crude into gas trade.</td>
+          <td><span class="sev sev3">3 · High</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">19 Mar 2026</td>
+          <td>Ras Laffan complex</td>
+          <td>Ras Laffan, Qatar</td>
+          <td>Iranian aerial attacks cause "extensive damage" to Ras Laffan — site of <b>the world's largest gas plant</b> (Qatar's main LNG export hub).</td>
+          <td>Direct threat to global LNG supply, not just oil — Qatar is the world's 2nd/3rd largest LNG exporter.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">30 Mar 2026</td>
+          <td>Al Salmi (Kuwait Petroleum Corp)</td>
+          <td>Off Dubai</td>
+          <td>Fully loaded Kuwaiti crude tanker hit at anchorage; hull damage but no spill.</td>
+          <td>Confirms attacks continuing a full month into the war with no abatement.</td>
+          <td><span class="sev sev3">3 · High</span></td>
+          <td><a class="src" href="https://www.aol.com/articles/factbox-many-ships-attacked-gulf-141322606.html" target="_blank">Reuters Factbox ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">13 Apr – 29 May 2026</td>
+          <td>US naval blockade of Iran</td>
+          <td>Iranian ports</td>
+          <td>US imposes a formal naval blockade on Iranian ports concurrent with continued Strait attacks.</td>
+          <td>Iran continues exporting an estimated ~1.5 mbd covertly despite blockade.</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+          <td><a class="src" href="https://en.wikipedia.org/wiki/2026_Strait_of_Hormuz_crisis" target="_blank">Wikipedia ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">17 Jun 2026</td>
+          <td>US–Iran MOU</td>
+          <td>Diplomatic</td>
+          <td>US and Iran sign a memorandum of understanding for reopening Hormuz; Tehran promises safe passage but lanes aren't clearly defined.</td>
+          <td>Brief traffic rebound as shippers cautiously test the route.</td>
+          <td><span class="sev sev2">2 · Elevated</span></td>
+          <td><a class="src" href="https://www.cnbc.com/2026/07/17/iran-war-oil-tanker-strait-hormuz-traffic-attacks-trump.html" target="_blank">CNBC ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">6–17 Jul 2026</td>
+          <td>Renewed tanker attacks</td>
+          <td>Strait of Hormuz</td>
+          <td>At least 9 ships attacked since July 6 as Iran tries to force vessels into its territorial waters instead of internationally recognized lanes — MOU effectively collapses.</td>
+          <td>Maritime risk firms describe a return to "worst case scenario" for tankers; US launches 6 rounds of retaliatory airstrikes.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://www.cnbc.com/2026/07/17/iran-war-oil-tanker-strait-hormuz-traffic-attacks-trump.html" target="_blank">CNBC ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">15–24 Jul 2026</td>
+          <td>13th consecutive night of US strikes</td>
+          <td>Iran-wide + Strait</td>
+          <td>US strikes Iran for 13 straight nights; hits a tanker attempting to evade the blockade en route to Kharg Island; Iran retaliates against US bases in Bahrain, Kuwait, Jordan.</td>
+          <td>Brent surges toward $100 and briefly above it — nearly +14% on the week — before easing to ~$98.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://tradingeconomics.com/commodity/brent-crude-oil" target="_blank">Trading Economics ↗</a> · <a class="src" href="https://www.npr.org/2026/07/15/nx-s1-5894582/us-iran-updates" target="_blank">NPR ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">Cumulative toll cited by Wikipedia's tracker as of late July 2026: 1 tugboat sunk, 17+ merchant ships damaged (7 abandoned), 2 ships captured, 12 seafarers killed/missing, 1 port worker killed + 2 wounded in Bahrain. Iran also struck Oman-based targets (Port of Duqm, Port of Salalah) and 2 additional tankers off Muscat/Khasab. See <a class="src" href="https://en.wikipedia.org/wiki/2026_Iranian_strikes_on_Oman" target="_blank">Wikipedia: 2026 Iranian strikes on Oman ↗</a>.</div>
+  </section>
+
+  <!-- ================= BLACK SEA ================= -->
+  <section id="blacksea">
+    <div class="region-head">
+      <h2>⚫ Black Sea &amp; Sea of Azov</h2>
+      <span class="note">Ukraine's escalating campaign against Russia's oil "shadow fleet"</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">150+</div><div class="lbl">vessels Ukraine claims struck since war start</div></div>
+      <div class="stat"><div class="num">105+</div><div class="lbl">ships hit in one 8-day Azov window (mid-Jul)</div></div>
+      <div class="stat"><div class="num">~25%</div><div class="lbl">of Russian grain exports routed via Azov</div></div>
+      <div class="stat"><div class="num">4</div><div class="lbl">CPC-loading tankers hit in 4 days (Jul 2026)</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Date</th><th>Vessel(s)</th><th>Location</th><th>What Happened</th><th>Flow/Capacity Impact</th><th>Intensity</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="date">14 Jul 2026</td>
+          <td>15 vessels (single night)</td>
+          <td>Sea of Azov / Taganrog Bay</td>
+          <td>Ukraine strikes 15 ships overnight, bringing its tally to 105+ vessels in an 8-day window.</td>
+          <td>Sustained pressure forces Russia to restrict shipping through Azov, a route carrying ~25% of Russian grain exports.</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+          <td><a class="src" href="https://oilprice.com/Latest-Energy-News/World-News/Ukraine-Intensifies-Attacks-on-Russian-Tankers-in-the-Black-Sea.html" target="_blank">OilPrice.com ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">15 Jul 2026</td>
+          <td>17 tankers + 2 gas carriers + 1 tugboat</td>
+          <td>Sea of Azov → pivot to Black Sea</td>
+          <td>Drone unit commander Robert Brovdi declares "first round of naval battle" over in Azov and announces expansion of the campaign into the Black Sea proper.</td>
+          <td>Campaign broadens from a regional (Azov) to a strategic (Black Sea) oil/gas disruption effort.</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+          <td><a class="src" href="https://www.bloomberg.com/news/articles/2026-07-15/ukraine-says-it-hit-russian-oil-and-gas-tankers-in-the-black-sea" target="_blank">Bloomberg ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">16 Jul 2026</td>
+          <td>11 Russian vessels (incl. 5 oil tankers, 1 gas tanker, 3 dry cargo, 2 tugs)</td>
+          <td>Black Sea / Sea of Azov</td>
+          <td>Coordinated Ukraine-Russia strikes on each other's vessels; Ukraine says it hit 11 Russian vessels while Russia targets a Ukrainian maritime vessel/speedboat.</td>
+          <td>Wheat/grain prices jump globally on shipping-route fears; Azov shipping stays restricted.</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+          <td><a class="src" href="https://www.usnews.com/news/world/articles/2026-07-16/russia-says-it-hits-military-targets-in-kyiv-ukrainian-ports" target="_blank">Reuters/US News ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">19 Jul 2026</td>
+          <td>Asia, Nissos Ios</td>
+          <td>CPC terminal, Novorossiysk</td>
+          <td>Drone strike hits two tankers loading Kazakh crude; fires break out (extinguished); CPC's SPM-1 &amp; SPM-3 moorings reported undamaged; oil loading suspended pending assessment. 5th attack on CPC facilities.</td>
+          <td>Suspends loading of roughly 80% of Kazakhstan's crude export route — ~1% of global oil supply.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://astanatimes.com/2026/07/kazakhstan-warns-drone-attack-on-cpc-oil-tankers-risks-global-energy-security/" target="_blank">Astana Times ↗</a> · <a class="src" href="https://www.bloomberg.com/news/articles/2026-07-19/caspian-pipeline-consortium-halts-loadings-after-drone-strike" target="_blank">Bloomberg ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">20 Jul 2026</td>
+          <td>Nelsa (ex-Fast Kathy)</td>
+          <td>KTK sea terminal, Novorossiysk</td>
+          <td>4th tanker attack in 4 days; Nelsa hit while loading Rosneft Urals crude that originated in Kazakhstan; loading briefly resumed, then suspended again.</td>
+          <td>Kazakhstan formally protests, calling the strikes attacks on "peaceful shipment of US- and Kazakh-owned crude aboard neutral vessels."</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://www.kyivpost.com/post/80776" target="_blank">Kyiv Post ↗</a> · <a class="src" href="https://www.spglobal.com/energy/en/news-research/latest-news/crude-oil/072026-tanker-attacks-at-cpc-disrupt-oil-loading-for-kazakhstan-main-export-route" target="_blank">S&amp;P Global ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">21 Jul 2026</td>
+          <td>Nordic Zenith</td>
+          <td>En route to CPC terminal</td>
+          <td>Empty tanker en route to load Kazakh crude hit by drone; fire extinguished, no casualties. Confirms 4 strikes in 4 days on the CPC supply chain.</td>
+          <td>Deters tankers from even approaching the terminal, compounding the loading suspension.</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+          <td><a class="src" href="https://www.euronews.com/2026/07/21/four-drone-strikes-in-four-days-hit-tankers-carrying-kazakhstans-oil" target="_blank">Euronews ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">24 Jul 2026</td>
+          <td>Cumulative tally</td>
+          <td>Black Sea / Sea of Azov</td>
+          <td>Kyiv Post/CNBC report Ukraine has now attacked 150+ tankers, cargo ships and shadow-fleet vessels since the campaign intensified.</td>
+          <td>Oil markets now managing simultaneous disruption on three fronts (Black Sea, Red Sea, Hormuz); Brent +30% for July, briefly above $100.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://www.kyivpost.com/post/80776" target="_blank">Kyiv Post ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ================= CASPIAN SEA ================= -->
+  <section id="caspian">
+    <div class="region-head">
+      <h2>🟦 Caspian Sea (Tengiz/Kashagan → CPC Pipeline)</h2>
+      <span class="note">No reported strikes inside the Caspian itself — disruption is transmitted through the CPC pipeline's Black Sea terminus</span>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="num">80%</div><div class="lbl">of Kazakhstan's crude exports via CPC</div></div>
+      <div class="stat"><div class="num">~1%</div><div class="lbl">of global oil supply carried by CPC</div></div>
+      <div class="stat"><div class="num">1,510 km</div><div class="lbl">pipeline length, Tengiz → Novorossiysk</div></div>
+      <div class="stat"><div class="num">5+</div><div class="lbl">CPC tanker attacks in July 2026 alone</div></div>
+    </div>
+    <table>
+      <thead><tr><th>Date</th><th>Site</th><th>What Happened</th><th>Flow/Capacity Impact</th><th>Intensity</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="date">19–21 Jul 2026</td>
+          <td>CPC terminal — 4 tankers in 4 days</td>
+          <td>See Black Sea table: Asia, Nissos Ios, Nelsa, Nordic Zenith all struck while loading or approaching CPC's Novorossiysk terminal.</td>
+          <td>Kazakhstan activates the Baku–Tbilisi–Ceyhan (BTC) pipeline — the Caspian "Middle Corridor" via Azerbaijan/Georgia/Turkey — as a Russia-bypassing alternative, though it can't fully absorb CPC's volume.</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://cryptobriefing.com/caspian-pipeline-consortium-drone-strike-oil-halt/" target="_blank">CPC/BTC rerouting analysis ↗</a></td>
+        </tr>
+        <tr>
+          <td class="date">23 Jul 2026</td>
+          <td>Cumulative — 5+ CPC attacks in July</td>
+          <td>Moscow Times/Reuters confirm at least 5 tankers attacked at the CPC terminal in July alone; Kazakhstan cuts oil production again in response.</td>
+          <td>Analysts flag Kazakhstan's near-total dependence on a single export artery running through an active war zone as an "undeniable strategic vulnerability."</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+          <td><a class="src" href="https://www.themoscowtimes.com/2026/07/23/kazakhstan-cuts-oil-production-following-drone-strikes-on-black-sea-tankers-a93325" target="_blank">Moscow Times ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">Note: because Kazakhstan's Caspian production is landlocked, disruption to Caspian-sourced oil doesn't happen "in" the Caspian Sea — it happens at the CPC pipeline's Black Sea outlet at Novorossiysk. That's why this table overlaps heavily with the Black Sea section above.</div>
+  </section>
+
+  <!-- ================= COMPARISON ================= -->
+  <section id="compare">
+    <div class="region-head"><h2>📊 Cross-Region Comparison (as of 27 Jul 2026)</h2></div>
+    <table>
+      <thead><tr><th>Region</th><th>Share of Global Flow at Risk</th><th>Primary Actor(s)</th><th>Current Status</th><th>Storage/Rerouting Response</th><th>Overall Intensity</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Persian Gulf / Hormuz</b></td>
+          <td>~20–25% oil, ~20% LNG (pre-war)</td>
+          <td>Iran (IRGC) vs. US/Israel/Gulf states</td>
+          <td>Active war since Feb 2026; MOU collapsed; attacks resumed July 2026</td>
+          <td>400M-barrel IEA reserve release; shut-ins at peak; some rerouting to Red Sea (now also disrupted)</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+        </tr>
+        <tr>
+          <td><b>Red Sea / Bab el-Mandeb</b></td>
+          <td>~10% oil</td>
+          <td>Houthis (Yemen)</td>
+          <td>Reactivated July 23, 2026 after ~8-month pause; blockade declared on Saudi shipping</td>
+          <td>Cape of Good Hope diversion (+10–14 days); now the "backup" route is also compromised</td>
+          <td><span class="sev sev5">5 · Critical</span></td>
+        </tr>
+        <tr>
+          <td><b>Black Sea / Sea of Azov</b></td>
+          <td>~1% oil (CPC) + significant grain/gas tonnage</td>
+          <td>Ukraine vs. Russia shadow fleet</td>
+          <td>Sharply escalating since mid-Jul 2026; 150+ vessels struck since war start; campaign expanding from Azov into open Black Sea</td>
+          <td>BTC pipeline (Middle Corridor) partial rerouting; repeated CPC mooring suspensions</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+        </tr>
+        <tr>
+          <td><b>Caspian Sea</b></td>
+          <td>~1% oil (via CPC/Novorossiysk)</td>
+          <td>Ukraine (targeting CPC's Black Sea outlet, not the Caspian itself)</td>
+          <td>No direct Caspian strikes; production cuts &amp; export losses transmitted from Black Sea attacks</td>
+          <td>Middle Corridor (Caspian→Azerbaijan→Georgia→Turkey) being scaled up as structural alternative</td>
+          <td><span class="sev sev4">4 · Severe</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note">Ranking reflects both volume exposed and disruption severity, not casualty counts. Hormuz and the Red Sea affect far larger volumes and are experiencing direct kinetic war; the Black Sea/Caspian pairing is a sustained but comparatively narrower (~1–2% of global supply) attritional campaign.</div>
+  </section>
+
+  <footer>
+    Compiled 27 July 2026 from Reuters, Bloomberg, AP, S&amp;P Global, CNBC, Al Jazeera, Euronews, the Astana Times, Moscow Times, Kyiv Post, and Wikipedia's continuously-updated conflict trackers. All figures are as reported by these outlets at time of writing and are subject to revision as the situation develops — click any "source" link above to check for updates.
+  </footer>
+
+</div>
+</body>
+</html>
