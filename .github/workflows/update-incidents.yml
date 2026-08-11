@@ -20,11 +20,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: pip
-
-      # The fetch script uses only stdlib — no pip install needed.
-      # Add a requirements.txt and uncomment below if you later add dependencies.
-      # - run: pip install -r scripts/requirements.txt
+          # no cache: pip — fetch_incidents.py uses only stdlib
 
       - name: Fetch new incidents
         run: python scripts/fetch_incidents.py
