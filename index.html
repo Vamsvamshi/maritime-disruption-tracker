@@ -122,6 +122,66 @@ a{color:var(--dl-blue-dk);}
 .dp-src:hover{text-decoration:underline;}
 /* About */
 .about-view{flex:1;overflow-y:auto;background:var(--dl-bg);padding:40px 20px 80px;}
+/* ── Analytics view ──────────────────────────────────────────────────────── */
+.analytics-view{flex:1;overflow-y:auto;background:var(--dl-bg);padding:24px 20px 80px;}
+.analytics-inner{max-width:1280px;margin:0 auto;}
+.analytics-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
+.analytics-head h1{font-size:1.05rem;font-weight:700;color:var(--dl-dark);}
+.analytics-head .snap{font-size:.72rem;color:var(--dl-gray);background:var(--dl-panel);border:1px solid var(--dl-border);padding:4px 10px;border-radius:4px;}
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
+.ag-wide{grid-column:span 2;}
+.ag-full{grid-column:span 3;}
+.acard{background:var(--dl-panel);border:1px solid var(--dl-border);border-radius:8px;padding:16px 18px;border-top:3px solid var(--dl-green);}
+.acard.amber{border-top-color:var(--dl-gold);}
+.acard.red{border-top-color:var(--dl-red);}
+.acard.blue{border-top-color:var(--dl-blue);}
+.acard.teal{border-top-color:var(--dl-teal);}
+.acard.purple{border-top-color:var(--dl-purple);}
+.acard.dark{border-top-color:var(--dl-dark);}
+.ac-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;gap:8px;}
+.ac-title{font-size:.78rem;font-weight:700;color:var(--dl-dark);text-transform:uppercase;letter-spacing:.06em;}
+.ac-src{font-size:.62rem;color:var(--dl-gray);font-style:italic;text-align:right;flex-shrink:0;}
+/* flow gauge */
+.flow-rows{display:flex;flex-direction:column;gap:10px;}
+.flow-row{display:grid;grid-template-columns:160px 1fr 62px;align-items:center;gap:10px;}
+.flow-name{font-size:.78rem;font-weight:600;color:var(--dl-dark);}
+.flow-track{background:#F0F0EE;border-radius:4px;height:18px;position:relative;overflow:hidden;border:1px solid var(--dl-border);}
+.flow-fill{height:100%;border-radius:4px;transition:width .3s;display:flex;align-items:center;padding-left:6px;}
+.flow-fill span{font-size:.62rem;font-weight:700;color:#fff;white-space:nowrap;}
+.flow-pct{font-size:.82rem;font-weight:700;text-align:right;}
+/* price grid */
+.price-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.pcell{background:var(--dl-bg);border:1px solid var(--dl-border);border-radius:6px;padding:10px 12px;}
+.pcell .pname{font-size:.65rem;color:var(--dl-gray);text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+.pcell .pval{font-size:1.1rem;font-weight:700;color:var(--dl-dark);margin:3px 0 2px;}
+.pcell .pchg{font-size:.7rem;font-weight:700;}
+.pchg.up{color:var(--dl-red);} .pchg.down{color:var(--dl-green);} .pchg.flat{color:var(--dl-gray);}
+/* data rows */
+.drow{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid #F5F5F3;font-size:.8rem;}
+.drow:last-child{border-bottom:none;}
+.drow .dlbl{color:var(--dl-dark);flex:1;}
+.drow .dval{font-weight:700;color:var(--dl-dark);text-align:right;}
+.drow .dtag{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px;color:#fff;white-space:nowrap;}
+/* status badges */
+.s-op{background:#86BC25;} .s-partial{background:#E8B000;} .s-risk{background:#E87722;} .s-closed{background:#C6281C;} .s-damaged{background:#7f1d1d;}
+/* shipping disruptions computed */
+#sd-counts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.sd-kpi{background:var(--dl-bg);border:1px solid var(--dl-border);border-radius:6px;padding:10px 12px;text-align:center;}
+.sd-kpi .knum{font-size:1.4rem;font-weight:700;color:var(--dl-dark);}
+.sd-kpi .klbl{font-size:.65rem;color:var(--dl-gray);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
+/* heatmap */
+.hm-table{width:100%;border-collapse:collapse;font-size:.75rem;}
+.hm-table th{background:var(--dl-dark);color:#fff;padding:8px 10px;text-align:center;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;}
+.hm-table th:first-child{text-align:left;}
+.hm-table td{padding:8px 10px;border:1px solid var(--dl-border);text-align:center;font-weight:700;font-size:.72rem;}
+.hm-table td:first-child{text-align:left;font-weight:600;color:var(--dl-dark);background:var(--dl-bg);}
+.hm-c{background:#fce8e8;color:#7f1d1d;} .hm-h{background:#ffd9be;color:#9a3a00;}
+.hm-m{background:#fff3cd;color:#856404;} .hm-l{background:#e8f5e9;color:#1b5e20;} .hm-n{background:#f5f5f5;color:#888;}
+/* trend spark */
+.trend-line{display:flex;align-items:flex-end;gap:3px;height:28px;margin:4px 0;}
+.tb{width:8px;background:var(--dl-green);border-radius:2px 2px 0 0;}
+@media(max-width:900px){.ag,.ag-wide,.ag-full{grid-column:span 1;}.ag{grid-template-columns:1fr 1fr;}.ag-full{grid-column:span 2;}}
+@media(max-width:600px){.ag{grid-template-columns:1fr;}.ag-wide,.ag-full{grid-column:span 1;}.price-cells{grid-template-columns:repeat(2,1fr);}}
 .about-inner{max-width:900px;margin:0 auto;}
 .about-hero{background:var(--dl-dark);border-radius:10px;padding:36px;margin-bottom:28px;background-image:linear-gradient(135deg,var(--dl-dark) 60%,rgba(134,188,37,.15));}
 .about-hero .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dl-green);margin-bottom:8px;}
@@ -204,6 +264,7 @@ a{color:var(--dl-blue-dk);}
     </div>
     <nav class="hdr-nav">
       <button class="nav-tab active" data-tab="map">&#128506; Map</button>
+      <button class="nav-tab" data-tab="analytics">&#128200; Analytics</button>
       <button class="nav-tab" data-tab="about">&#8505; About</button>
     </nav>
     <div class="hdr-actions">
@@ -282,6 +343,212 @@ a{color:var(--dl-blue-dk);}
     <div id="map"></div>
   </div>
   <div class="view about-view" id="aboutView" hidden>
+  <!-- ── Analytics View ──────────────────────────────────────────────────── -->
+  <div class="view analytics-view" id="analyticsView" hidden>
+    <div class="analytics-inner">
+      <div class="analytics-head">
+        <h1>&#128200; Energy &amp; Shipping Analytics Dashboard</h1>
+        <div class="snap">Snapshot: Aug 11, 2026 &middot; Updated 3&times; daily &middot; Deloitte ER&amp;I</div>
+      </div>
+
+      <!-- Row 1: Vessel Flow (wide) + Shipping Disruptions -->
+      <div class="ag">
+        <div class="acard ag-wide red">
+          <div class="ac-hd"><span class="ac-title">&#127870; Vessel Flow by Chokepoint (% of pre-war capacity)</span><span class="ac-src">UKMTO / Kpler / S&amp;P Global</span></div>
+          <div class="flow-rows">
+            <div class="flow-row">
+              <div class="flow-name">&#127754; Hormuz / Persian Gulf<br><span style="font-size:.65rem;color:var(--dl-gray)">Pre-war: ~130 transits/day</span></div>
+              <div class="flow-track"><div class="flow-fill" style="width:15%;background:#C6281C"><span>15%</span></div></div>
+              <div class="flow-pct" style="color:#C6281C">&lt;25%</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-name">&#128308; Red Sea / Bab-el-Mandeb<br><span style="font-size:.65rem;color:var(--dl-gray)">Pre-war: ~50 tankers/day</span></div>
+              <div class="flow-track"><div class="flow-fill" style="width:10%;background:#C6281C"><span>~10%</span></div></div>
+              <div class="flow-pct" style="color:#C6281C">&lt;25%</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-name">&#9899; Black Sea / Sea of Azov<br><span style="font-size:.65rem;color:var(--dl-gray)">Pre-war: ~40 tankers/day</span></div>
+              <div class="flow-track"><div class="flow-fill" style="width:62%;background:#E87722"><span>~62%</span></div></div>
+              <div class="flow-pct" style="color:#E87722">50&ndash;75%</div>
+            </div>
+            <div class="flow-row">
+              <div class="flow-name">&#128998; Caspian Sea (CPC/Novorossiysk)<br><span style="font-size:.65rem;color:var(--dl-gray)">Pre-war: ~1.5 mbd loaded</span></div>
+              <div class="flow-track"><div class="flow-fill" style="width:38%;background:#E8B000"><span>~38%</span></div></div>
+              <div class="flow-pct" style="color:#E8B000">25&ndash;50%</div>
+            </div>
+          </div>
+        </div>
+        <div class="acard red">
+          <div class="ac-hd"><span class="ac-title">&#128674; Shipping Disruptions</span><span class="ac-src">Computed from incident log</span></div>
+          <div id="sd-counts">
+            <div class="sd-kpi"><div class="knum" id="sd-total">--</div><div class="klbl">Total incidents</div></div>
+            <div class="sd-kpi"><div class="knum" id="sd-maritime">--</div><div class="klbl">Vessel attacks</div></div>
+            <div class="sd-kpi"><div class="knum" id="sd-sev5">--</div><div class="klbl">Critical (Sev 5)</div></div>
+            <div class="sd-kpi"><div class="knum" id="sd-recent">--</div><div class="klbl">Last 30 days</div></div>
+          </div>
+          <div class="drow"><span class="dlbl">Crude oil supply disrupted (peak)</span><span class="dval">~10 mbd</span></div>
+          <div class="drow"><span class="dlbl">LNG capacity at risk</span><span class="dval">~20% global</span></div>
+          <div class="drow"><span class="dlbl">Seafarers stranded</span><span class="dval">~6,000</span></div>
+          <div class="drow"><span class="dlbl">Vessels abandoned</span><span class="dval">7 confirmed</span></div>
+          <div class="drow"><span class="dlbl">Vessels captured</span><span class="dval">2</span></div>
+          <div class="drow"><span class="dlbl">Crew killed / missing</span><span class="dval">12+</span></div>
+        </div>
+      </div>
+
+      <!-- Row 2: Oil Prices (wide) + Shipping Rates -->
+      <div class="ag">
+        <div class="acard ag-wide amber">
+          <div class="ac-hd"><span class="ac-title">&#128178; Oil Prices &amp; Spreads</span><span class="ac-src">ICE / CME / EIA &mdash; Aug 10, 2026</span></div>
+          <div class="price-cells">
+            <div class="pcell"><div class="pname">Brent Crude</div><div class="pval">$96.40<small style="font-size:.65rem;font-weight:400">/bbl</small></div><div class="pchg up">&#9650; -32% vs Apr peak ($112)</div></div>
+            <div class="pcell"><div class="pname">WTI Crude</div><div class="pval">$91.60<small style="font-size:.65rem;font-weight:400">/bbl</small></div><div class="pchg flat">Brent-WTI spread: $4.80</div></div>
+            <div class="pcell"><div class="pname">Oman Crude</div><div class="pval">$95.80<small style="font-size:.65rem;font-weight:400">/bbl</small></div><div class="pchg flat">Gulf premium: +$0.60 vs Brent</div></div>
+            <div class="pcell"><div class="pname">Arab Light (Saudi OSP)</div><div class="pval">$96.10<small style="font-size:.65rem;font-weight:400">/bbl</small></div><div class="pchg flat">+$1.20 vs Brent</div></div>
+            <div class="pcell"><div class="pname">TTF (European gas)</div><div class="pval">$13.66<small style="font-size:.65rem;font-weight:400">/MMBtu</small></div><div class="pchg up">&#9650; Highest since Jun 2026</div></div>
+            <div class="pcell"><div class="pname">JKM (Asia LNG)</div><div class="pval">$16.58<small style="font-size:.65rem;font-weight:400">/MMBtu</small></div><div class="pchg up">&#9650; +26% YoY; +$13.57 vs HH</div></div>
+          </div>
+          <div style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;">
+            <div style="font-size:.72rem;color:var(--dl-gray)">Dubai: <strong>$95.40</strong> &middot; Urals (CIF): <strong>~$78 (discounted)</strong> &middot; Henry Hub: <strong>$3.01/MMBtu</strong> &middot; Brent 1-yr fwd: <strong>$88.20</strong></div>
+          </div>
+        </div>
+        <div class="acard amber">
+          <div class="ac-hd"><span class="ac-title">&#9196; Shipping Rates</span><span class="ac-src">Baltic Exchange / Clarksons</span></div>
+          <div class="drow"><span class="dlbl">VLCC ME Gulf&ndash;China (TD3C)</span><span class="dval">$85,000<span class="dtag s-closed">+240%</span></span></div>
+          <div class="drow"><span class="dlbl">Suezmax ME&ndash;Med (Cape)</span><span class="dval">$72,000<span class="dtag s-risk">+195%</span></span></div>
+          <div class="drow"><span class="dlbl">Aframax N.Sea&ndash;NW Eur</span><span class="dval">$45,000<span class="dtag s-partial">+85%</span></span></div>
+          <div class="drow"><span class="dlbl">MR Tanker AG&ndash;Japan</span><span class="dval">$48,000<span class="dtag s-risk">+160%</span></span></div>
+          <div class="drow"><span class="dlbl">LNG carrier ME&ndash;NE Asia</span><span class="dval">$180,000<span class="dtag s-closed">+380%</span></span></div>
+          <div class="drow"><span class="dlbl">LPG VLGC ME&ndash;Japan</span><span class="dval">$125,000<span class="dtag s-closed">+310%</span></span></div>
+          <div style="font-size:.66rem;color:var(--dl-gray);margin-top:8px;">All rates USD/day. % vs pre-war (Jan 2026).</div>
+        </div>
+      </div>
+
+      <!-- Row 3: Bypass Pipelines + Key Ports + LNG Terminals -->
+      <div class="ag">
+        <div class="acard blue">
+          <div class="ac-hd"><span class="ac-title">&#128737; Bypass Pipeline Capacity</span><span class="ac-src">Operator reports / IEA</span></div>
+          <div class="drow"><span class="dlbl">Saudi East&ndash;West Pipeline (EWP)</span><span class="dval">5.0 mbd<span class="dtag s-op">ACTIVE</span></span></div>
+          <div class="drow"><span class="dlbl">BTC (Azerbaijan&ndash;Turkey, Ceyhan)</span><span class="dval">1.2 mbd<span class="dtag s-op">ACTIVE</span></span></div>
+          <div class="drow"><span class="dlbl">SUMED Pipeline (Egypt)</span><span class="dval">3.1 mbd<span class="dtag s-op">ACTIVE</span></span></div>
+          <div class="drow"><span class="dlbl">Iraq&ndash;Turkey (Ceyhan) restart</span><span class="dval">~0.35 mbd<span class="dtag s-partial">PARTIAL</span></span></div>
+          <div class="drow"><span class="dlbl">Cape of Good Hope (sea detour)</span><span class="dval">Unlimited<span class="dtag s-partial">+14 days</span></span></div>
+          <div class="drow" style="flex-direction:column;align-items:flex-start;gap:3px;"><span class="dlbl" style="font-weight:700">Total active bypass: ~9.65 mbd</span><span style="font-size:.67rem;color:var(--dl-gray)">vs ~20 mbd pre-war Hormuz flow — 48% substitution</span></div>
+        </div>
+        <div class="acard blue">
+          <div class="ac-hd"><span class="ac-title">&#9875; Key Port Status</span><span class="ac-src">UKMTO / Lloyd&rsquo;s / Port operators</span></div>
+          <div class="drow"><span class="dlbl">Fujairah (UAE &mdash; key hub)</span><span class="dval"><span class="dtag s-partial">RESTRICTED</span></span></div>
+          <div class="drow"><span class="dlbl">Ras Laffan (Qatar &mdash; LNG)</span><span class="dval"><span class="dtag s-partial">60% CAPACITY</span></span></div>
+          <div class="drow"><span class="dlbl">Khor al-Zubair (Iraq)</span><span class="dval"><span class="dtag s-risk">INTERMITTENT</span></span></div>
+          <div class="drow"><span class="dlbl">Bandar Abbas (Iran)</span><span class="dval"><span class="dtag s-closed">CLOSED</span></span></div>
+          <div class="drow"><span class="dlbl">Novorossiysk (Russia &mdash; CPC)</span><span class="dval"><span class="dtag s-risk">HIGH RISK</span></span></div>
+          <div class="drow"><span class="dlbl">Salalah (Oman)</span><span class="dval"><span class="dtag s-partial">OPERATIONAL*</span></span></div>
+          <div class="drow"><span class="dlbl">Jeddah / Yanbu (Saudi)</span><span class="dval"><span class="dtag s-partial">OPERATIONAL*</span></span></div>
+          <div class="drow"><span class="dlbl">Abadan (Iran &mdash; refinery)</span><span class="dval"><span class="dtag s-damaged">DAMAGED</span></span></div>
+          <div style="font-size:.65rem;color:var(--dl-gray);margin-top:6px;">* = operational but under elevated threat</div>
+        </div>
+        <div class="acard teal">
+          <div class="ac-hd"><span class="ac-title">&#128293; LNG Terminal Status</span><span class="ac-src">IEA / GasWorld / operator disclosures</span></div>
+          <div style="font-size:.68rem;font-weight:700;color:var(--dl-gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Export Terminals</div>
+          <div class="drow"><span class="dlbl">Ras Laffan, Qatar</span><span class="dval"><span class="dtag s-partial">60%</span></span></div>
+          <div class="drow"><span class="dlbl">Das Island (ADGAS), UAE</span><span class="dval"><span class="dtag s-risk">AT RISK</span></span></div>
+          <div class="drow"><span class="dlbl">South Pars, Iran</span><span class="dval"><span class="dtag s-closed">SHUT DOWN</span></span></div>
+          <div class="drow"><span class="dlbl">Sohar LNG, Oman</span><span class="dval"><span class="dtag s-op">OPERATIONAL</span></span></div>
+          <div class="drow"><span class="dlbl">Freeport LNG, US</span><span class="dval"><span class="dtag s-partial">MAINT.</span></span></div>
+          <div class="drow"><span class="dlbl">Sabine Pass / Corpus Christi, US</span><span class="dval"><span class="dtag s-op">FULL</span></span></div>
+          <div style="font-size:.68rem;font-weight:700;color:var(--dl-gray);margin:8px 0 4px;text-transform:uppercase;letter-spacing:.06em">Receiving (Import) Terminals</div>
+          <div class="drow"><span class="dlbl">NW Europe (Rotterdam, Zeebrugge)</span><span class="dval"><span class="dtag s-op">FULL</span></span></div>
+          <div class="drow"><span class="dlbl">NE Asia (Japan, Korea, China)</span><span class="dval"><span class="dtag s-op">FULL</span></span></div>
+        </div>
+      </div>
+
+      <!-- Row 4: Storage + Transit Fees + Insurance -->
+      <div class="ag">
+        <div class="acard dark">
+          <div class="ac-hd"><span class="ac-title">&#127983; Storage Volumes</span><span class="ac-src">IEA / EIA / Bloomberg</span></div>
+          <div class="drow"><span class="dlbl">US SPR (Strategic Petroleum Reserve)</span><span class="dval">~330M bbl<span class="dtag s-risk">-45%</span></span></div>
+          <div class="drow"><span class="dlbl">IEA emergency stocks released</span><span class="dval">400M bbl<span class="dtag" style="background:#00A3E0">RECORD</span></span></div>
+          <div class="drow"><span class="dlbl">OECD forward cover</span><span class="dval">~56 days<span class="dtag s-risk">vs 90d target</span></span></div>
+          <div class="drow"><span class="dlbl">Floating storage (global)</span><span class="dval">~180M bbl<span class="dtag s-closed">+157%</span></span></div>
+          <div class="drow"><span class="dlbl">Fujairah onshore storage (UAE)</span><span class="dval">~60M bbl (~60%)</span></div>
+          <div class="drow"><span class="dlbl">European natural gas storage</span><span class="dval">~87% full<span class="dtag s-op">ON TRACK</span></span></div>
+          <div class="drow"><span class="dlbl">Asian LNG strategic reserves</span><span class="dval">Moderate<span class="dtag s-partial">BUILDING</span></span></div>
+        </div>
+        <div class="acard purple">
+          <div class="ac-hd"><span class="ac-title">&#128178; Transit Fees (Speculated)</span><span class="ac-src">Broker estimates / S&amp;P Global Platts</span></div>
+          <div class="drow"><span class="dlbl">Hormuz war-risk premium (vessel)</span><span class="dval">$8&ndash;15/bbl</span></div>
+          <div class="drow"><span class="dlbl">Red Sea surcharge</span><span class="dval">$3&ndash;6/bbl</span></div>
+          <div class="drow"><span class="dlbl">Cape of Good Hope premium</span><span class="dval">$2.50&ndash;4.50/bbl</span></div>
+          <div class="drow"><span class="dlbl">BTC pipeline transit fee</span><span class="dval">$1.20&ndash;2.00/bbl</span></div>
+          <div class="drow"><span class="dlbl">Saudi EWP (pipeline bypass)</span><span class="dval">$0.30&ndash;0.60/bbl</span></div>
+          <div class="drow"><span class="dlbl">SUMED Pipeline</span><span class="dval">$0.40&ndash;0.70/bbl</span></div>
+          <div style="margin-top:10px;padding:8px 10px;background:#f5f0ff;border-left:3px solid var(--dl-purple);border-radius:4px;font-size:.72rem;color:var(--dl-dark);line-height:1.6;">Pre-war Hormuz transit was effectively free (open international waterway). Current war-risk surcharges represent a $8&ndash;15/bbl implicit tariff on ~20% of world oil trade.</div>
+        </div>
+        <div class="acard red">
+          <div class="ac-hd"><span class="ac-title">&#128220; Insurance &amp; Freight</span><span class="ac-src">Lloyd&rsquo;s / BIMCO / Marsh</span></div>
+          <div class="drow"><span class="dlbl">War risk premium (Hormuz/Red Sea)</span><span class="dval">0.75&ndash;1.25%/voyage</span></div>
+          <div class="drow"><span class="dlbl">Pre-war benchmark</span><span class="dval">0.025% <span class="dtag s-closed">&times;40&ndash;50x</span></span></div>
+          <div class="drow"><span class="dlbl">P&amp;I additional call (per vessel)</span><span class="dval">$75,000/call</span></div>
+          <div class="drow"><span class="dlbl">H&amp;M hull surcharge</span><span class="dval">0.25&ndash;0.50% hull</span></div>
+          <div class="drow"><span class="dlbl">Lloyd&rsquo;s JWC extended to</span><span class="dval">Red Sea + N. Arabian Sea</span></div>
+          <div class="drow"><span class="dlbl">Freight rate markup vs pre-war</span><span class="dval">+240&ndash;380% (VLCC)</span></div>
+          <div class="drow"><span class="dlbl">Crew war bonus (per voyage)</span><span class="dval">$5,000&ndash;20,000/person</span></div>
+        </div>
+      </div>
+
+      <!-- Row 5: US Oil & LNG full width -->
+      <div class="ag">
+        <div class="acard ag-full" style="border-top-color:var(--dl-blue)">
+          <div class="ac-hd"><span class="ac-title">&#127482;&#127480; US Oil &amp; LNG Supplies</span><span class="ac-src">EIA &mdash; Aug 2026</span></div>
+          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:12px;">
+            <div class="pcell"><div class="pname">US Crude Production</div><div class="pval">13.3 mbd</div><div class="pchg down">&#9660; Record high</div></div>
+            <div class="pcell"><div class="pname">US Crude Exports</div><div class="pval">5.2 mbd</div><div class="pchg down">Elevated demand</div></div>
+            <div class="pcell"><div class="pname">US LNG Exports</div><div class="pval">14.2 bcf/d</div><div class="pchg down">&#9660; Record high</div></div>
+            <div class="pcell"><div class="pname">SPR Level</div><div class="pval">~330M bbl</div><div class="pchg up">&#9650; -45% from pre-war</div></div>
+            <div class="pcell"><div class="pname">Henry Hub Spot</div><div class="pval">$3.01/MMBtu</div><div class="pchg up">6-wk low; maint. impact</div></div>
+            <div class="pcell"><div class="pname">WTI Cushing Stocks</div><div class="pval">~420M bbl</div><div class="pchg flat">Moderate; SPR draw</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+            <div style="font-size:.78rem;color:var(--dl-dark);line-height:1.7;"><strong style="color:var(--dl-green)">&#9660; LNG Premium to HH:</strong><br>TTF: +$10.65 &middot; JKM: +$13.57/MMBtu<br>Structural pull keeps US LNG cargoes flowing to EU &amp; Asia despite war-risk freight cost</div>
+            <div style="font-size:.78rem;color:var(--dl-dark);line-height:1.7;"><strong style="color:var(--dl-green)">&#9660; Active US LNG Terminals:</strong><br>Sabine Pass (5 trains, full) &middot; Corpus Christi (3 trains, full) &middot; Cameron (3 trains, full) &middot; Freeport (reduced, maintenance)</div>
+            <div style="font-size:.78rem;color:var(--dl-dark);line-height:1.7;"><strong style="color:var(--dl-green)">&#9660; SPR Policy:</strong><br>400M bbl IEA release (record, Apr 2026) &middot; US SPR at 330M bbl (lowest since 1984) &middot; DOE considering refill once Brent below $85</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 6: Client Exposure Heatmap full width -->
+      <div class="ag">
+        <div class="acard ag-full amber">
+          <div class="ac-hd"><span class="ac-title">&#127777; E&amp;C Sector Exposure by Chokepoint</span><span class="ac-src">Deloitte ER&amp;I internal assessment &mdash; Aug 2026</span></div>
+          <div style="font-size:.72rem;color:var(--dl-gray);margin-bottom:10px;">Exposure rating reflects supply chain dependency, contract exposure, and asset proximity. Not client-specific &mdash; sector-level assessment for E&amp;C advisory context.</div>
+          <table class="hm-table">
+            <thead><tr>
+              <th style="min-width:180px">Chokepoint</th>
+              <th>LNG Production<br>&amp; Export</th>
+              <th>Crude Oil<br>E&amp;P</th>
+              <th>Petrochemicals<br>&amp; Refining</th>
+              <th>E&amp;C Project<br>Contractors</th>
+              <th>Power<br>Generation</th>
+              <th>Shipping<br>&amp; Trading</th>
+            </tr></thead>
+            <tbody>
+              <tr><td>&#127754; Hormuz / Persian Gulf</td><td class="hm-c">Critical</td><td class="hm-c">Critical</td><td class="hm-c">Critical</td><td class="hm-h">High</td><td class="hm-h">High</td><td class="hm-c">Critical</td></tr>
+              <tr><td>&#128308; Red Sea / Bab-el-Mandeb</td><td class="hm-h">High</td><td class="hm-h">High</td><td class="hm-m">Medium</td><td class="hm-l">Low</td><td class="hm-m">Medium</td><td class="hm-c">Critical</td></tr>
+              <tr><td>&#9899; Black Sea / Sea of Azov</td><td class="hm-n">Minimal</td><td class="hm-m">Medium</td><td class="hm-m">Medium</td><td class="hm-l">Low</td><td class="hm-l">Low</td><td class="hm-h">High</td></tr>
+              <tr><td>&#128998; Caspian Sea / CPC Route</td><td class="hm-n">Minimal</td><td class="hm-h">High</td><td class="hm-m">Medium</td><td class="hm-m">Medium</td><td class="hm-l">Low</td><td class="hm-m">Medium</td></tr>
+              <tr><td>&#128337; Cumulative / Combined Risk</td><td class="hm-c">Critical</td><td class="hm-c">Critical</td><td class="hm-c">Critical</td><td class="hm-h">High</td><td class="hm-h">High</td><td class="hm-c">Critical</td></tr>
+            </tbody>
+          </table>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:.68rem;color:var(--dl-gray)">
+            <span><span style="display:inline-block;width:10px;height:10px;background:#fce8e8;border:1px solid #c00;border-radius:2px;vertical-align:middle"></span> Critical = direct supply chain dependency; business continuity risk</span>
+            <span><span style="display:inline-block;width:10px;height:10px;background:#ffd9be;border:1px solid #c60;border-radius:2px;vertical-align:middle"></span> High = significant cost/schedule exposure</span>
+            <span><span style="display:inline-block;width:10px;height:10px;background:#fff3cd;border:1px solid #b8a000;border-radius:2px;vertical-align:middle"></span> Medium = indirect or partial exposure</span>
+            <span><span style="display:inline-block;width:10px;height:10px;background:#e8f5e9;border:1px solid #1b5e20;border-radius:2px;vertical-align:middle"></span> Low = manageable or substitutable</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /analyticsView -->
     <div class="about-inner">
       <div class="about-hero">
         <div class="eyebrow">Deloitte Center for Energy, Resources &amp; Industrials</div>
@@ -606,11 +873,26 @@ document.querySelectorAll('.nav-tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
     document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');
     const t=tab.dataset.tab;
-    document.getElementById('mapView').hidden=t!=='map';
-    document.getElementById('aboutView').hidden=t!=='about';
-    if(t==='map')map.invalidateSize();
+    document.getElementById('mapView').hidden       = t!=='map';
+    document.getElementById('analyticsView').hidden = t!=='analytics';
+    document.getElementById('aboutView').hidden     = t!=='about';
+    if(t==='map') map.invalidateSize();
+    if(t==='analytics') updateAnalytics();
   });
 });
+
+function updateAnalytics() {
+  if (!allIncidents.length) return;
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-30);
+  const cutStr  = cutoff.toISOString().slice(0,10);
+  const maritime = allIncidents.filter(i=>(i.category||'maritime')==='maritime');
+  const sev5     = allIncidents.filter(i=>i.severity===5);
+  const recent   = allIncidents.filter(i=>i.date>=cutStr);
+  document.getElementById('sd-total').textContent    = allIncidents.length;
+  document.getElementById('sd-maritime').textContent = maritime.length;
+  document.getElementById('sd-sev5').textContent     = sev5.length;
+  document.getElementById('sd-recent').textContent   = recent.length;
+}
 class ERIBot{
   constructor(){this.key=localStorage.getItem('dl_eri_key')||'';this.hist=[];this.sys='';}
   buildPrompt(incidents){
