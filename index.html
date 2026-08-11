@@ -43,6 +43,20 @@ a{color:var(--dl-blue-dk);}
 .btn-refresh{background:transparent;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.7);font-family:inherit;font-size:.78rem;padding:6px 12px;border-radius:4px;cursor:pointer;}
 .btn-refresh:hover{border-color:var(--dl-green);color:var(--dl-green);}
 .btn-refresh:disabled{opacity:.4;cursor:wait;}
+.btn-settings{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.55);font-family:inherit;font-size:.85rem;padding:5px 9px;border-radius:4px;cursor:pointer;line-height:1;}
+.btn-settings:hover{border-color:var(--dl-green);color:var(--dl-green);}
+.pat-panel{position:fixed;top:calc(var(--top-h) + var(--hdr-h));right:16px;width:340px;background:var(--dl-dark);border:1px solid rgba(255,255,255,.12);border-top:3px solid var(--dl-green);border-radius:0 0 8px 8px;padding:14px 16px;z-index:1500;box-shadow:0 8px 24px rgba(0,0,0,.5);}
+.pat-panel[hidden]{display:none;}
+.pat-panel p{font-size:.75rem;color:rgba(255,255,255,.6);line-height:1.55;margin-bottom:10px;}
+.pat-panel p strong{color:#fff;}
+.pat-panel p code{font-size:.7rem;background:rgba(255,255,255,.1);padding:1px 5px;border-radius:3px;}
+.pat-panel input{width:100%;padding:7px 10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:5px;color:#fff;font-family:inherit;font-size:.78rem;margin-bottom:8px;}
+.pat-panel input:focus{outline:none;border-color:var(--dl-green);}
+.pat-actions{display:flex;gap:6px;}
+.btn-save-pat{flex:1;background:var(--dl-green);color:var(--dl-dark);border:none;font-family:inherit;font-size:.75rem;font-weight:700;padding:7px;border-radius:5px;cursor:pointer;}
+.btn-save-pat:hover{background:var(--dl-green-dk);}
+.btn-clear-pat{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);font-family:inherit;font-size:.75rem;padding:7px 12px;border-radius:5px;cursor:pointer;}
+.pat-note{font-size:.65rem;color:rgba(255,255,255,.35);margin-top:8px;line-height:1.5;}
 .subhdr{height:var(--sub-h);flex-shrink:0;background:var(--dl-dark);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:.72rem;color:rgba(255,255,255,.55);}
 .subhdr strong{color:rgba(255,255,255,.85);}
 .subhdr .badge{background:var(--dl-green);color:var(--dl-dark);font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;}
@@ -194,9 +208,20 @@ a{color:var(--dl-blue-dk);}
     </nav>
     <div class="hdr-actions">
       <button class="btn-chat" id="chatFab">&#128172; ER&amp;I Analyst</button>
-      <button class="btn-refresh" id="refreshBtn">&#8635; Refresh</button>
+      <button class="btn-settings" id="settingsBtn" title="Configure GitHub Actions token">&#9881;</button>
+      <button class="btn-refresh" id="refreshBtn">&#8635; Run &amp; Refresh</button>
     </div>
   </header>
+  <!-- GitHub PAT drop-down panel -->
+  <div class="pat-panel" id="patPanel" hidden>
+    <p>Add a <strong>GitHub Personal Access Token (PAT)</strong> with <code>workflow</code> scope. Clicking <em>Run &amp; Refresh</em> will trigger the GitHub Actions fetch workflow — pulling fresh incidents from 16+ news sources — then reload the map automatically.</p>
+    <input type="password" id="patInput" placeholder="ghp_... paste your PAT here">
+    <div class="pat-actions">
+      <button class="btn-save-pat" id="savePatBtn">Save &amp; connect</button>
+      <button class="btn-clear-pat" id="clearPatBtn">Clear</button>
+    </div>
+    <div class="pat-note">&#128274; Stored only in your browser localStorage &mdash; sent directly to api.github.com, never through any Deloitte server. Create one at <strong style="color:rgba(255,255,255,.6)">github.com/settings/tokens</strong> &rarr; select the <code>workflow</code> scope.</div>
+  </div>
   <div class="subhdr">
     <span>Built by <strong>Deloitte Center for Energy, Resources &amp; Industrials</strong><span class="badge">ER&amp;I</span></span>
     <span style="display:flex;align-items:center;gap:10px;"><span class="live-badge"><span class="live-dot"></span>LIVE</span><span id="lastUpdated">Loading data...</span></span>
@@ -436,9 +461,84 @@ document.getElementById('btnClear').addEventListener('click',()=>{
   document.querySelectorAll('.cat-chip').forEach(b=>b.classList.add('on'));
   renderAll();
 });
-document.getElementById('refreshBtn').addEventListener('click',()=>{
-  const btn=document.getElementById('refreshBtn');btn.disabled=true;btn.textContent='... Refreshing';
-  loadData().finally(()=>{btn.disabled=false;btn.textContent='↻ Refresh';});
+document.getElementById('refreshBtn').addEventListener('click', triggerAndRefresh);
+
+// ── GitHub Actions trigger + poll + reload ────────────────────────────────
+const GH_OWNER = 'Vamsvamshi';
+const GH_REPO  = 'maritime-disruption-tracker';
+const GH_WF    = 'update-incidents.yml';
+const sleep    = ms => new Promise(r => setTimeout(r, ms));
+
+async function triggerAndRefresh() {
+  const pat = localStorage.getItem('dl_gh_pat') || '';
+  if (!pat) { document.getElementById('patPanel').hidden = false; return; }
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true;
+  try {
+    // 1. Dispatch the workflow
+    btn.textContent = '⟳ Triggering…';
+    const ghHeaders = { 'Authorization':`Bearer ${pat}`, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28', 'Content-Type':'application/json' };
+    const tr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${GH_WF}/dispatches`,
+      { method:'POST', headers:ghHeaders, body:JSON.stringify({ref:'main'}) });
+    if (!tr.ok) { const e=await tr.json().catch(()=>({})); throw new Error(e.message||`GitHub ${tr.status}`); }
+    // 2. Wait for run to register, then find its ID
+    btn.textContent = '⟳ Queued…';
+    await sleep(5000);
+    let runId = null;
+    for (let i = 0; i < 10; i++) {
+      const rr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/runs?event=workflow_dispatch&per_page=5`, {headers:ghHeaders});
+      const rd = await rr.json();
+      const run = (rd.workflow_runs||[]).find(r => (Date.now()-new Date(r.created_at))<180000);
+      if (run) { runId = run.id; break; }
+      await sleep(3000);
+    }
+    // 3. Poll until completed (max ~2 min)
+    const start = Date.now();
+    if (runId) {
+      for (let i = 0; i < 24; i++) {
+        await sleep(5000);
+        btn.textContent = `⟳ Running (${Math.round((Date.now()-start)/1000)}s)…`;
+        const sr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/runs/${runId}`, {headers:ghHeaders});
+        const sd = await sr.json();
+        if (sd.status==='completed') { if(sd.conclusion!=='success') throw new Error(`Workflow ${sd.conclusion}`); break; }
+      }
+    } else {
+      // fallback: just wait 45s if we couldn't find the run
+      for (let s=5;s<=45;s+=5) { await sleep(5000); btn.textContent=`⟳ Running (${s}s)…`; }
+    }
+    // 4. Reload fresh data
+    btn.textContent = '⟳ Loading…';
+    await loadData();
+    btn.textContent = '✓ Done!';
+    setTimeout(()=>{ btn.disabled=false; btn.textContent='↻ Run & Refresh'; }, 3000);
+  } catch(err) {
+    btn.disabled = false; btn.textContent = '✗ Error — retry';
+    setTimeout(()=>{ btn.textContent='↻ Run & Refresh'; }, 4000);
+    if (err.message.includes('401')||err.message.includes('Bad credentials')) {
+      localStorage.removeItem('dl_gh_pat');
+      document.getElementById('patPanel').hidden = false;
+    }
+  }
+}
+
+// ── PAT panel controls ────────────────────────────────────────────────────
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  const p = document.getElementById('patPanel');
+  p.hidden = !p.hidden;
+  if (!p.hidden && localStorage.getItem('dl_gh_pat')) document.getElementById('patInput').placeholder='ghp_••••••••••• (saved — paste new to update)';
+});
+document.getElementById('savePatBtn').addEventListener('click', () => {
+  const k = document.getElementById('patInput').value.trim();
+  if (!k) return;
+  localStorage.setItem('dl_gh_pat', k);
+  document.getElementById('patInput').value='';
+  document.getElementById('patInput').placeholder='ghp_••••••••••• (saved)';
+  document.getElementById('patPanel').hidden=true;
+});
+document.getElementById('clearPatBtn').addEventListener('click', () => {
+  localStorage.removeItem('dl_gh_pat');
+  document.getElementById('patInput').value='';
+  document.getElementById('patInput').placeholder='ghp_... paste your PAT here';
 });
 document.querySelectorAll('.nav-tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
