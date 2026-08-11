@@ -214,13 +214,25 @@ a{color:var(--dl-blue-dk);}
   </header>
   <!-- GitHub PAT drop-down panel (admin-only: trigger on-demand fetch) -->
   <div class="pat-panel" id="patPanel" hidden>
-    <p><strong>Admin: Trigger a fresh fetch now</strong><br>Regular users never need this &mdash; data auto-updates 3&times; daily. If you have a GitHub PAT with <code>workflow</code> scope, pasting it here lets you trigger the fetch workflow instantly.</p>
-    <input type="password" id="patInput" placeholder="ghp_... paste your PAT here">
-    <div class="pat-actions">
-      <button class="btn-save-pat" id="savePatBtn">Save &amp; connect</button>
-      <button class="btn-clear-pat" id="clearPatBtn">Clear</button>
+    <!-- shown when PAT is already saved -->
+    <div id="patReadyPane" hidden>
+      <p style="margin-bottom:10px;"><strong>&#9989; Token saved.</strong> Click below to trigger a live fetch from all 16 news sources now.</p>
+      <div class="pat-actions">
+        <button class="btn-save-pat" id="runNowBtn">&#9889; Run fetch &amp; refresh map</button>
+        <button class="btn-clear-pat" id="clearPatBtn">Remove token</button>
+      </div>
     </div>
-    <div class="pat-note">&#128274; Stored only in your browser localStorage &mdash; sent directly to api.github.com, never through any Deloitte server. Create one at <strong style="color:rgba(255,255,255,.6)">github.com/settings/tokens</strong> &rarr; select the <code>workflow</code> scope.</div>
+    <!-- shown when no PAT saved -->
+    <div id="patSetupPane">
+      <p><strong>Admin: trigger a fresh fetch now</strong><br>Regular users never need this &mdash; data auto-updates 3&times; daily. Paste a GitHub PAT with <code>workflow</code> scope below.</p>
+      <input type="password" id="patInput" placeholder="ghp_... paste your token here">
+      <div class="pat-actions">
+        <button class="btn-save-pat" id="savePatBtn">Save &amp; run now</button>
+        <button class="btn-clear-pat" id="cancelPatBtn">Cancel</button>
+      </div>
+    </div>
+    <div id="patError" style="display:none;font-size:.72rem;color:#ff9999;margin-top:8px;padding:6px 8px;background:rgba(198,40,28,.2);border-radius:4px;"></div>
+    <div class="pat-note">&#128274; Token stored only in your browser &mdash; sent directly to api.github.com. Create at <strong style="color:rgba(255,255,255,.6)">github.com/settings/tokens</strong> &rarr; tick <code>workflow</code> scope.</div>
   </div>
   <div class="subhdr">
     <span>Built by <strong>Deloitte Center for Energy, Resources &amp; Industrials</strong><span class="badge">ER&amp;I</span></span>
@@ -470,88 +482,125 @@ document.getElementById('refreshBtn').addEventListener('click', () => {
   });
 });
 
-// ⚙ Trigger — admin only; fires Actions workflow then reloads
-document.getElementById('settingsBtn').addEventListener('click', () => {
-  const p = document.getElementById('patPanel');
-  p.hidden = !p.hidden;
-  if (!p.hidden && localStorage.getItem('dl_gh_pat'))
-    document.getElementById('patInput').placeholder = 'ghp_••••••••••• (saved — paste new to update)';
-});
-
 // ── GitHub Actions trigger + poll + reload ────────────────────────────────
 const GH_OWNER = 'Vamsvamshi';
 const GH_REPO  = 'maritime-disruption-tracker';
 const GH_WF    = 'update-incidents.yml';
 const sleep    = ms => new Promise(r => setTimeout(r, ms));
 
+function showPatError(msg) {
+  const el = document.getElementById('patError');
+  el.textContent = '⚠ ' + msg; el.style.display = 'block';
+}
+function clearPatError() { document.getElementById('patError').style.display = 'none'; }
+
+function refreshPatPanel() {
+  const hasPat = !!localStorage.getItem('dl_gh_pat');
+  document.getElementById('patReadyPane').hidden  = !hasPat;
+  document.getElementById('patSetupPane').hidden  =  hasPat;
+  clearPatError();
+}
+
+// ⚙ Trigger button — shows panel; state depends on whether PAT is saved
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  const p = document.getElementById('patPanel');
+  p.hidden = !p.hidden;
+  if (!p.hidden) refreshPatPanel();
+});
+
 async function triggerAndRefresh() {
-  // Called only by the ⚙ Trigger (admin) button
   const pat = localStorage.getItem('dl_gh_pat') || '';
-  if (!pat) { document.getElementById('patPanel').hidden = false; return; }
-  const btn = document.getElementById('settingsBtn');
-  btn.disabled = true;
+  if (!pat) { document.getElementById('patPanel').hidden = false; refreshPatPanel(); return; }
+  clearPatError();
+  const trigBtn = document.getElementById('runNowBtn');
+  const hdrBtn  = document.getElementById('settingsBtn');
+  trigBtn.disabled = hdrBtn.disabled = true;
+  trigBtn.textContent = hdrBtn.textContent = '⟳ Triggering…';
+  const ghHeaders = {
+    'Authorization': `Bearer ${pat}`,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+    'Content-Type': 'application/json',
+  };
   try {
-    // 1. Dispatch the workflow
-    btn.textContent = '⟳ Triggering…';
-    const ghHeaders = { 'Authorization':`Bearer ${pat}`, 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28', 'Content-Type':'application/json' };
-    const tr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${GH_WF}/dispatches`,
-      { method:'POST', headers:ghHeaders, body:JSON.stringify({ref:'main'}) });
-    if (!tr.ok) { const e=await tr.json().catch(()=>({})); throw new Error(e.message||`GitHub ${tr.status}`); }
-    // 2. Wait for run to register, then find its ID
-    btn.textContent = '⟳ Queued…';
+    // 1. Dispatch
+    const tr = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/workflows/${GH_WF}/dispatches`,
+      { method: 'POST', headers: ghHeaders, body: JSON.stringify({ ref: 'main' }) }
+    );
+    if (!tr.ok) {
+      const e = await tr.json().catch(() => ({}));
+      throw new Error(`GitHub ${tr.status}: ${e.message || 'check token scope (needs workflow)'}`);
+    }
+    // 2. Find the run ID
+    trigBtn.textContent = hdrBtn.textContent = '⟳ Queued…';
     await sleep(5000);
     let runId = null;
-    for (let i = 0; i < 10; i++) {
-      const rr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/runs?event=workflow_dispatch&per_page=5`, {headers:ghHeaders});
-      const rd = await rr.json();
-      const run = (rd.workflow_runs||[]).find(r => (Date.now()-new Date(r.created_at))<180000);
+    for (let i = 0; i < 12; i++) {
+      const rr  = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/runs?event=workflow_dispatch&per_page=5`, { headers: ghHeaders });
+      const rd  = await rr.json();
+      const run = (rd.workflow_runs || []).find(r => Date.now() - new Date(r.created_at) < 180000);
       if (run) { runId = run.id; break; }
       await sleep(3000);
     }
-    // 3. Poll until completed (max ~2 min)
+    // 3. Poll until done
     const start = Date.now();
-    if (runId) {
-      for (let i = 0; i < 24; i++) {
-        await sleep(5000);
-        btn.textContent = `⟳ Running (${Math.round((Date.now()-start)/1000)}s)…`;
-        const sr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/runs/${runId}`, {headers:ghHeaders});
-        const sd = await sr.json();
-        if (sd.status==='completed') { if(sd.conclusion!=='success') throw new Error(`Workflow ${sd.conclusion}`); break; }
+    outer: for (let i = 0; i < 24; i++) {
+      await sleep(5000);
+      const elapsed = Math.round((Date.now() - start) / 1000);
+      trigBtn.textContent = hdrBtn.textContent = `⟳ Running (${elapsed}s)…`;
+      if (!runId) continue;
+      const sr = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/actions/runs/${runId}`, { headers: ghHeaders });
+      const sd = await sr.json();
+      if (sd.status === 'completed') {
+        if (sd.conclusion !== 'success') throw new Error(`Workflow ended: ${sd.conclusion}`);
+        break outer;
       }
-    } else {
-      // fallback: just wait 45s if we couldn't find the run
-      for (let s=5;s<=45;s+=5) { await sleep(5000); btn.textContent=`⟳ Running (${s}s)…`; }
     }
-    // 4. Reload fresh data
-    btn.textContent = '⟳ Loading…';
+    // 4. Reload
+    trigBtn.textContent = hdrBtn.textContent = '⟳ Loading…';
     await loadData();
-    btn.textContent = '⟳ Done!';
-    setTimeout(()=>{ btn.disabled=false; btn.textContent='⚙ Trigger'; }, 3000);
-  } catch(err) {
-    btn.disabled = false; btn.textContent = '✗ Error — retry';
-    setTimeout(()=>{ btn.textContent='⚙ Trigger'; }, 4000);
-    if (err.message.includes('401')||err.message.includes('Bad credentials')) {
+    trigBtn.textContent = hdrBtn.textContent = '✓ Done!';
+    document.getElementById('patPanel').hidden = true;
+    setTimeout(() => {
+      trigBtn.disabled = hdrBtn.disabled = false;
+      trigBtn.textContent = '⚡ Run fetch & refresh map';
+      hdrBtn.textContent  = '⚙ Trigger';
+    }, 3000);
+  } catch (err) {
+    trigBtn.disabled = hdrBtn.disabled = false;
+    trigBtn.textContent = '⚡ Run fetch & refresh map';
+    hdrBtn.textContent  = '⚙ Trigger';
+    showPatError(err.message);
+    // clear bad token on auth failure
+    if (/401|403|Bad credentials/i.test(err.message)) {
       localStorage.removeItem('dl_gh_pat');
-      document.getElementById('patPanel').hidden = false;
+      refreshPatPanel();
     }
   }
 }
 
-// PAT save / clear (used by ⚙ Trigger panel)
+document.getElementById('runNowBtn').addEventListener('click', triggerAndRefresh);
+
 document.getElementById('savePatBtn').addEventListener('click', () => {
   const k = document.getElementById('patInput').value.trim();
-  if (!k) return;
+  if (!k) { showPatError('Paste a token first.'); return; }
+  if (!k.startsWith('ghp_') && !k.startsWith('github_pat_')) {
+    showPatError('Token should start with ghp_ or github_pat_'); return;
+  }
   localStorage.setItem('dl_gh_pat', k);
-  document.getElementById('patInput').value='';
-  document.getElementById('patInput').placeholder='ghp_••••••••••• (saved)';
-  document.getElementById('patPanel').hidden=true;
-  // kick off the workflow immediately after saving
+  document.getElementById('patInput').value = '';
+  refreshPatPanel();
   triggerAndRefresh();
 });
+
+document.getElementById('cancelPatBtn').addEventListener('click', () => {
+  document.getElementById('patPanel').hidden = true;
+});
+
 document.getElementById('clearPatBtn').addEventListener('click', () => {
   localStorage.removeItem('dl_gh_pat');
-  document.getElementById('patInput').value='';
-  document.getElementById('patInput').placeholder='ghp_... paste your PAT here';
+  refreshPatPanel();
 });
 document.querySelectorAll('.nav-tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
