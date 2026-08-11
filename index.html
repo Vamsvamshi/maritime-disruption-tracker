@@ -208,13 +208,13 @@ a{color:var(--dl-blue-dk);}
     </nav>
     <div class="hdr-actions">
       <button class="btn-chat" id="chatFab">&#128172; ER&amp;I Analyst</button>
-      <button class="btn-settings" id="settingsBtn" title="Configure GitHub Actions token">&#9881;</button>
-      <button class="btn-refresh" id="refreshBtn">&#8635; Run &amp; Refresh</button>
+      <button class="btn-refresh" id="refreshBtn" title="Reload latest incident data (no login required)">&#8635; Refresh</button>
+      <button class="btn-settings" id="settingsBtn" title="Admin: trigger a fresh fetch from news sources now (requires GitHub token)">&#9881; Trigger</button>
     </div>
   </header>
-  <!-- GitHub PAT drop-down panel -->
+  <!-- GitHub PAT drop-down panel (admin-only: trigger on-demand fetch) -->
   <div class="pat-panel" id="patPanel" hidden>
-    <p>Add a <strong>GitHub Personal Access Token (PAT)</strong> with <code>workflow</code> scope. Clicking <em>Run &amp; Refresh</em> will trigger the GitHub Actions fetch workflow — pulling fresh incidents from 16+ news sources — then reload the map automatically.</p>
+    <p><strong>Admin: Trigger a fresh fetch now</strong><br>Regular users never need this &mdash; data auto-updates 3&times; daily. If you have a GitHub PAT with <code>workflow</code> scope, pasting it here lets you trigger the fetch workflow instantly.</p>
     <input type="password" id="patInput" placeholder="ghp_... paste your PAT here">
     <div class="pat-actions">
       <button class="btn-save-pat" id="savePatBtn">Save &amp; connect</button>
@@ -461,7 +461,22 @@ document.getElementById('btnClear').addEventListener('click',()=>{
   document.querySelectorAll('.cat-chip').forEach(b=>b.classList.add('on'));
   renderAll();
 });
-document.getElementById('refreshBtn').addEventListener('click', triggerAndRefresh);
+// ↻ Refresh — public, no auth; just reloads the latest auto-updated JSON
+document.getElementById('refreshBtn').addEventListener('click', () => {
+  const btn = document.getElementById('refreshBtn');
+  btn.disabled = true; btn.textContent = '⟳ Loading…';
+  loadData().finally(() => {
+    btn.disabled = false; btn.textContent = '↻ Refresh';
+  });
+});
+
+// ⚙ Trigger — admin only; fires Actions workflow then reloads
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  const p = document.getElementById('patPanel');
+  p.hidden = !p.hidden;
+  if (!p.hidden && localStorage.getItem('dl_gh_pat'))
+    document.getElementById('patInput').placeholder = 'ghp_••••••••••• (saved — paste new to update)';
+});
 
 // ── GitHub Actions trigger + poll + reload ────────────────────────────────
 const GH_OWNER = 'Vamsvamshi';
@@ -470,9 +485,10 @@ const GH_WF    = 'update-incidents.yml';
 const sleep    = ms => new Promise(r => setTimeout(r, ms));
 
 async function triggerAndRefresh() {
+  // Called only by the ⚙ Trigger (admin) button
   const pat = localStorage.getItem('dl_gh_pat') || '';
   if (!pat) { document.getElementById('patPanel').hidden = false; return; }
-  const btn = document.getElementById('refreshBtn');
+  const btn = document.getElementById('settingsBtn');
   btn.disabled = true;
   try {
     // 1. Dispatch the workflow
@@ -509,11 +525,11 @@ async function triggerAndRefresh() {
     // 4. Reload fresh data
     btn.textContent = '⟳ Loading…';
     await loadData();
-    btn.textContent = '✓ Done!';
-    setTimeout(()=>{ btn.disabled=false; btn.textContent='↻ Run & Refresh'; }, 3000);
+    btn.textContent = '⟳ Done!';
+    setTimeout(()=>{ btn.disabled=false; btn.textContent='⚙ Trigger'; }, 3000);
   } catch(err) {
     btn.disabled = false; btn.textContent = '✗ Error — retry';
-    setTimeout(()=>{ btn.textContent='↻ Run & Refresh'; }, 4000);
+    setTimeout(()=>{ btn.textContent='⚙ Trigger'; }, 4000);
     if (err.message.includes('401')||err.message.includes('Bad credentials')) {
       localStorage.removeItem('dl_gh_pat');
       document.getElementById('patPanel').hidden = false;
@@ -521,12 +537,7 @@ async function triggerAndRefresh() {
   }
 }
 
-// ── PAT panel controls ────────────────────────────────────────────────────
-document.getElementById('settingsBtn').addEventListener('click', () => {
-  const p = document.getElementById('patPanel');
-  p.hidden = !p.hidden;
-  if (!p.hidden && localStorage.getItem('dl_gh_pat')) document.getElementById('patInput').placeholder='ghp_••••••••••• (saved — paste new to update)';
-});
+// PAT save / clear (used by ⚙ Trigger panel)
 document.getElementById('savePatBtn').addEventListener('click', () => {
   const k = document.getElementById('patInput').value.trim();
   if (!k) return;
@@ -534,6 +545,8 @@ document.getElementById('savePatBtn').addEventListener('click', () => {
   document.getElementById('patInput').value='';
   document.getElementById('patInput').placeholder='ghp_••••••••••• (saved)';
   document.getElementById('patPanel').hidden=true;
+  // kick off the workflow immediately after saving
+  triggerAndRefresh();
 });
 document.getElementById('clearPatBtn').addEventListener('click', () => {
   localStorage.removeItem('dl_gh_pat');
