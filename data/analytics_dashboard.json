@@ -1,0 +1,500 @@
+{
+  "meta": {
+    "last_updated": "2026-08-19T10:27:50.913Z",
+    "method": "Automated refresh from incidents + public market quotes; curated structural assets retained.",
+    "notes": "Values are directional and should be validated against latest primary publications before external use.",
+    "automation": {
+      "runner": "scripts/update_analytics_feed.js",
+      "oil_quote_symbols": [
+        "BZ=F",
+        "CL=F"
+      ]
+    }
+  },
+  "client_exposure": {
+    "companies": [
+      {
+        "name": "Saudi Aramco",
+        "hq": "Dhahran, Saudi Arabia",
+        "segment": "Integrated",
+        "exposure": "Very High",
+        "lat": 26.3,
+        "lon": 50.1
+      },
+      {
+        "name": "ADNOC",
+        "hq": "Abu Dhabi, UAE",
+        "segment": "Integrated",
+        "exposure": "High",
+        "lat": 24.45,
+        "lon": 54.38
+      },
+      {
+        "name": "QatarEnergy",
+        "hq": "Doha, Qatar",
+        "segment": "LNG + Upstream",
+        "exposure": "High",
+        "lat": 25.29,
+        "lon": 51.53
+      },
+      {
+        "name": "Kuwait Petroleum",
+        "hq": "Kuwait City, Kuwait",
+        "segment": "Integrated",
+        "exposure": "High",
+        "lat": 29.38,
+        "lon": 47.99
+      },
+      {
+        "name": "Sonatrach",
+        "hq": "Algiers, Algeria",
+        "segment": "NOC",
+        "exposure": "Medium",
+        "lat": 36.75,
+        "lon": 3.06
+      },
+      {
+        "name": "NIOC",
+        "hq": "Tehran, Iran",
+        "segment": "NOC",
+        "exposure": "Very High",
+        "lat": 35.69,
+        "lon": 51.39
+      },
+      {
+        "name": "PetroChina",
+        "hq": "Beijing, China",
+        "segment": "Integrated",
+        "exposure": "Medium",
+        "lat": 39.9,
+        "lon": 116.4
+      },
+      {
+        "name": "Sinopec",
+        "hq": "Beijing, China",
+        "segment": "Refining",
+        "exposure": "Medium",
+        "lat": 39.91,
+        "lon": 116.38
+      },
+      {
+        "name": "TotalEnergies",
+        "hq": "Paris, France",
+        "segment": "Integrated",
+        "exposure": "Medium",
+        "lat": 48.86,
+        "lon": 2.35
+      },
+      {
+        "name": "Shell",
+        "hq": "London, UK",
+        "segment": "Integrated",
+        "exposure": "Medium",
+        "lat": 51.51,
+        "lon": -0.13
+      },
+      {
+        "name": "ExxonMobil",
+        "hq": "Houston, US",
+        "segment": "Integrated",
+        "exposure": "Medium",
+        "lat": 29.76,
+        "lon": -95.37
+      },
+      {
+        "name": "bp",
+        "hq": "London, UK",
+        "segment": "Integrated",
+        "exposure": "Medium",
+        "lat": 51.51,
+        "lon": -0.1
+      },
+      {
+        "name": "Chevron",
+        "hq": "San Ramon, US",
+        "segment": "Integrated",
+        "exposure": "Medium",
+        "lat": 37.78,
+        "lon": -121.98
+      },
+      {
+        "name": "Eni",
+        "hq": "Rome, Italy",
+        "segment": "Integrated",
+        "exposure": "Medium",
+        "lat": 41.9,
+        "lon": 12.5
+      },
+      {
+        "name": "Reliance Industries",
+        "hq": "Mumbai, India",
+        "segment": "Refining + Petrochem",
+        "exposure": "High",
+        "lat": 19.07,
+        "lon": 72.88
+      },
+      {
+        "name": "Petrobras",
+        "hq": "Rio de Janeiro, Brazil",
+        "segment": "Integrated",
+        "exposure": "Medium",
+        "lat": -22.91,
+        "lon": -43.17
+      }
+    ],
+    "source_refs": [
+      "Company annual reports and investor presentations",
+      "IEA Oil 2026 market report"
+    ]
+  },
+  "shipping_disruptions": {
+    "incidents": 815,
+    "products": [
+      "CRUDE",
+      "LNG",
+      "REFINED",
+      "LPG",
+      "GRAIN",
+      "NUCLEAR",
+      "GAS"
+    ],
+    "affected_capacity_mbd": 25,
+    "intensity_index_0_100": 54,
+    "source_refs": [
+      "Dashboard incident feed (CENTCOM/UKMTO/public reporting)",
+      "UKMTO advisories",
+      "Reuters shipping coverage"
+    ]
+  },
+  "bypass_pipeline_capacity": {
+    "items": [
+      {
+        "name": "East-West (Petroline, Saudi)",
+        "status": "Active",
+        "volume_mbd": 5,
+        "products": "Crude"
+      },
+      {
+        "name": "Abu Dhabi Crude Pipeline (Habshan-Fujairah)",
+        "status": "Active",
+        "volume_mbd": 1.8,
+        "products": "Crude"
+      },
+      {
+        "name": "SUMED (Egypt)",
+        "status": "Active",
+        "volume_mbd": 2.5,
+        "products": "Crude"
+      },
+      {
+        "name": "BTC (Azerbaijan-Georgia-Turkiye)",
+        "status": "Activated contingency",
+        "volume_mbd": 1.2,
+        "products": "Crude"
+      },
+      {
+        "name": "CPC reroute programs",
+        "status": "Partial",
+        "volume_mbd": 0.4,
+        "products": "Crude"
+      }
+    ],
+    "source_refs": [
+      "EIA chokepoint analysis",
+      "Operator disclosures",
+      "S&P Global Commodity Insights"
+    ]
+  },
+  "vessel_flow_chokepoint": {
+    "bands": {
+      "lt25": [
+        "Hormuz",
+        "Bab el-Mandeb"
+      ],
+      "b25_50": [
+        "Caspian/CPC"
+      ],
+      "b50_75": [
+        "Black Sea/Azov"
+      ],
+      "g75": [
+        "Atlantic and selected Pacific corridors"
+      ]
+    },
+    "source_refs": [
+      "EIA",
+      "Vortexa",
+      "Kpler"
+    ]
+  },
+  "key_ports": {
+    "ports": [
+      {
+        "name": "Ras Tanura",
+        "country": "Saudi Arabia",
+        "capacity_mbd": 6.5,
+        "status": "Operational with security escort",
+        "lat": 26.64,
+        "lon": 50.16
+      },
+      {
+        "name": "Fujairah",
+        "country": "UAE",
+        "capacity_mbd": 2.3,
+        "status": "Operational, elevated risk",
+        "lat": 25.13,
+        "lon": 56.34
+      },
+      {
+        "name": "Kharg Island",
+        "country": "Iran",
+        "capacity_mbd": 3.5,
+        "status": "Intermittent disruption",
+        "lat": 29.25,
+        "lon": 50.32
+      },
+      {
+        "name": "Yanbu",
+        "country": "Saudi Arabia",
+        "capacity_mbd": 3.2,
+        "status": "Operational",
+        "lat": 24.09,
+        "lon": 38.06
+      },
+      {
+        "name": "Ceyhan",
+        "country": "Turkiye",
+        "capacity_mbd": 1,
+        "status": "Operational",
+        "lat": 36.82,
+        "lon": 35.93
+      },
+      {
+        "name": "Jebel Ali",
+        "country": "UAE",
+        "capacity_mbd": 1.2,
+        "status": "Operational",
+        "lat": 25.02,
+        "lon": 55.06
+      },
+      {
+        "name": "Basrah Oil Terminal",
+        "country": "Iraq",
+        "capacity_mbd": 2.4,
+        "status": "Operational with risk",
+        "lat": 29.76,
+        "lon": 48.85
+      },
+      {
+        "name": "Novorossiysk",
+        "country": "Russia",
+        "capacity_mbd": 1.6,
+        "status": "Operational constrained",
+        "lat": 44.72,
+        "lon": 37.78
+      },
+      {
+        "name": "Rotterdam",
+        "country": "Netherlands",
+        "capacity_mbd": 4.2,
+        "status": "Operational",
+        "lat": 51.95,
+        "lon": 4.14
+      },
+      {
+        "name": "Singapore",
+        "country": "Singapore",
+        "capacity_mbd": 3.8,
+        "status": "Operational",
+        "lat": 1.26,
+        "lon": 103.84
+      },
+      {
+        "name": "Ningbo-Zhoushan",
+        "country": "China",
+        "capacity_mbd": 3,
+        "status": "Operational",
+        "lat": 29.9,
+        "lon": 121.8
+      },
+      {
+        "name": "Houston",
+        "country": "US",
+        "capacity_mbd": 2.6,
+        "status": "Operational",
+        "lat": 29.73,
+        "lon": -95.27
+      },
+      {
+        "name": "Los Angeles/Long Beach",
+        "country": "US",
+        "capacity_mbd": 1.3,
+        "status": "Operational",
+        "lat": 33.73,
+        "lon": -118.2
+      }
+    ],
+    "source_refs": [
+      "Port authority statistics",
+      "UNCTADstat",
+      "Lloyd's List"
+    ]
+  },
+  "storage": {
+    "land_storage_mmbbl": 6420,
+    "afloat_storage_mmbbl": 132,
+    "strategic_storage_mmbbl": 1510,
+    "source_refs": [
+      "IEA Oil Market Report",
+      "EIA stocks",
+      "Kpler floating storage"
+    ]
+  },
+  "transit_fee": {
+    "suez_typical_usd_per_ton": 7.5,
+    "suez_speculated_war_risk_uplift_pct": 25,
+    "panama_typical_usd_per_pcu": 6,
+    "panama_drought_uplift_pct": 18,
+    "source_refs": [
+      "Suez Canal Authority tariff circulars",
+      "Panama Canal Authority notices"
+    ]
+  },
+  "oil_prices_spreads": {
+    "oman_usd_bbl": 95.8,
+    "arab_light_usd_bbl": 97.1,
+    "brent_usd_bbl": 96.4,
+    "dubai_usd_bbl": 95,
+    "brent_minus_oman_usd": 0.6,
+    "source_refs": [
+      "ICE",
+      "CME/Platts Dubai",
+      "Oman DME",
+      "Aramco OSP disclosures",
+      "Yahoo Finance fetch unavailable at run time",
+      "Yahoo Finance fetch unavailable at run time",
+      "Yahoo Finance fetch unavailable at run time"
+    ]
+  },
+  "shipping_rates_trend": {
+    "vlcc_td3c_usd_day": 101236,
+    "suezmax_td20_usd_day": 73843,
+    "aframax_med_usd_day": 64314,
+    "trend_30d": "Upward",
+    "source_refs": [
+      "Baltic Exchange (benchmark conventions)",
+      "Clarksons market commentary",
+      "Dashboard incident intensity proxy"
+    ]
+  },
+  "insurance_freight": {
+    "war_risk_hormuz_pct_hull": 1.24,
+    "war_risk_red_sea_pct_hull": 0.95,
+    "freight_premium_usd_bbl": 2.1,
+    "trend_30d": "Upward",
+    "source_refs": [
+      "Lloyd's market commentary",
+      "Marine insurance broker publications",
+      "Dashboard incident intensity proxy"
+    ]
+  },
+  "lng_terminals": {
+    "terminals": [
+      {
+        "name": "Ras Laffan",
+        "country": "Qatar",
+        "capacity_mtpa": 77,
+        "status": "Operational, elevated security",
+        "lat": 25.93,
+        "lon": 51.62
+      },
+      {
+        "name": "Das Island",
+        "country": "UAE",
+        "capacity_mtpa": 6,
+        "status": "Operational",
+        "lat": 25.15,
+        "lon": 52.88
+      },
+      {
+        "name": "Sabine Pass",
+        "country": "US",
+        "capacity_mtpa": 30,
+        "status": "Operational, elevated security",
+        "lat": 29.73,
+        "lon": -93.88
+      },
+      {
+        "name": "Freeport LNG",
+        "country": "US",
+        "capacity_mtpa": 15,
+        "status": "Operational",
+        "lat": 28.95,
+        "lon": -95.31
+      },
+      {
+        "name": "Qalhat",
+        "country": "Oman",
+        "capacity_mtpa": 10.4,
+        "status": "Operational",
+        "lat": 22.7,
+        "lon": 59.38
+      },
+      {
+        "name": "Cove Point",
+        "country": "US",
+        "capacity_mtpa": 5.8,
+        "status": "Operational",
+        "lat": 38.4,
+        "lon": -76.39
+      },
+      {
+        "name": "Corpus Christi LNG",
+        "country": "US",
+        "capacity_mtpa": 25,
+        "status": "Operational",
+        "lat": 27.81,
+        "lon": -97.22
+      },
+      {
+        "name": "Calcasieu Pass",
+        "country": "US",
+        "capacity_mtpa": 10,
+        "status": "Operational",
+        "lat": 29.72,
+        "lon": -93.35
+      },
+      {
+        "name": "Bintulu",
+        "country": "Malaysia",
+        "capacity_mtpa": 29,
+        "status": "Operational",
+        "lat": 3.17,
+        "lon": 113.04
+      },
+      {
+        "name": "Ichthys LNG",
+        "country": "Australia",
+        "capacity_mtpa": 8.9,
+        "status": "Operational",
+        "lat": -12.4,
+        "lon": 130.78
+      }
+    ],
+    "source_refs": [
+      "GIIGNL",
+      "Company terminal disclosures",
+      "IEA Gas Market Report"
+    ]
+  },
+  "us_oil_lng_supplies": {
+    "us_crude_supply_mbd": 13.3,
+    "us_crude_exports_mbd": 4.2,
+    "us_lng_feedgas_bcfpd": 13.1,
+    "us_lng_exports_bcfpd": 11.8,
+    "source_refs": [
+      "US EIA Weekly Petroleum Status",
+      "US EIA Natural Gas Weekly Update"
+    ]
+  }
+}

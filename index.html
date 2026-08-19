@@ -60,6 +60,10 @@ a{color:var(--dl-blue-dk);}
 .subhdr{height:var(--sub-h);flex-shrink:0;background:var(--dl-dark);border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;padding:0 20px;font-size:.72rem;color:rgba(255,255,255,.55);}
 .subhdr strong{color:rgba(255,255,255,.85);}
 .subhdr .badge{background:var(--dl-green);color:var(--dl-dark);font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:10px;margin-left:6px;}
+.feed-health{font-size:.62rem;padding:2px 7px;border-radius:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+.feed-ok{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;}
+.feed-warn{background:#FFF8E1;color:#8D6E00;border:1px solid #FFCC80;}
+.feed-bad{background:#FDECEA;color:#B71C1C;border:1px solid #FFCDD2;}
 .live-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(198,40,28,.15);border:1px solid rgba(198,40,28,.4);color:#ff6b6b;font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:100px;}
 .live-dot{width:6px;height:6px;background:#ff4444;border-radius:50%;animation:pulse-red 1.8s infinite;}
 @keyframes pulse-red{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,68,68,.5);}50%{opacity:.5;box-shadow:0 0 0 4px rgba(255,68,68,0);}}
@@ -102,8 +106,60 @@ a{color:var(--dl-blue-dk);}
 .inc-title{font-size:.79rem;line-height:1.4;color:var(--dl-dark);}
 .inc-loc{font-size:.68rem;color:var(--dl-gray);margin-top:2px;}
 #map{flex:1;min-height:0;}
+.map-stage{display:flex;flex:1;min-width:0;}
+.analytics-side{width:380px;flex-shrink:0;background:var(--dl-panel);border-left:1px solid var(--dl-border);display:flex;flex-direction:column;overflow-y:auto;}
+.as-head{position:sticky;top:0;background:#fff;padding:12px 14px;border-bottom:1px solid var(--dl-border);z-index:2;}
+.as-title{font-size:.8rem;font-weight:700;color:var(--dl-dark);text-transform:uppercase;letter-spacing:.06em;}
+.as-sub{font-size:.68rem;color:var(--dl-gray);margin-top:3px;}
+.as-sec{padding:12px 14px;border-bottom:1px solid #F2F2F0;}
+.as-sec h4{font-size:.72rem;color:var(--dl-dark);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+.as-kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.as-kpi{background:var(--dl-bg);border:1px solid var(--dl-border);border-radius:6px;padding:8px 10px;}
+.as-kpi .n{font-size:1.1rem;font-weight:700;color:var(--dl-dark);}
+.as-kpi .l{font-size:.62rem;color:var(--dl-gray);text-transform:uppercase;letter-spacing:.05em;}
+.transit-table{width:100%;border-collapse:collapse;font-size:.72rem;}
+.transit-table th{font-size:.62rem;text-transform:uppercase;letter-spacing:.05em;color:#fff;background:var(--dl-dark);padding:6px 8px;text-align:left;}
+.transit-table td{padding:7px 8px;border-bottom:1px solid #EFEFED;vertical-align:top;}
+.transit-table tr:last-child td{border-bottom:none;}
+.t-mbd{font-weight:700;color:var(--dl-dark);white-space:nowrap;}
+.t-dir{font-size:.67rem;color:var(--dl-gray);line-height:1.4;}
+.flow-band{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #F3F3F1;font-size:.75rem;}
+.flow-band:last-child{border-bottom:none;}
+.bad{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:10px;color:#fff;}
+.b1{background:#C6281C}.b2{background:#E8B000}.b3{background:#E87722}.b4{background:#86BC25}
+.mini-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid #F4F4F2;font-size:.75rem;}
+.mini-row:last-child{border-bottom:none;}
+.mini-row b{font-size:.8rem;color:var(--dl-dark);}
+.as-note{font-size:.64rem;color:var(--dl-gray);line-height:1.45;margin-top:8px;}
+.as-grid{display:grid;grid-template-columns:1fr;gap:8px;}
+.a12-card{background:var(--dl-bg);border:1px solid var(--dl-border);border-left:3px solid var(--dl-green);border-radius:6px;padding:8px 10px;}
+.a12-title{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dl-gray);margin-bottom:4px;}
+.a12-main{font-size:.9rem;font-weight:700;color:var(--dl-dark);line-height:1.35;}
+.a12-sub{font-size:.66rem;color:var(--dl-gray);line-height:1.4;margin-top:2px;}
+.a12-rows{margin-top:4px;}
+.a12-row{display:flex;justify-content:space-between;align-items:center;font-size:.7rem;padding:3px 0;border-bottom:1px solid #efefed;}
+.a12-row:last-child{border-bottom:none;}
+.spark{display:flex;align-items:flex-end;gap:2px;height:20px;margin-top:5px;}
+.spark i{display:block;width:7px;background:#86BC25;border-radius:2px 2px 0 0;opacity:.9;}
+.layer-toggles{display:grid;grid-template-columns:1fr;gap:6px;font-size:.72rem;color:var(--dl-dark);}
+.layer-toggles label{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.src-note{font-size:.62rem;color:var(--dl-gray);line-height:1.4;margin-top:3px;}
+.asset-lists{display:grid;grid-template-columns:1fr;gap:6px;margin-top:8px;}
+.asset-list-card{background:#fff;border:1px solid var(--dl-border);border-radius:6px;padding:6px 8px;}
+.asset-list-title{font-size:.62rem;font-weight:700;color:var(--dl-gray);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.asset-list{max-height:84px;overflow:auto;}
+.asset-row{display:flex;justify-content:space-between;gap:8px;font-size:.68rem;padding:2px 0;border-bottom:1px solid #F2F2F0;}
+.asset-row:last-child{border-bottom:none;}
+.asset-pin{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;color:#fff;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+.asset-label{background:rgba(255,255,255,.92);border:1px solid var(--dl-border);border-radius:4px;padding:1px 5px;font-size:.58rem;font-weight:700;color:var(--dl-dark);white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.09);}
+
 .map-pin{border-radius:50%;display:flex;align-items:center;justify-content:center;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.25);cursor:pointer;transition:transform .12s;}
 .map-pin:hover{transform:scale(1.3);}
+.cp-bubble{width:34px;height:34px;border-radius:50%;background:#FFB300;border:2px solid #CC8A00;color:#1a1a1a;font-weight:700;font-size:.78rem;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2);}
+.cp-name{background:rgba(255,255,255,.9);border:1px solid var(--dl-border);border-radius:4px;padding:2px 6px;font-size:.62rem;font-weight:700;color:var(--dl-dark);white-space:nowrap;box-shadow:0 1px 5px rgba(0,0,0,.08);}
+.route-label{background:rgba(13,35,65,.88);border-radius:4px;padding:2px 6px;font-size:.6rem;color:#fff;white-space:nowrap;letter-spacing:.02em;}
+.ship-flow{font-size:16px;line-height:1;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35));}
+.route-track{opacity:.55;}
 .leaflet-div-icon{background:transparent!important;border:none!important;}
 .leaflet-popup-content-wrapper{background:#fff;border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.18);border:1px solid var(--dl-border);padding:0;}
 .leaflet-popup-content{margin:0;line-height:1;}
@@ -122,66 +178,6 @@ a{color:var(--dl-blue-dk);}
 .dp-src:hover{text-decoration:underline;}
 /* About */
 .about-view{flex:1;overflow-y:auto;background:var(--dl-bg);padding:40px 20px 80px;}
-/* ── Analytics view ──────────────────────────────────────────────────────── */
-.analytics-view{flex:1;overflow-y:auto;background:var(--dl-bg);padding:24px 20px 80px;}
-.analytics-inner{max-width:1280px;margin:0 auto;}
-.analytics-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:20px;}
-.analytics-head h1{font-size:1.05rem;font-weight:700;color:var(--dl-dark);}
-.analytics-head .snap{font-size:.72rem;color:var(--dl-gray);background:var(--dl-panel);border:1px solid var(--dl-border);padding:4px 10px;border-radius:4px;}
-.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px;}
-.ag-wide{grid-column:span 2;}
-.ag-full{grid-column:span 3;}
-.acard{background:var(--dl-panel);border:1px solid var(--dl-border);border-radius:8px;padding:16px 18px;border-top:3px solid var(--dl-green);}
-.acard.amber{border-top-color:var(--dl-gold);}
-.acard.red{border-top-color:var(--dl-red);}
-.acard.blue{border-top-color:var(--dl-blue);}
-.acard.teal{border-top-color:var(--dl-teal);}
-.acard.purple{border-top-color:var(--dl-purple);}
-.acard.dark{border-top-color:var(--dl-dark);}
-.ac-hd{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;gap:8px;}
-.ac-title{font-size:.78rem;font-weight:700;color:var(--dl-dark);text-transform:uppercase;letter-spacing:.06em;}
-.ac-src{font-size:.62rem;color:var(--dl-gray);font-style:italic;text-align:right;flex-shrink:0;}
-/* flow gauge */
-.flow-rows{display:flex;flex-direction:column;gap:10px;}
-.flow-row{display:grid;grid-template-columns:160px 1fr 62px;align-items:center;gap:10px;}
-.flow-name{font-size:.78rem;font-weight:600;color:var(--dl-dark);}
-.flow-track{background:#F0F0EE;border-radius:4px;height:18px;position:relative;overflow:hidden;border:1px solid var(--dl-border);}
-.flow-fill{height:100%;border-radius:4px;transition:width .3s;display:flex;align-items:center;padding-left:6px;}
-.flow-fill span{font-size:.62rem;font-weight:700;color:#fff;white-space:nowrap;}
-.flow-pct{font-size:.82rem;font-weight:700;text-align:right;}
-/* price grid */
-.price-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
-.pcell{background:var(--dl-bg);border:1px solid var(--dl-border);border-radius:6px;padding:10px 12px;}
-.pcell .pname{font-size:.65rem;color:var(--dl-gray);text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
-.pcell .pval{font-size:1.1rem;font-weight:700;color:var(--dl-dark);margin:3px 0 2px;}
-.pcell .pchg{font-size:.7rem;font-weight:700;}
-.pchg.up{color:var(--dl-red);} .pchg.down{color:var(--dl-green);} .pchg.flat{color:var(--dl-gray);}
-/* data rows */
-.drow{display:flex;justify-content:space-between;align-items:baseline;padding:7px 0;border-bottom:1px solid #F5F5F3;font-size:.8rem;}
-.drow:last-child{border-bottom:none;}
-.drow .dlbl{color:var(--dl-dark);flex:1;}
-.drow .dval{font-weight:700;color:var(--dl-dark);text-align:right;}
-.drow .dtag{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px;color:#fff;white-space:nowrap;}
-/* status badges */
-.s-op{background:#86BC25;} .s-partial{background:#E8B000;} .s-risk{background:#E87722;} .s-closed{background:#C6281C;} .s-damaged{background:#7f1d1d;}
-/* shipping disruptions computed */
-#sd-counts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
-.sd-kpi{background:var(--dl-bg);border:1px solid var(--dl-border);border-radius:6px;padding:10px 12px;text-align:center;}
-.sd-kpi .knum{font-size:1.4rem;font-weight:700;color:var(--dl-dark);}
-.sd-kpi .klbl{font-size:.65rem;color:var(--dl-gray);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;}
-/* heatmap */
-.hm-table{width:100%;border-collapse:collapse;font-size:.75rem;}
-.hm-table th{background:var(--dl-dark);color:#fff;padding:8px 10px;text-align:center;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;}
-.hm-table th:first-child{text-align:left;}
-.hm-table td{padding:8px 10px;border:1px solid var(--dl-border);text-align:center;font-weight:700;font-size:.72rem;}
-.hm-table td:first-child{text-align:left;font-weight:600;color:var(--dl-dark);background:var(--dl-bg);}
-.hm-c{background:#fce8e8;color:#7f1d1d;} .hm-h{background:#ffd9be;color:#9a3a00;}
-.hm-m{background:#fff3cd;color:#856404;} .hm-l{background:#e8f5e9;color:#1b5e20;} .hm-n{background:#f5f5f5;color:#888;}
-/* trend spark */
-.trend-line{display:flex;align-items:flex-end;gap:3px;height:28px;margin:4px 0;}
-.tb{width:8px;background:var(--dl-green);border-radius:2px 2px 0 0;}
-@media(max-width:900px){.ag,.ag-wide,.ag-full{grid-column:span 1;}.ag{grid-template-columns:1fr 1fr;}.ag-full{grid-column:span 2;}}
-@media(max-width:600px){.ag{grid-template-columns:1fr;}.ag-wide,.ag-full{grid-column:span 1;}.price-cells{grid-template-columns:repeat(2,1fr);}}
 .about-inner{max-width:900px;margin:0 auto;}
 .about-hero{background:var(--dl-dark);border-radius:10px;padding:36px;margin-bottom:28px;background-image:linear-gradient(135deg,var(--dl-dark) 60%,rgba(134,188,37,.15));}
 .about-hero .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dl-green);margin-bottom:8px;}
@@ -250,7 +246,7 @@ a{color:var(--dl-blue-dk);}
 .chat-send:disabled{background:var(--dl-gray-lt);cursor:wait;}
 .chat-key-hint{font-size:.66rem;color:var(--dl-blue-dk);cursor:pointer;text-align:center;padding:3px;flex-shrink:0;border:none;background:none;font-family:inherit;width:100%;}
 .chat-key-hint:hover{text-decoration:underline;}
-@media(max-width:720px){.sidebar{width:100%;max-height:42vh;border-right:none;border-bottom:1px solid var(--dl-border);}.view{flex-direction:column;}.chat-panel{width:calc(100vw - 32px);right:16px;}.hdr-title small{display:none;}.chokepoint-grid,.card-grid{grid-template-columns:1fr;}.src-list{column-count:1;}}
+@media(max-width:720px){.sidebar{width:100%;max-height:42vh;border-right:none;border-bottom:1px solid var(--dl-border);} .map-stage{flex-direction:column;} .analytics-side{width:100%;max-height:42vh;border-left:none;border-top:1px solid var(--dl-border);} .view{flex-direction:column;} .chat-panel{width:calc(100vw - 32px);right:16px;} .hdr-title small{display:none;} .chokepoint-grid,.card-grid{grid-template-columns:1fr;} .src-list{column-count:1;}}
 </style>
 </head>
 <body>
@@ -264,7 +260,7 @@ a{color:var(--dl-blue-dk);}
     </div>
     <nav class="hdr-nav">
       <button class="nav-tab active" data-tab="map">&#128506; Map</button>
-      <button class="nav-tab" data-tab="analytics">&#128200; Analytics</button>
+
       <button class="nav-tab" data-tab="about">&#8505; About</button>
     </nav>
     <div class="hdr-actions">
@@ -298,7 +294,8 @@ a{color:var(--dl-blue-dk);}
   <div class="subhdr">
     <span>Built by <strong>Deloitte Center for Energy, Resources &amp; Industrials</strong><span class="badge">ER&amp;I</span></span>
     <span style="display:flex;align-items:center;gap:10px;"><span class="live-badge"><span class="live-dot"></span>LIVE</span><span id="lastUpdated">Loading data...</span></span>
-    <span><strong id="statTotal">--</strong> incidents &middot; Feb 28 &ndash; Aug 10, 2026</span>
+    <span><strong id="statTotal">--</strong> incidents &middot; <span id="statRange">loading range...</span></span>
+    <span id="feedHealth" class="feed-health feed-warn">FEEDS CHECKING</span>
   </div>
   <div class="view" id="mapView">
     <aside class="sidebar">
@@ -323,6 +320,15 @@ a{color:var(--dl-blue-dk);}
       </div>
       <div class="filt-section">
         <span class="filt-label">Date Range</span>
+        <select id="datePreset" class="search-input" style="margin-bottom:6px;">
+          <option value="7d">Last 7 days</option>
+          <option value="15d">Last 15 days</option>
+          <option value="1m">Last 1 month</option>
+          <option value="3m">Last 3 months</option>
+          <option value="6m">Last 6 months</option>
+          <option value="since" selected>Since Feb 28, 2026</option>
+          <option value="custom">Custom range</option>
+        </select>
         <div class="date-row"><input type="date" id="dateFrom" value="2026-02-28"><input type="date" id="dateTo"></div>
         <button class="btn-clear-all" id="btnClear">&#8634; Reset all filters</button>
       </div>
@@ -340,215 +346,94 @@ a{color:var(--dl-blue-dk);}
       <div class="list-meta"><span id="listCount">Loading...</span><span style="font-size:.65rem;color:var(--dl-gray);">newest first</span></div>
       <div class="inc-list" id="incList"></div>
     </aside>
-    <div id="map"></div>
-  </div>
-  <div class="view about-view" id="aboutView" hidden>
-  <!-- ── Analytics View ──────────────────────────────────────────────────── -->
-  <div class="view analytics-view" id="analyticsView" hidden>
-    <div class="analytics-inner">
-      <div class="analytics-head">
-        <h1>&#128200; Energy &amp; Shipping Analytics Dashboard</h1>
-        <div class="snap">Snapshot: Aug 11, 2026 &middot; Updated 3&times; daily &middot; Deloitte ER&amp;I</div>
-      </div>
+    <div class="map-stage">
+      <div id="map"></div>
+      <aside class="analytics-side" id="analyticsSide">
+        <div class="as-head">
+          <div class="as-title">Dashboard Analytics</div>
+          <div class="as-sub">Right panel &middot; Deloitte ER&amp;I &middot; 12 modules</div>
+        </div>
 
-      <!-- Row 1: Vessel Flow (wide) + Shipping Disruptions -->
-      <div class="ag">
-        <div class="acard ag-wide red">
-          <div class="ac-hd"><span class="ac-title">&#127870; Vessel Flow by Chokepoint (% of pre-war capacity)</span><span class="ac-src">UKMTO / Kpler / S&amp;P Global</span></div>
-          <div class="flow-rows">
-            <div class="flow-row">
-              <div class="flow-name">&#127754; Hormuz / Persian Gulf<br><span style="font-size:.65rem;color:var(--dl-gray)">Pre-war: ~130 transits/day</span></div>
-              <div class="flow-track"><div class="flow-fill" style="width:15%;background:#C6281C"><span>15%</span></div></div>
-              <div class="flow-pct" style="color:#C6281C">&lt;25%</div>
-            </div>
-            <div class="flow-row">
-              <div class="flow-name">&#128308; Red Sea / Bab-el-Mandeb<br><span style="font-size:.65rem;color:var(--dl-gray)">Pre-war: ~50 tankers/day</span></div>
-              <div class="flow-track"><div class="flow-fill" style="width:10%;background:#C6281C"><span>~10%</span></div></div>
-              <div class="flow-pct" style="color:#C6281C">&lt;25%</div>
-            </div>
-            <div class="flow-row">
-              <div class="flow-name">&#9899; Black Sea / Sea of Azov<br><span style="font-size:.65rem;color:var(--dl-gray)">Pre-war: ~40 tankers/day</span></div>
-              <div class="flow-track"><div class="flow-fill" style="width:62%;background:#E87722"><span>~62%</span></div></div>
-              <div class="flow-pct" style="color:#E87722">50&ndash;75%</div>
-            </div>
-            <div class="flow-row">
-              <div class="flow-name">&#128998; Caspian Sea (CPC/Novorossiysk)<br><span style="font-size:.65rem;color:var(--dl-gray)">Pre-war: ~1.5 mbd loaded</span></div>
-              <div class="flow-track"><div class="flow-fill" style="width:38%;background:#E8B000"><span>~38%</span></div></div>
-              <div class="flow-pct" style="color:#E8B000">25&ndash;50%</div>
-            </div>
+        <div class="as-sec">
+          <h4>Full Analytics Suite (12)</h4>
+          <div class="layer-toggles" style="margin-bottom:8px;">
+            <label><input type="checkbox" id="lyrClients" checked> Client Exposure Heatmap (Key Oil &amp; Gas Companies)</label>
+            <label><input type="checkbox" id="lyrPorts" checked> Key Ports (capacity + status)</label>
+            <label><input type="checkbox" id="lyrLng" checked> LNG Terminals Status Layer</label>
+          </div>
+          <div class="src-note" id="analyticsUpdated">Analytics feed: loading...</div>
+          <div class="asset-lists">
+            <div class="asset-list-card"><div class="asset-list-title">Main Client Exposure Locations</div><div class="asset-list" id="clientAssetList"></div></div>
+            <div class="asset-list-card"><div class="asset-list-title">Main Ports</div><div class="asset-list" id="portAssetList"></div></div>
+            <div class="asset-list-card"><div class="asset-list-title">Main LNG Terminals</div><div class="asset-list" id="lngAssetList"></div></div>
+          </div>
+          <div class="as-grid">
+            <div class="a12-card"><div class="a12-title">1) Client Exposure Heatmap</div><div class="a12-main" id="an1">--</div><div class="a12-sub" id="an1s">--</div></div>
+            <div class="a12-card"><div class="a12-title">2) Shipping Disruptions</div><div class="a12-main" id="an2">--</div><div class="a12-sub" id="an2s">--</div></div>
+            <div class="a12-card"><div class="a12-title">3) Bypass Pipeline Capacity</div><div class="a12-main" id="an3">--</div><div class="a12-sub" id="an3s">--</div></div>
+            <div class="a12-card"><div class="a12-title">4) Vessel Flow by Chokepoint Bands</div><div class="a12-rows" id="an4"></div></div>
+            <div class="a12-card"><div class="a12-title">5) Key Ports</div><div class="a12-rows" id="an5"></div></div>
+            <div class="a12-card"><div class="a12-title">6) Storage Volumes</div><div class="a12-rows" id="an6"></div></div>
+            <div class="a12-card"><div class="a12-title">7) Transit Fees (Speculated)</div><div class="a12-main" id="an7">--</div><div class="a12-sub" id="an7s">--</div></div>
+            <div class="a12-card"><div class="a12-title">8) Oil Prices and Spreads</div><div class="a12-rows" id="an8"></div><div class="a12-sub" id="an8s">--</div></div>
+            <div class="a12-card"><div class="a12-title">9) Shipping Rates Trend</div><div class="a12-main" id="an9">--</div><div class="a12-sub" id="an9s">--</div></div>
+            <div class="a12-card"><div class="a12-title">10) Insurance &amp; Freight Trend</div><div class="a12-main" id="an10">--</div><div class="a12-sub" id="an10s">--</div></div>
+            <div class="a12-card"><div class="a12-title">11) LNG Terminals Status</div><div class="a12-main" id="an11">--</div><div class="a12-sub" id="an11s">--</div></div>
+            <div class="a12-card"><div class="a12-title">12) US Oil and LNG Supplies</div><div class="a12-main" id="an12">--</div><div class="a12-sub" id="an12s">--</div></div>
           </div>
         </div>
-        <div class="acard red">
-          <div class="ac-hd"><span class="ac-title">&#128674; Shipping Disruptions</span><span class="ac-src">Computed from incident log</span></div>
-          <div id="sd-counts">
-            <div class="sd-kpi"><div class="knum" id="sd-total">--</div><div class="klbl">Total incidents</div></div>
-            <div class="sd-kpi"><div class="knum" id="sd-maritime">--</div><div class="klbl">Vessel attacks</div></div>
-            <div class="sd-kpi"><div class="knum" id="sd-sev5">--</div><div class="klbl">Critical (Sev 5)</div></div>
-            <div class="sd-kpi"><div class="knum" id="sd-recent">--</div><div class="klbl">Last 30 days</div></div>
-          </div>
-          <div class="drow"><span class="dlbl">Crude oil supply disrupted (peak)</span><span class="dval">~10 mbd</span></div>
-          <div class="drow"><span class="dlbl">LNG capacity at risk</span><span class="dval">~20% global</span></div>
-          <div class="drow"><span class="dlbl">Seafarers stranded</span><span class="dval">~6,000</span></div>
-          <div class="drow"><span class="dlbl">Vessels abandoned</span><span class="dval">7 confirmed</span></div>
-          <div class="drow"><span class="dlbl">Vessels captured</span><span class="dval">2</span></div>
-          <div class="drow"><span class="dlbl">Crew killed / missing</span><span class="dval">12+</span></div>
-        </div>
-      </div>
 
-      <!-- Row 2: Oil Prices (wide) + Shipping Rates -->
-      <div class="ag">
-        <div class="acard ag-wide amber">
-          <div class="ac-hd"><span class="ac-title">&#128178; Oil Prices &amp; Spreads</span><span class="ac-src">ICE / CME / EIA &mdash; Aug 10, 2026</span></div>
-          <div class="price-cells">
-            <div class="pcell"><div class="pname">Brent Crude</div><div class="pval">$96.40<small style="font-size:.65rem;font-weight:400">/bbl</small></div><div class="pchg up">&#9650; -32% vs Apr peak ($112)</div></div>
-            <div class="pcell"><div class="pname">WTI Crude</div><div class="pval">$91.60<small style="font-size:.65rem;font-weight:400">/bbl</small></div><div class="pchg flat">Brent-WTI spread: $4.80</div></div>
-            <div class="pcell"><div class="pname">Oman Crude</div><div class="pval">$95.80<small style="font-size:.65rem;font-weight:400">/bbl</small></div><div class="pchg flat">Gulf premium: +$0.60 vs Brent</div></div>
-            <div class="pcell"><div class="pname">Arab Light (Saudi OSP)</div><div class="pval">$96.10<small style="font-size:.65rem;font-weight:400">/bbl</small></div><div class="pchg flat">+$1.20 vs Brent</div></div>
-            <div class="pcell"><div class="pname">TTF (European gas)</div><div class="pval">$13.66<small style="font-size:.65rem;font-weight:400">/MMBtu</small></div><div class="pchg up">&#9650; Highest since Jun 2026</div></div>
-            <div class="pcell"><div class="pname">JKM (Asia LNG)</div><div class="pval">$16.58<small style="font-size:.65rem;font-weight:400">/MMBtu</small></div><div class="pchg up">&#9650; +26% YoY; +$13.57 vs HH</div></div>
-          </div>
-          <div style="margin-top:10px;display:flex;gap:12px;flex-wrap:wrap;">
-            <div style="font-size:.72rem;color:var(--dl-gray)">Dubai: <strong>$95.40</strong> &middot; Urals (CIF): <strong>~$78 (discounted)</strong> &middot; Henry Hub: <strong>$3.01/MMBtu</strong> &middot; Brent 1-yr fwd: <strong>$88.20</strong></div>
+        <div class="as-sec">
+          <h4>Live Disruptions</h4>
+          <div class="as-kpis">
+            <div class="as-kpi"><div class="n" id="ak-total">--</div><div class="l">Total Incidents</div></div>
+            <div class="as-kpi"><div class="n" id="ak-mar">--</div><div class="l">Maritime</div></div>
+            <div class="as-kpi"><div class="n" id="ak-sev5">--</div><div class="l">Critical (5)</div></div>
+            <div class="as-kpi"><div class="n" id="ak-30d">--</div><div class="l">Last 30 Days</div></div>
           </div>
         </div>
-        <div class="acard amber">
-          <div class="ac-hd"><span class="ac-title">&#9196; Shipping Rates</span><span class="ac-src">Baltic Exchange / Clarksons</span></div>
-          <div class="drow"><span class="dlbl">VLCC ME Gulf&ndash;China (TD3C)</span><span class="dval">$85,000<span class="dtag s-closed">+240%</span></span></div>
-          <div class="drow"><span class="dlbl">Suezmax ME&ndash;Med (Cape)</span><span class="dval">$72,000<span class="dtag s-risk">+195%</span></span></div>
-          <div class="drow"><span class="dlbl">Aframax N.Sea&ndash;NW Eur</span><span class="dval">$45,000<span class="dtag s-partial">+85%</span></span></div>
-          <div class="drow"><span class="dlbl">MR Tanker AG&ndash;Japan</span><span class="dval">$48,000<span class="dtag s-risk">+160%</span></span></div>
-          <div class="drow"><span class="dlbl">LNG carrier ME&ndash;NE Asia</span><span class="dval">$180,000<span class="dtag s-closed">+380%</span></span></div>
-          <div class="drow"><span class="dlbl">LPG VLGC ME&ndash;Japan</span><span class="dval">$125,000<span class="dtag s-closed">+310%</span></span></div>
-          <div style="font-size:.66rem;color:var(--dl-gray);margin-top:8px;">All rates USD/day. % vs pre-war (Jan 2026).</div>
-        </div>
-      </div>
 
-      <!-- Row 3: Bypass Pipelines + Key Ports + LNG Terminals -->
-      <div class="ag">
-        <div class="acard blue">
-          <div class="ac-hd"><span class="ac-title">&#128737; Bypass Pipeline Capacity</span><span class="ac-src">Operator reports / IEA</span></div>
-          <div class="drow"><span class="dlbl">Saudi East&ndash;West Pipeline (EWP)</span><span class="dval">5.0 mbd<span class="dtag s-op">ACTIVE</span></span></div>
-          <div class="drow"><span class="dlbl">BTC (Azerbaijan&ndash;Turkey, Ceyhan)</span><span class="dval">1.2 mbd<span class="dtag s-op">ACTIVE</span></span></div>
-          <div class="drow"><span class="dlbl">SUMED Pipeline (Egypt)</span><span class="dval">3.1 mbd<span class="dtag s-op">ACTIVE</span></span></div>
-          <div class="drow"><span class="dlbl">Iraq&ndash;Turkey (Ceyhan) restart</span><span class="dval">~0.35 mbd<span class="dtag s-partial">PARTIAL</span></span></div>
-          <div class="drow"><span class="dlbl">Cape of Good Hope (sea detour)</span><span class="dval">Unlimited<span class="dtag s-partial">+14 days</span></span></div>
-          <div class="drow" style="flex-direction:column;align-items:flex-start;gap:3px;"><span class="dlbl" style="font-weight:700">Total active bypass: ~9.65 mbd</span><span style="font-size:.67rem;color:var(--dl-gray)">vs ~20 mbd pre-war Hormuz flow — 48% substitution</span></div>
-        </div>
-        <div class="acard blue">
-          <div class="ac-hd"><span class="ac-title">&#9875; Key Port Status</span><span class="ac-src">UKMTO / Lloyd&rsquo;s / Port operators</span></div>
-          <div class="drow"><span class="dlbl">Fujairah (UAE &mdash; key hub)</span><span class="dval"><span class="dtag s-partial">RESTRICTED</span></span></div>
-          <div class="drow"><span class="dlbl">Ras Laffan (Qatar &mdash; LNG)</span><span class="dval"><span class="dtag s-partial">60% CAPACITY</span></span></div>
-          <div class="drow"><span class="dlbl">Khor al-Zubair (Iraq)</span><span class="dval"><span class="dtag s-risk">INTERMITTENT</span></span></div>
-          <div class="drow"><span class="dlbl">Bandar Abbas (Iran)</span><span class="dval"><span class="dtag s-closed">CLOSED</span></span></div>
-          <div class="drow"><span class="dlbl">Novorossiysk (Russia &mdash; CPC)</span><span class="dval"><span class="dtag s-risk">HIGH RISK</span></span></div>
-          <div class="drow"><span class="dlbl">Salalah (Oman)</span><span class="dval"><span class="dtag s-partial">OPERATIONAL*</span></span></div>
-          <div class="drow"><span class="dlbl">Jeddah / Yanbu (Saudi)</span><span class="dval"><span class="dtag s-partial">OPERATIONAL*</span></span></div>
-          <div class="drow"><span class="dlbl">Abadan (Iran &mdash; refinery)</span><span class="dval"><span class="dtag s-damaged">DAMAGED</span></span></div>
-          <div style="font-size:.65rem;color:var(--dl-gray);margin-top:6px;">* = operational but under elevated threat</div>
-        </div>
-        <div class="acard teal">
-          <div class="ac-hd"><span class="ac-title">&#128293; LNG Terminal Status</span><span class="ac-src">IEA / GasWorld / operator disclosures</span></div>
-          <div style="font-size:.68rem;font-weight:700;color:var(--dl-gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Export Terminals</div>
-          <div class="drow"><span class="dlbl">Ras Laffan, Qatar</span><span class="dval"><span class="dtag s-partial">60%</span></span></div>
-          <div class="drow"><span class="dlbl">Das Island (ADGAS), UAE</span><span class="dval"><span class="dtag s-risk">AT RISK</span></span></div>
-          <div class="drow"><span class="dlbl">South Pars, Iran</span><span class="dval"><span class="dtag s-closed">SHUT DOWN</span></span></div>
-          <div class="drow"><span class="dlbl">Sohar LNG, Oman</span><span class="dval"><span class="dtag s-op">OPERATIONAL</span></span></div>
-          <div class="drow"><span class="dlbl">Freeport LNG, US</span><span class="dval"><span class="dtag s-partial">MAINT.</span></span></div>
-          <div class="drow"><span class="dlbl">Sabine Pass / Corpus Christi, US</span><span class="dval"><span class="dtag s-op">FULL</span></span></div>
-          <div style="font-size:.68rem;font-weight:700;color:var(--dl-gray);margin:8px 0 4px;text-transform:uppercase;letter-spacing:.06em">Receiving (Import) Terminals</div>
-          <div class="drow"><span class="dlbl">NW Europe (Rotterdam, Zeebrugge)</span><span class="dval"><span class="dtag s-op">FULL</span></span></div>
-          <div class="drow"><span class="dlbl">NE Asia (Japan, Korea, China)</span><span class="dval"><span class="dtag s-op">FULL</span></span></div>
-        </div>
-      </div>
-
-      <!-- Row 4: Storage + Transit Fees + Insurance -->
-      <div class="ag">
-        <div class="acard dark">
-          <div class="ac-hd"><span class="ac-title">&#127983; Storage Volumes</span><span class="ac-src">IEA / EIA / Bloomberg</span></div>
-          <div class="drow"><span class="dlbl">US SPR (Strategic Petroleum Reserve)</span><span class="dval">~330M bbl<span class="dtag s-risk">-45%</span></span></div>
-          <div class="drow"><span class="dlbl">IEA emergency stocks released</span><span class="dval">400M bbl<span class="dtag" style="background:#00A3E0">RECORD</span></span></div>
-          <div class="drow"><span class="dlbl">OECD forward cover</span><span class="dval">~56 days<span class="dtag s-risk">vs 90d target</span></span></div>
-          <div class="drow"><span class="dlbl">Floating storage (global)</span><span class="dval">~180M bbl<span class="dtag s-closed">+157%</span></span></div>
-          <div class="drow"><span class="dlbl">Fujairah onshore storage (UAE)</span><span class="dval">~60M bbl (~60%)</span></div>
-          <div class="drow"><span class="dlbl">European natural gas storage</span><span class="dval">~87% full<span class="dtag s-op">ON TRACK</span></span></div>
-          <div class="drow"><span class="dlbl">Asian LNG strategic reserves</span><span class="dval">Moderate<span class="dtag s-partial">BUILDING</span></span></div>
-        </div>
-        <div class="acard purple">
-          <div class="ac-hd"><span class="ac-title">&#128178; Transit Fees (Speculated)</span><span class="ac-src">Broker estimates / S&amp;P Global Platts</span></div>
-          <div class="drow"><span class="dlbl">Hormuz war-risk premium (vessel)</span><span class="dval">$8&ndash;15/bbl</span></div>
-          <div class="drow"><span class="dlbl">Red Sea surcharge</span><span class="dval">$3&ndash;6/bbl</span></div>
-          <div class="drow"><span class="dlbl">Cape of Good Hope premium</span><span class="dval">$2.50&ndash;4.50/bbl</span></div>
-          <div class="drow"><span class="dlbl">BTC pipeline transit fee</span><span class="dval">$1.20&ndash;2.00/bbl</span></div>
-          <div class="drow"><span class="dlbl">Saudi EWP (pipeline bypass)</span><span class="dval">$0.30&ndash;0.60/bbl</span></div>
-          <div class="drow"><span class="dlbl">SUMED Pipeline</span><span class="dval">$0.40&ndash;0.70/bbl</span></div>
-          <div style="margin-top:10px;padding:8px 10px;background:#f5f0ff;border-left:3px solid var(--dl-purple);border-radius:4px;font-size:.72rem;color:var(--dl-dark);line-height:1.6;">Pre-war Hormuz transit was effectively free (open international waterway). Current war-risk surcharges represent a $8&ndash;15/bbl implicit tariff on ~20% of world oil trade.</div>
-        </div>
-        <div class="acard red">
-          <div class="ac-hd"><span class="ac-title">&#128220; Insurance &amp; Freight</span><span class="ac-src">Lloyd&rsquo;s / BIMCO / Marsh</span></div>
-          <div class="drow"><span class="dlbl">War risk premium (Hormuz/Red Sea)</span><span class="dval">0.75&ndash;1.25%/voyage</span></div>
-          <div class="drow"><span class="dlbl">Pre-war benchmark</span><span class="dval">0.025% <span class="dtag s-closed">&times;40&ndash;50x</span></span></div>
-          <div class="drow"><span class="dlbl">P&amp;I additional call (per vessel)</span><span class="dval">$75,000/call</span></div>
-          <div class="drow"><span class="dlbl">H&amp;M hull surcharge</span><span class="dval">0.25&ndash;0.50% hull</span></div>
-          <div class="drow"><span class="dlbl">Lloyd&rsquo;s JWC extended to</span><span class="dval">Red Sea + N. Arabian Sea</span></div>
-          <div class="drow"><span class="dlbl">Freight rate markup vs pre-war</span><span class="dval">+240&ndash;380% (VLCC)</span></div>
-          <div class="drow"><span class="dlbl">Crew war bonus (per voyage)</span><span class="dval">$5,000&ndash;20,000/person</span></div>
-        </div>
-      </div>
-
-      <!-- Row 5: US Oil & LNG full width -->
-      <div class="ag">
-        <div class="acard ag-full" style="border-top-color:var(--dl-blue)">
-          <div class="ac-hd"><span class="ac-title">&#127482;&#127480; US Oil &amp; LNG Supplies</span><span class="ac-src">EIA &mdash; Aug 2026</span></div>
-          <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:12px;">
-            <div class="pcell"><div class="pname">US Crude Production</div><div class="pval">13.3 mbd</div><div class="pchg down">&#9660; Record high</div></div>
-            <div class="pcell"><div class="pname">US Crude Exports</div><div class="pval">5.2 mbd</div><div class="pchg down">Elevated demand</div></div>
-            <div class="pcell"><div class="pname">US LNG Exports</div><div class="pval">14.2 bcf/d</div><div class="pchg down">&#9660; Record high</div></div>
-            <div class="pcell"><div class="pname">SPR Level</div><div class="pval">~330M bbl</div><div class="pchg up">&#9650; -45% from pre-war</div></div>
-            <div class="pcell"><div class="pname">Henry Hub Spot</div><div class="pval">$3.01/MMBtu</div><div class="pchg up">6-wk low; maint. impact</div></div>
-            <div class="pcell"><div class="pname">WTI Cushing Stocks</div><div class="pval">~420M bbl</div><div class="pchg flat">Moderate; SPR draw</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-            <div style="font-size:.78rem;color:var(--dl-dark);line-height:1.7;"><strong style="color:var(--dl-green)">&#9660; LNG Premium to HH:</strong><br>TTF: +$10.65 &middot; JKM: +$13.57/MMBtu<br>Structural pull keeps US LNG cargoes flowing to EU &amp; Asia despite war-risk freight cost</div>
-            <div style="font-size:.78rem;color:var(--dl-dark);line-height:1.7;"><strong style="color:var(--dl-green)">&#9660; Active US LNG Terminals:</strong><br>Sabine Pass (5 trains, full) &middot; Corpus Christi (3 trains, full) &middot; Cameron (3 trains, full) &middot; Freeport (reduced, maintenance)</div>
-            <div style="font-size:.78rem;color:var(--dl-dark);line-height:1.7;"><strong style="color:var(--dl-green)">&#9660; SPR Policy:</strong><br>400M bbl IEA release (record, Apr 2026) &middot; US SPR at 330M bbl (lowest since 1984) &middot; DOE considering refill once Brent below $85</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 6: Client Exposure Heatmap full width -->
-      <div class="ag">
-        <div class="acard ag-full amber">
-          <div class="ac-hd"><span class="ac-title">&#127777; E&amp;C Sector Exposure by Chokepoint</span><span class="ac-src">Deloitte ER&amp;I internal assessment &mdash; Aug 2026</span></div>
-          <div style="font-size:.72rem;color:var(--dl-gray);margin-bottom:10px;">Exposure rating reflects supply chain dependency, contract exposure, and asset proximity. Not client-specific &mdash; sector-level assessment for E&amp;C advisory context.</div>
-          <table class="hm-table">
-            <thead><tr>
-              <th style="min-width:180px">Chokepoint</th>
-              <th>LNG Production<br>&amp; Export</th>
-              <th>Crude Oil<br>E&amp;P</th>
-              <th>Petrochemicals<br>&amp; Refining</th>
-              <th>E&amp;C Project<br>Contractors</th>
-              <th>Power<br>Generation</th>
-              <th>Shipping<br>&amp; Trading</th>
-            </tr></thead>
+        <div class="as-sec">
+          <h4>Ship Transit (EIA 2Q26)</h4>
+          <table class="transit-table">
+            <thead><tr><th>Chokepoint</th><th>Volume</th><th>Direction (major)</th></tr></thead>
             <tbody>
-              <tr><td>&#127754; Hormuz / Persian Gulf</td><td class="hm-c">Critical</td><td class="hm-c">Critical</td><td class="hm-c">Critical</td><td class="hm-h">High</td><td class="hm-h">High</td><td class="hm-c">Critical</td></tr>
-              <tr><td>&#128308; Red Sea / Bab-el-Mandeb</td><td class="hm-h">High</td><td class="hm-h">High</td><td class="hm-m">Medium</td><td class="hm-l">Low</td><td class="hm-m">Medium</td><td class="hm-c">Critical</td></tr>
-              <tr><td>&#9899; Black Sea / Sea of Azov</td><td class="hm-n">Minimal</td><td class="hm-m">Medium</td><td class="hm-m">Medium</td><td class="hm-l">Low</td><td class="hm-l">Low</td><td class="hm-h">High</td></tr>
-              <tr><td>&#128998; Caspian Sea / CPC Route</td><td class="hm-n">Minimal</td><td class="hm-h">High</td><td class="hm-m">Medium</td><td class="hm-m">Medium</td><td class="hm-l">Low</td><td class="hm-m">Medium</td></tr>
-              <tr><td>&#128337; Cumulative / Combined Risk</td><td class="hm-c">Critical</td><td class="hm-c">Critical</td><td class="hm-c">Critical</td><td class="hm-h">High</td><td class="hm-h">High</td><td class="hm-c">Critical</td></tr>
+              <tr><td>Strait of Malacca</td><td class="t-mbd">16.6 mbd</td><td class="t-dir">Middle East/Africa → East Asia; Pacific ↔ Indian Ocean</td></tr>
+              <tr><td>Cape of Good Hope</td><td class="t-mbd">9.4 mbd</td><td class="t-dir">Gulf/West Africa ↔ Europe/US bypassing Suez/Red Sea</td></tr>
+              <tr><td>Bab el-Mandeb</td><td class="t-mbd">8.1 mbd</td><td class="t-dir">Red Sea ↔ Gulf of Aden (Europe–Asia corridor)</td></tr>
+              <tr><td>Suez Canal</td><td class="t-mbd">5.8 mbd</td><td class="t-dir">Mediterranean ↔ Red Sea (two-way transit)</td></tr>
+              <tr><td>Strait of Hormuz</td><td class="t-mbd">4.9 mbd*</td><td class="t-dir">Persian Gulf exports → Arabian Sea / global markets</td></tr>
+              <tr><td>Danish Straits</td><td class="t-mbd">4.7 mbd</td><td class="t-dir">Baltic ↔ North Sea</td></tr>
+              <tr><td>Turkish Straits</td><td class="t-mbd">4.1 mbd</td><td class="t-dir">Black Sea ↔ Mediterranean</td></tr>
+              <tr><td>Panama Canal</td><td class="t-mbd">3.2 mbd</td><td class="t-dir">Atlantic ↔ Pacific inter-basin crude/products</td></tr>
             </tbody>
           </table>
-          <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:.68rem;color:var(--dl-gray)">
-            <span><span style="display:inline-block;width:10px;height:10px;background:#fce8e8;border:1px solid #c00;border-radius:2px;vertical-align:middle"></span> Critical = direct supply chain dependency; business continuity risk</span>
-            <span><span style="display:inline-block;width:10px;height:10px;background:#ffd9be;border:1px solid #c60;border-radius:2px;vertical-align:middle"></span> High = significant cost/schedule exposure</span>
-            <span><span style="display:inline-block;width:10px;height:10px;background:#fff3cd;border:1px solid #b8a000;border-radius:2px;vertical-align:middle"></span> Medium = indirect or partial exposure</span>
-            <span><span style="display:inline-block;width:10px;height:10px;background:#e8f5e9;border:1px solid #1b5e20;border-radius:2px;vertical-align:middle"></span> Low = manageable or substitutable</span>
-          </div>
+          <div class="as-note">*Value shown per attached EIA 2Q26 map. Hormuz war-time flow in this dashboard remains far below pre-crisis levels.</div>
         </div>
-      </div>
 
+        <div class="as-sec">
+          <h4>Flow Band by Chokepoint</h4>
+          <div class="flow-band"><span>Hormuz</span><span class="bad b1">&lt;25%</span></div>
+          <div class="flow-band"><span>Red Sea / Bab-el-Mandeb</span><span class="bad b1">&lt;25%</span></div>
+          <div class="flow-band"><span>Caspian / CPC</span><span class="bad b2">25–50%</span></div>
+          <div class="flow-band"><span>Black Sea / Azov</span><span class="bad b3">50–75%</span></div>
+          <div class="flow-band"><span>Global (other routes)</span><span class="bad b4">75%+</span></div>
+        </div>
+
+        <div class="as-sec">
+          <h4>Prices, Freight, Insurance</h4>
+          <div class="mini-row"><span>Brent</span><b>$96.4/bbl</b></div>
+          <div class="mini-row"><span>WTI</span><b>$91.6/bbl</b></div>
+          <div class="mini-row"><span>Oman</span><b>$95.8/bbl</b></div>
+          <div class="mini-row"><span>VLCC TD3C</span><b>$85k/day</b></div>
+          <div class="mini-row"><span>LNG Carrier</span><b>$180k/day</b></div>
+          <div class="mini-row"><span>War-Risk Premium</span><b>0.75–1.25%</b></div>
+        </div>
+      </aside>
     </div>
-  </div><!-- /analyticsView -->
+  </div>
+  <div class="view about-view" id="aboutView" hidden>
+
     <div class="about-inner">
       <div class="about-hero">
         <div class="eyebrow">Deloitte Center for Energy, Resources &amp; Industrials</div>
@@ -638,6 +523,8 @@ a{color:var(--dl-blue-dk);}
 <script>
 'use strict';
 const DATA_URL = './data/incidents.json';
+const ANALYTICS_URL = './data/analytics_dashboard.json';
+const DATA_START_DATE = '2026-02-28';
 const CATS = {
   maritime:   { label:'Maritime',    emoji:'🚢', color:'#00A3E0' },
   nuclear:    { label:'Nuclear',     emoji:'☢️', color:'#C6281C' },
@@ -651,10 +538,226 @@ const CATS = {
 const SEV_COLOR={1:'#86BC25',2:'#E8B000',3:'#E87722',4:'#C6281C',5:'#7f1d1d'};
 const SEV_LABEL={1:'Low',2:'Elevated',3:'High',4:'Severe',5:'Critical'};
 let allIncidents=[],markers={},listEls={},activeId=null;
+let analyticsFeed=null;
+let latestIncidentDate='';
 let filters={cats:new Set(Object.keys(CATS)),minSev:1,dateFrom:'2026-02-28',dateTo:'',search:''};
-const map=L.map('map',{zoomControl:true}).setView([33,50],4);
+const map=L.map('map',{zoomControl:true}).setView([20,20],2);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',subdomains:'abcd',maxZoom:18}).addTo(map);
+const transitLayer = L.layerGroup().addTo(map);
+const clientLayer = L.layerGroup().addTo(map);
+const portsLayer = L.layerGroup().addTo(map);
+const lngLayer = L.layerGroup().addTo(map);
+let transitAnimId=null,transitActors=[],lastAnimTs=0;
 map.on('click',()=>deselect());
+
+const CHOKEPOINTS = [
+  { name:'Strait of Malacca', mbd:16.6, lat:2.5, lon:101.0 },
+  { name:'Cape of Good Hope', mbd:9.4, lat:-34.7, lon:19.0 },
+  { name:'Bab el-Mandeb', mbd:8.1, lat:12.7, lon:43.3 },
+  { name:'Suez Canal', mbd:5.8, lat:30.3, lon:32.3 },
+  { name:'Strait of Hormuz', mbd:4.9, lat:26.6, lon:56.3 },
+  { name:'Danish Straits', mbd:4.7, lat:55.7, lon:12.8 },
+  { name:'Turkish Straits', mbd:4.1, lat:41.0, lon:29.0 },
+  { name:'Panama Canal', mbd:3.2, lat:9.1, lon:-79.6 }
+];
+
+const TRANSIT_ROUTES = [
+  {
+    from:'Ras Tanura (Saudi)',to:'Ningbo-Zhoushan (China)',corridor:'Hormuz + Malacca',speed:0.000012,shipCount:6,
+    points:[[26.6,50.2],[26.6,56.3],[19.5,62.5],[9.0,74.5],[5.5,90.0],[2.5,101.0],[8.0,108.5],[18.5,118.5],[29.9,121.8]]
+  },
+  {
+    from:'Ras Tanura (Saudi)',to:'Trieste (Italy)',corridor:'Hormuz + Bab el-Mandeb + Suez',speed:0.000011,shipCount:5,
+    points:[[26.6,50.2],[26.6,56.3],[18.0,57.0],[12.7,43.3],[17.5,39.5],[24.0,35.0],[30.3,32.3],[33.5,24.0],[36.0,14.0],[45.7,13.8]]
+  },
+  {
+    from:'Ras Tanura (Saudi)',to:'Rotterdam (NL)',corridor:'Hormuz + Cape detour',speed:0.000009,shipCount:4,
+    points:[[26.6,50.2],[26.6,56.3],[10.0,58.0],[-9.0,52.0],[-24.0,35.0],[-34.7,19.0],[-15.0,5.0],[5.0,-6.0],[28.0,-12.0],[45.0,-10.0],[51.9,4.5]]
+  },
+  {
+    from:'Ras Tanura (Saudi)',to:'Jamnagar (India)',corridor:'Hormuz + Arabian Sea',speed:0.000013,shipCount:4,
+    points:[[26.6,50.2],[26.6,56.3],[23.5,60.0],[20.0,64.0],[18.7,67.5],[22.4,70.0]]
+  },
+  {
+    from:'Yanbu (Red Sea)',to:'Augusta (Italy)',corridor:'Bab el-Mandeb + Suez northbound',speed:0.000011,shipCount:3,
+    points:[[24.1,38.1],[20.0,39.0],[16.0,41.0],[12.7,43.3],[20.0,38.5],[26.0,34.5],[30.3,32.3],[33.5,24.0],[35.0,18.0],[37.2,15.2]]
+  },
+  {
+    from:'Bonny (Nigeria)',to:'Rotterdam (NL)',corridor:'West Africa -> Europe',speed:0.00001,shipCount:4,
+    points:[[4.4,7.2],[5.0,1.0],[12.0,-10.0],[24.0,-14.0],[37.0,-12.0],[50.0,-4.0],[51.9,4.5]]
+  },
+  {
+    from:'Bonny (Nigeria)',to:'Jamnagar (India)',corridor:'West Africa + Cape + Indian Ocean',speed:0.000009,shipCount:3,
+    points:[[4.4,7.2],[-5.0,1.0],[-20.0,12.0],[-34.7,19.0],[-25.0,45.0],[-10.0,58.0],[4.0,68.0],[15.0,71.0],[22.4,70.0]]
+  },
+  {
+    from:'Novorossiysk (RU)',to:'Augusta (Italy)',corridor:'Turkish Straits + Mediterranean',speed:0.000014,shipCount:3,
+    points:[[44.7,37.8],[42.0,32.0],[41.0,29.0],[39.0,26.0],[38.8,23.0],[37.5,19.0],[37.2,15.2]]
+  },
+  {
+    from:'Primorsk (RU Baltic)',to:'Rotterdam (NL)',corridor:'Danish Straits + North Sea',speed:0.000013,shipCount:3,
+    points:[[60.4,28.7],[58.0,20.0],[56.0,15.0],[55.7,12.8],[54.8,9.5],[53.5,4.5],[51.9,4.5]]
+  },
+  {
+    from:'Houston (US Gulf)',to:'Rotterdam (NL)',corridor:'North Atlantic',speed:0.000011,shipCount:4,
+    points:[[29.7,-95.0],[29.5,-88.0],[33.0,-75.0],[39.0,-58.0],[46.0,-35.0],[51.0,-10.0],[51.9,4.5]]
+  },
+  {
+    from:'Houston (US Gulf)',to:'Los Angeles (USWC)',corridor:'Panama Canal westbound',speed:0.000011,shipCount:3,
+    points:[[29.7,-95.0],[25.0,-90.0],[18.0,-84.0],[9.1,-79.6],[12.0,-88.0],[20.0,-105.0],[27.0,-115.0],[33.7,-118.2]]
+  },
+  {
+    from:'Santos (Brazil)',to:'Ningbo-Zhoushan (China)',corridor:'South Atlantic + Cape + Malacca',speed:0.000008,shipCount:3,
+    points:[[-23.9,-46.3],[-30.0,-20.0],[-34.7,19.0],[-20.0,50.0],[-6.0,78.0],[2.5,101.0],[10.0,112.0],[22.0,119.0],[29.9,121.8]]
+  },
+  {
+    from:'Ningbo-Zhoushan (China)',to:'Rotterdam (NL)',corridor:'Malacca + Suez westbound',speed:0.00001,shipCount:4,
+    points:[[29.9,121.8],[20.0,118.0],[8.0,108.0],[2.5,101.0],[8.0,80.0],[12.7,43.3],[22.0,35.5],[30.3,32.3],[36.0,14.0],[43.0,5.0],[51.9,4.5]]
+  },
+  {
+    from:'Los Angeles (USWC)',to:'Houston (US Gulf)',corridor:'Panama Canal eastbound',speed:0.000011,shipCount:3,
+    points:[[33.7,-118.2],[27.0,-115.0],[20.0,-105.0],[12.0,-88.0],[9.1,-79.6],[18.0,-84.0],[25.0,-90.0],[29.7,-95.0]]
+  }
+];
+
+function midpoint(points){
+  const i=Math.floor(points.length/2);
+  return points[i];
+}
+
+function routeLength(points){
+  let len=0;
+  for(let i=1;i<points.length;i++){
+    len+=Math.hypot(points[i][0]-points[i-1][0],points[i][1]-points[i-1][1]);
+  }
+  return len;
+}
+
+function pointAlong(points,t){
+  const total=routeLength(points);
+  if(!total)return points[0];
+  let target=(t%1)*total;
+  for(let i=1;i<points.length;i++){
+    const a=points[i-1],b=points[i];
+    const seg=Math.hypot(b[0]-a[0],b[1]-a[1]);
+    if(target<=seg){
+      const k=seg?target/seg:0;
+      return [a[0]+(b[0]-a[0])*k,a[1]+(b[1]-a[1])*k];
+    }
+    target-=seg;
+  }
+  return points[points.length-1];
+}
+
+function startTransitAnimation(){
+  if(transitAnimId) cancelAnimationFrame(transitAnimId);
+  lastAnimTs=0;
+  const tick=(ts)=>{
+    if(!lastAnimTs) lastAnimTs=ts;
+    const dt=ts-lastAnimTs;
+    lastAnimTs=ts;
+    for(const actor of transitActors){
+      actor.progress=(actor.progress + actor.speed*dt)%1;
+      const p=pointAlong(actor.points,actor.progress);
+      actor.marker.setLatLng(p);
+    }
+    transitAnimId=requestAnimationFrame(tick);
+  };
+  transitAnimId=requestAnimationFrame(tick);
+}
+
+function renderTransitOverlay(){
+  transitLayer.clearLayers();
+  transitActors=[];
+  for(const route of TRANSIT_ROUTES){
+    L.polyline(route.points,{
+      color:'#8E1B2D',
+      weight:2,
+      opacity:.5,
+      dashArray:'10 10',
+      lineCap:'round',
+      lineJoin:'round'
+    }).addTo(transitLayer).getElement()?.classList.add('route-track');
+
+    L.circleMarker(route.points[0],{radius:2.5,color:'#0D2341',fillColor:'#0D2341',fillOpacity:1,weight:1}).addTo(transitLayer);
+    L.circleMarker(route.points[route.points.length-1],{radius:2.5,color:'#86BC25',fillColor:'#86BC25',fillOpacity:1,weight:1}).addTo(transitLayer);
+
+    const m=midpoint(route.points);
+    L.marker([m[0],m[1]],{
+      interactive:false,
+      icon:L.divIcon({
+        className:'leaflet-div-icon',
+        iconSize:[180,18],
+        iconAnchor:[90,9],
+        html:`<div class="route-label">${route.from} to ${route.to}</div>`
+      })
+    }).addTo(transitLayer);
+
+    const shipMarker=L.marker(route.points[0],{
+      interactive:false,
+      icon:L.divIcon({
+        className:'leaflet-div-icon',
+        iconSize:[20,20],
+        iconAnchor:[10,10],
+        html:'<div class="ship-flow">🚢</div>'
+      })
+    }).addTo(transitLayer);
+    const n=route.shipCount||1;
+    transitActors.push({
+      marker:shipMarker,
+      points:route.points,
+      progress:Math.random(),
+      speed:route.speed
+    });
+    for(let i=1;i<n;i++){
+      const extra=L.marker(route.points[0],{
+        interactive:false,
+        icon:L.divIcon({
+          className:'leaflet-div-icon',
+          iconSize:[20,20],
+          iconAnchor:[10,10],
+          html:'<div class="ship-flow">🚢</div>'
+        })
+      }).addTo(transitLayer);
+      transitActors.push({
+        marker:extra,
+        points:route.points,
+        progress:(i/n+Math.random()*0.08)%1,
+        speed:route.speed*(0.92+Math.random()*0.18)
+      });
+    }
+  }
+
+  for(const cp of CHOKEPOINTS){
+    L.marker([cp.lat,cp.lon],{
+      icon:L.divIcon({
+        className:'leaflet-div-icon',
+        iconSize:[34,34],
+        iconAnchor:[17,17],
+        html:`<div class="cp-bubble">${cp.mbd}</div>`
+      })
+    }).addTo(transitLayer);
+
+    L.marker([cp.lat-2.2,cp.lon+1.2],{
+      interactive:false,
+      icon:L.divIcon({
+        className:'leaflet-div-icon',
+        iconSize:[130,18],
+        iconAnchor:[0,9],
+        html:`<div class="cp-name">${cp.name}</div>`
+      })
+    }).addTo(transitLayer);
+  }
+
+  startTransitAnimation();
+}
+
+renderTransitOverlay();
+const transitBounds=L.latLngBounds([
+  ...CHOKEPOINTS.map(c=>[c.lat,c.lon]),
+  ...TRANSIT_ROUTES.flatMap(r=>r.points)
+]);
+map.fitBounds(transitBounds,{padding:[24,24],maxZoom:2});
 function makeMarker(inc){
   const cat=CATS[inc.category]||CATS.maritime;
   const size=20+inc.severity*4,fs=Math.round(size*.5);
@@ -670,18 +773,95 @@ function buildPopup(inc){
   const unv=inc.verified===false?'<div class="dp-unverified">⚠ Auto-fetched — pending manual verification</div>':'';
   return`<div class="dl-popup"><div class="dp-head"><span class="dp-date">${inc.date}</span><span class="dp-cat" style="background:${cat.color}">${cat.emoji} ${cat.label}</span><span class="dp-sev" style="background:${SEV_COLOR[inc.severity]}">${inc.severity}·${SEV_LABEL[inc.severity]}</span></div><div class="dp-event">${inc.event}</div><div class="dp-loc">📍 ${inc.location}</div>${inc.vessel?`<div class="dp-vessel">🚢 ${inc.vessel}</div>`:''}<div class="dp-impact"><b>Flow impact:</b><br>${inc.flow_impact}</div>${fuels?`<div class="dp-fuels">${fuels}</div>`:''}${unv}<a class="dp-src" href="${inc.source_url}" target="_blank" rel="noopener">↗ ${inc.source_label}</a></div>`;
 }
+
+function shiftDays(isoDate, days){
+  const d=new Date(isoDate+'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate()+days);
+  return d.toISOString().slice(0,10);
+}
+
+function shiftMonths(isoDate, months){
+  const d=new Date(isoDate+'T00:00:00Z');
+  d.setUTCMonth(d.getUTCMonth()+months);
+  return d.toISOString().slice(0,10);
+}
+
+function applyDatePreset(preset){
+  const to=latestIncidentDate || new Date().toISOString().slice(0,10);
+  let from=DATA_START_DATE;
+  if(preset==='7d') from=shiftDays(to,-7);
+  else if(preset==='15d') from=shiftDays(to,-15);
+  else if(preset==='1m') from=shiftMonths(to,-1);
+  else if(preset==='3m') from=shiftMonths(to,-3);
+  else if(preset==='6m') from=shiftMonths(to,-6);
+  else if(preset==='custom') {
+    from=document.getElementById('dateFrom').value || DATA_START_DATE;
+    filters.dateFrom=from; filters.dateTo=document.getElementById('dateTo').value || to; renderAll(); return;
+  }
+  if(from<DATA_START_DATE) from=DATA_START_DATE;
+  document.getElementById('dateFrom').value=from;
+  document.getElementById('dateTo').value=to;
+  filters.dateFrom=from;
+  filters.dateTo=to;
+  renderAll();
+}
+
+async function fetchJsonWithRetry(url, options={}){
+  const { attempts=3, timeoutMs=12000 } = options;
+  let lastErr=null;
+  for(let a=1;a<=attempts;a++){
+    const ctrl=new AbortController();
+    const to=setTimeout(()=>ctrl.abort(), timeoutMs);
+    try{
+      const res=await fetch(url,{signal:ctrl.signal,cache:'no-store'});
+      clearTimeout(to);
+      if(!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    }catch(err){
+      clearTimeout(to);
+      lastErr=err;
+      if(a<attempts) await new Promise(r=>setTimeout(r, 600*a));
+    }
+  }
+  throw lastErr || new Error('fetch_failed');
+}
+
+function setFeedHealth(kind, text){
+  const el=document.getElementById('feedHealth');
+  if(!el) return;
+  el.className='feed-health ' + (kind==='ok'?'feed-ok':kind==='bad'?'feed-bad':'feed-warn');
+  el.textContent=text;
+}
+
 async function loadData(){
   try{
-    const r=await fetch(DATA_URL+'?_='+Date.now());
-    if(!r.ok)throw new Error(r.status);
-    const data=await r.json();
+    const cacheBust='?_='+Date.now();
+    const data=await fetchJsonWithRetry(DATA_URL+cacheBust,{attempts:3,timeoutMs:15000});
+    try{
+      analyticsFeed=await fetchJsonWithRetry(ANALYTICS_URL+cacheBust,{attempts:2,timeoutMs:9000});
+    }catch(_e){analyticsFeed=null;}
     allIncidents=data.incidents||[];
+    latestIncidentDate=allIncidents.reduce((m,i)=>!m||i.date>m?i.date:m,'');
     const upd=data.meta?.last_updated?new Date(data.meta.last_updated).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+' UTC':'unknown';
     document.getElementById('lastUpdated').textContent='Updated '+upd;
     document.getElementById('statTotal').textContent=allIncidents.length;
+    const rangeStart=(data.meta?.window_start||DATA_START_DATE);
+    const rangeEnd=latestIncidentDate||new Date().toISOString().slice(0,10);
+    document.getElementById('statRange').textContent=`${rangeStart} to ${rangeEnd}`;
     document.getElementById('setupCount').textContent=allIncidents.length;
     if(bot)bot.buildPrompt(allIncidents);
+    applyDatePreset(document.getElementById('datePreset').value||'since');
     renderAll();
+    updateRightAnalytics();
+    renderAnalyticsLayers();
+    if(analyticsFeed?.meta?.last_updated){
+      const ageH=(Date.now()-new Date(analyticsFeed.meta.last_updated).getTime())/36e5;
+      if(ageH<=48) setFeedHealth('ok','FEEDS HEALTHY');
+      else if(ageH<=168) setFeedHealth('warn','ANALYTICS STALE');
+      else setFeedHealth('bad','ANALYTICS OUTDATED');
+    }else{
+      setFeedHealth('warn','ANALYTICS PARTIAL');
+    }
   }catch(e){document.getElementById('lastUpdated').textContent='Error: '+e.message;}
 }
 function applyFilters(){
@@ -729,16 +909,18 @@ document.querySelectorAll('.cat-chip').forEach(btn=>{
 document.getElementById('catAll').addEventListener('click',()=>{document.querySelectorAll('.cat-chip').forEach(b=>{b.classList.add('on');filters.cats.add(b.dataset.cat);});renderAll();});
 document.getElementById('catNone').addEventListener('click',()=>{document.querySelectorAll('.cat-chip').forEach(b=>{b.classList.remove('on');filters.cats.delete(b.dataset.cat);});renderAll();});
 document.getElementById('sevSlider').addEventListener('input',function(){filters.minSev=+this.value;document.getElementById('sevVal').textContent=this.value;renderAll();});
-document.getElementById('dateFrom').addEventListener('change',e=>{filters.dateFrom=e.target.value;renderAll();});
-document.getElementById('dateTo').addEventListener('change',e=>{filters.dateTo=e.target.value;renderAll();});
+document.getElementById('datePreset').addEventListener('change',e=>applyDatePreset(e.target.value));
+document.getElementById('dateFrom').addEventListener('change',e=>{document.getElementById('datePreset').value='custom';filters.dateFrom=e.target.value;renderAll();});
+document.getElementById('dateTo').addEventListener('change',e=>{document.getElementById('datePreset').value='custom';filters.dateTo=e.target.value;renderAll();});
 document.getElementById('searchBox').addEventListener('input',e=>{filters.search=e.target.value;renderAll();});
 document.getElementById('btnClear').addEventListener('click',()=>{
   filters={cats:new Set(Object.keys(CATS)),minSev:1,dateFrom:'2026-02-28',dateTo:'',search:''};
   document.getElementById('sevSlider').value=1;document.getElementById('sevVal').textContent='1';
   document.getElementById('dateFrom').value='2026-02-28';document.getElementById('dateTo').value='';
+  document.getElementById('datePreset').value='since';
   document.getElementById('searchBox').value='';
   document.querySelectorAll('.cat-chip').forEach(b=>b.classList.add('on'));
-  renderAll();
+  applyDatePreset('since');
 });
 // ↻ Refresh — public, no auth; just reloads the latest auto-updated JSON
 document.getElementById('refreshBtn').addEventListener('click', () => {
@@ -873,26 +1055,153 @@ document.querySelectorAll('.nav-tab').forEach(tab=>{
   tab.addEventListener('click',()=>{
     document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');
     const t=tab.dataset.tab;
-    document.getElementById('mapView').hidden       = t!=='map';
-    document.getElementById('analyticsView').hidden = t!=='analytics';
-    document.getElementById('aboutView').hidden     = t!=='about';
+    document.getElementById('mapView').hidden   = t!=='map';
+    document.getElementById('aboutView').hidden = t!=='about';
     if(t==='map') map.invalidateSize();
-    if(t==='analytics') updateAnalytics();
   });
 });
 
-function updateAnalytics() {
+function updateRightAnalytics() {
   if (!allIncidents.length) return;
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-30);
-  const cutStr  = cutoff.toISOString().slice(0,10);
-  const maritime = allIncidents.filter(i=>(i.category||'maritime')==='maritime');
-  const sev5     = allIncidents.filter(i=>i.severity===5);
-  const recent   = allIncidents.filter(i=>i.date>=cutStr);
-  document.getElementById('sd-total').textContent    = allIncidents.length;
-  document.getElementById('sd-maritime').textContent = maritime.length;
-  document.getElementById('sd-sev5').textContent     = sev5.length;
-  document.getElementById('sd-recent').textContent   = recent.length;
+  const cutStr = cutoff.toISOString().slice(0,10);
+  const total=allIncidents.length;
+  const maritime=allIncidents.filter(i=>(i.category||'maritime')==='maritime');
+  const sev5=allIncidents.filter(i=>i.severity===5);
+  const recent=allIncidents.filter(i=>i.date>=cutStr);
+  document.getElementById('ak-total').textContent = total;
+  document.getElementById('ak-mar').textContent   = maritime.length;
+  document.getElementById('ak-sev5').textContent  = sev5.length;
+  document.getElementById('ak-30d').textContent   = recent.length;
+
+  if(!analyticsFeed){
+    document.getElementById('analyticsUpdated').textContent='Analytics feed unavailable. Showing incident-only stats.';
+    document.getElementById('clientAssetList').innerHTML='';
+    document.getElementById('portAssetList').innerHTML='';
+    document.getElementById('lngAssetList').innerHTML='';
+    document.getElementById('an1').textContent = `${total} incidents tracked`;
+    document.getElementById('an1s').textContent = `${recent.length} logged in last 30 days`;
+    return;
+  }
+
+  const f=analyticsFeed;
+  const upd=f.meta?.last_updated?new Date(f.meta.last_updated).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})+' UTC':'unknown';
+  document.getElementById('analyticsUpdated').textContent=`Analytics feed updated ${upd}. Sources embedded per metric.`;
+
+  const rows=(arr,left,right)=>arr.map(x=>`<div class="a12-row"><span>${left(x)}</span><strong>${right(x)}</strong></div>`).join('');
+
+  document.getElementById('an1').textContent=`${f.client_exposure.companies.length} key companies mapped`;
+  document.getElementById('an1s').textContent=f.client_exposure.source_refs.join(' | ');
+
+  const sd=f.shipping_disruptions;
+  document.getElementById('an2').textContent=`${sd.incidents} events | ${sd.affected_capacity_mbd} mbd impacted`;
+  document.getElementById('an2s').textContent=`Products: ${sd.products.join(', ')} | Intensity ${sd.intensity_index_0_100}/100`;
+
+  const bp=f.bypass_pipeline_capacity.items;
+  const bpTotal=bp.reduce((s,i)=>s+(i.volume_mbd||0),0).toFixed(1);
+  document.getElementById('an3').textContent=`${bpTotal} mbd bypass pipeline capacity`;
+  document.getElementById('an3s').textContent=bp.map(i=>`${i.name}: ${i.status}`).slice(0,2).join(' | ');
+
+  const vb=f.vessel_flow_chokepoint.bands;
+  document.getElementById('an4').innerHTML=[
+    {k:'<25%',v:vb.lt25.join(', ')},{k:'25-50%',v:vb.b25_50.join(', ')},{k:'50-75%',v:vb.b50_75.join(', ')},{k:'75%+',v:vb.g75.join(', ')}
+  ].map(r=>`<div class="a12-row"><span>${r.k}</span><strong>${r.v}</strong></div>`).join('');
+
+  document.getElementById('an5').innerHTML=rows(f.key_ports.ports.slice(0,5),p=>p.name,p=>`${p.capacity_mbd} mbd | ${p.status}`);
+
+  const st=f.storage;
+  document.getElementById('an6').innerHTML=[
+    {n:'Land storage',v:`${st.land_storage_mmbbl} mmbbl`},
+    {n:'Afloat storage',v:`${st.afloat_storage_mmbbl} mmbbl`},
+    {n:'Strategic storage',v:`${st.strategic_storage_mmbbl} mmbbl`}
+  ].map(r=>`<div class="a12-row"><span>${r.n}</span><strong>${r.v}</strong></div>`).join('');
+
+  const tf=f.transit_fee;
+  document.getElementById('an7').textContent=`Suez ~$${tf.suez_typical_usd_per_ton}/ton | Panama ~$${tf.panama_typical_usd_per_pcu}/PCU`;
+  document.getElementById('an7s').textContent=`Speculated uplifts: Suez +${tf.suez_speculated_war_risk_uplift_pct}% | Panama +${tf.panama_drought_uplift_pct}%`;
+
+  const op=f.oil_prices_spreads;
+  document.getElementById('an8').innerHTML=[
+    {n:'Oman',v:`$${op.oman_usd_bbl}`},{n:'Arab Light',v:`$${op.arab_light_usd_bbl}`},{n:'Brent',v:`$${op.brent_usd_bbl}`},{n:'Dubai',v:`$${op.dubai_usd_bbl}`},{n:'Brent-Oman',v:`$${op.brent_minus_oman_usd}`}
+  ].map(r=>`<div class="a12-row"><span>${r.n}</span><strong>${r.v}</strong></div>`).join('');
+  document.getElementById('an8s').textContent=f.oil_prices_spreads.source_refs.join(' | ');
+
+  const sr=f.shipping_rates_trend;
+  document.getElementById('an9').textContent=`VLCC $${sr.vlcc_td3c_usd_day.toLocaleString()}/d | Suezmax $${sr.suezmax_td20_usd_day.toLocaleString()}/d`;
+  document.getElementById('an9s').textContent=`Aframax $${sr.aframax_med_usd_day.toLocaleString()}/d | Trend: ${sr.trend_30d}`;
+
+  const ins=f.insurance_freight;
+  document.getElementById('an10').textContent=`War-risk: Hormuz ${ins.war_risk_hormuz_pct_hull}% | Red Sea ${ins.war_risk_red_sea_pct_hull}%`;
+  document.getElementById('an10s').textContent=`Freight premium ~$${ins.freight_premium_usd_bbl}/bbl | Trend: ${ins.trend_30d}`;
+
+  const t=f.lng_terminals.terminals;
+  const offline=t.filter(x=>/disrupt|outage|closed/i.test(x.status)).length;
+  document.getElementById('an11').textContent=`${t.length} terminals tracked | ${offline} materially disrupted`;
+  document.getElementById('an11s').textContent=t.slice(0,3).map(x=>`${x.name}: ${x.status}`).join(' | ');
+
+  const us=f.us_oil_lng_supplies;
+  document.getElementById('an12').textContent=`Crude supply ${us.us_crude_supply_mbd} mbd | LNG exports ${us.us_lng_exports_bcfpd} bcf/d`;
+  document.getElementById('an12s').textContent=`Crude exports ${us.us_crude_exports_mbd} mbd | LNG feedgas ${us.us_lng_feedgas_bcfpd} bcf/d`;
 }
+
+function exposureColor(level){
+  if(level==='Very High') return '#C6281C';
+  if(level==='High') return '#E87722';
+  return '#0D8390';
+}
+
+function renderAnalyticsLayers(){
+  clientLayer.clearLayers();
+  portsLayer.clearLayers();
+  lngLayer.clearLayers();
+  if(!analyticsFeed) return;
+
+  for(const c of (analyticsFeed.client_exposure?.companies||[])){
+    L.marker([c.lat,c.lon],{
+      icon:L.divIcon({className:'leaflet-div-icon',iconSize:[26,26],iconAnchor:[13,13],html:`<div class="asset-pin" style="background:${exposureColor(c.exposure)}">🏢</div>`})
+    })
+      .bindPopup(`<b>${c.name}</b><br>${c.hq}<br>Exposure: ${c.exposure}<br>Segment: ${c.segment}`)
+      .addTo(clientLayer);
+    L.marker([c.lat+1.1,c.lon+1.2],{interactive:false,icon:L.divIcon({className:'leaflet-div-icon',iconSize:[120,16],iconAnchor:[0,8],html:`<div class="asset-label">${c.name}</div>`})}).addTo(clientLayer);
+  }
+
+  for(const p of (analyticsFeed.key_ports?.ports||[])){
+    L.marker([p.lat,p.lon],{
+      icon:L.divIcon({className:'leaflet-div-icon',iconSize:[26,26],iconAnchor:[13,13],html:'<div class="asset-pin" style="background:#005EB8">⚓</div>'})
+    })
+      .bindPopup(`<b>${p.name}</b><br>${p.country}<br>Capacity: ${p.capacity_mbd} mbd<br>Status: ${p.status}`)
+      .addTo(portsLayer);
+    L.marker([p.lat+1.0,p.lon+1.1],{interactive:false,icon:L.divIcon({className:'leaflet-div-icon',iconSize:[120,16],iconAnchor:[0,8],html:`<div class="asset-label">${p.name}</div>`})}).addTo(portsLayer);
+  }
+
+  for(const t of (analyticsFeed.lng_terminals?.terminals||[])){
+    const bad=/disrupt|outage|closed/i.test(t.status);
+    L.marker([t.lat,t.lon],{
+      icon:L.divIcon({className:'leaflet-div-icon',iconSize:[26,26],iconAnchor:[13,13],html:`<div class="asset-pin" style="background:${bad?'#C6281C':'#86BC25'}">⛽</div>`})
+    })
+      .bindPopup(`<b>${t.name}</b><br>${t.country}<br>Capacity: ${t.capacity_mtpa} mtpa<br>Status: ${t.status}`)
+      .addTo(lngLayer);
+    L.marker([t.lat+1.0,t.lon+1.1],{interactive:false,icon:L.divIcon({className:'leaflet-div-icon',iconSize:[120,16],iconAnchor:[0,8],html:`<div class="asset-label">${t.name}</div>`})}).addTo(lngLayer);
+  }
+
+  document.getElementById('clientAssetList').innerHTML=(analyticsFeed.client_exposure?.companies||[])
+    .map(c=>`<div class="asset-row"><span>${c.name}</span><strong>${c.exposure}</strong></div>`).join('');
+  document.getElementById('portAssetList').innerHTML=(analyticsFeed.key_ports?.ports||[])
+    .map(p=>`<div class="asset-row"><span>${p.name}</span><strong>${p.capacity_mbd} mbd</strong></div>`).join('');
+  document.getElementById('lngAssetList').innerHTML=(analyticsFeed.lng_terminals?.terminals||[])
+    .map(t=>`<div class="asset-row"><span>${t.name}</span><strong>${t.capacity_mtpa} mtpa</strong></div>`).join('');
+
+  const lyrClients=document.getElementById('lyrClients');
+  const lyrPorts=document.getElementById('lyrPorts');
+  const lyrLng=document.getElementById('lyrLng');
+  if(lyrClients && !lyrClients.checked) map.removeLayer(clientLayer); else if(lyrClients) map.addLayer(clientLayer);
+  if(lyrPorts && !lyrPorts.checked) map.removeLayer(portsLayer); else if(lyrPorts) map.addLayer(portsLayer);
+  if(lyrLng && !lyrLng.checked) map.removeLayer(lngLayer); else if(lyrLng) map.addLayer(lngLayer);
+}
+
+document.getElementById('lyrClients')?.addEventListener('change',e=>{ if(e.target.checked) map.addLayer(clientLayer); else map.removeLayer(clientLayer); });
+document.getElementById('lyrPorts')?.addEventListener('change',e=>{ if(e.target.checked) map.addLayer(portsLayer); else map.removeLayer(portsLayer); });
+document.getElementById('lyrLng')?.addEventListener('change',e=>{ if(e.target.checked) map.addLayer(lngLayer); else map.removeLayer(lngLayer); });
 class ERIBot{
   constructor(){this.key=localStorage.getItem('dl_eri_key')||'';this.hist=[];this.sys='';}
   buildPrompt(incidents){
