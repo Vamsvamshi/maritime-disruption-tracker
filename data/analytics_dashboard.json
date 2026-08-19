@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-08-19T10:27:50.913Z",
+    "last_updated": "2026-08-19T14:29:00.871Z",
     "method": "Automated refresh from incidents + public market quotes; curated structural assets retained.",
     "notes": "Values are directional and should be validated against latest primary publications before external use.",
     "automation": {
@@ -148,7 +148,7 @@
     ]
   },
   "shipping_disruptions": {
-    "incidents": 815,
+    "incidents": 864,
     "products": [
       "CRUDE",
       "LNG",
@@ -373,13 +373,14 @@
       "Aramco OSP disclosures",
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
+      "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time"
     ]
   },
   "shipping_rates_trend": {
-    "vlcc_td3c_usd_day": 101236,
-    "suezmax_td20_usd_day": 73843,
-    "aframax_med_usd_day": 64314,
+    "vlcc_td3c_usd_day": 107310,
+    "suezmax_td20_usd_day": 78274,
+    "aframax_med_usd_day": 68173,
     "trend_30d": "Upward",
     "source_refs": [
       "Baltic Exchange (benchmark conventions)",
