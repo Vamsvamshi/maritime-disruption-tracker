@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-09-05T09:53:47.738Z",
+    "last_updated": "2026-09-05T16:30:25.440Z",
     "method": "Automated refresh from incidents + public market quotes; curated structural assets retained.",
     "notes": "Values are directional and should be validated against latest primary publications before external use.",
     "automation": {
@@ -148,7 +148,7 @@
     ]
   },
   "shipping_disruptions": {
-    "incidents": 2434,
+    "incidents": 2449,
     "products": [
       "CRUDE",
       "LNG",
@@ -422,13 +422,14 @@
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
+      "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time"
     ]
   },
   "shipping_rates_trend": {
-    "vlcc_td3c_usd_day": 1759226,
-    "suezmax_td20_usd_day": 1283215,
-    "aframax_med_usd_day": 1117615,
+    "vlcc_td3c_usd_day": 1864780,
+    "suezmax_td20_usd_day": 1360208,
+    "aframax_med_usd_day": 1184672,
     "trend_30d": "Upward",
     "source_refs": [
       "Baltic Exchange (benchmark conventions)",
