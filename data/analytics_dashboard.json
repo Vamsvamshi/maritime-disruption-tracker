@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-10-05T13:27:32.002Z",
+    "last_updated": "2026-10-05T21:25:25.017Z",
     "method": "Automated refresh from incidents + public market quotes; curated structural assets retained.",
     "notes": "Values are directional and should be validated against latest primary publications before external use.",
     "automation": {
@@ -148,7 +148,7 @@
     ]
   },
   "shipping_disruptions": {
-    "incidents": 5088,
+    "incidents": 5126,
     "products": [
       "CRUDE",
       "LNG",
@@ -512,13 +512,14 @@
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
+      "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time"
     ]
   },
   "shipping_rates_trend": {
-    "vlcc_td3c_usd_day": 333311016,
-    "suezmax_td20_usd_day": 243123864,
-    "aframax_med_usd_day": 211748401,
+    "vlcc_td3c_usd_day": 353309677,
+    "suezmax_td20_usd_day": 257711296,
+    "aframax_med_usd_day": 224453305,
     "trend_30d": "Upward",
     "source_refs": [
       "Baltic Exchange (benchmark conventions)",
@@ -567,7 +568,7 @@
         "name": "Freeport LNG",
         "country": "US",
         "capacity_mtpa": 15,
-        "status": "Operational",
+        "status": "Operational, elevated security",
         "lat": 28.95,
         "lon": -95.31
       },
