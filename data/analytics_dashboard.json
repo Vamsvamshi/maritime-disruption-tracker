@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-11-04T20:39:08.028Z",
+    "last_updated": "2026-11-05T01:58:06.092Z",
     "method": "Automated refresh from incidents + public market quotes; curated structural assets retained.",
     "notes": "Values are directional and should be validated against latest primary publications before external use.",
     "automation": {
@@ -148,7 +148,7 @@
     ]
   },
   "shipping_disruptions": {
-    "incidents": 7633,
+    "incidents": 7669,
     "products": [
       "CRUDE",
       "LNG",
@@ -600,14 +600,15 @@
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
+      "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time"
     ]
   },
   "shipping_rates_trend": {
-    "vlcc_td3c_usd_day": 629351327,
-    "suezmax_td20_usd_day": 459061715,
-    "aframax_med_usd_day": 399819177,
-    "trend_30d": "Upward",
+    "vlcc_td3c_usd_day": 597883761,
+    "suezmax_td20_usd_day": 436108629,
+    "aframax_med_usd_day": 379828218,
+    "trend_30d": "Stable to lower",
     "source_refs": [
       "Baltic Exchange (benchmark conventions)",
       "Clarksons market commentary",
@@ -618,7 +619,7 @@
     "war_risk_hormuz_pct_hull": 0.89,
     "war_risk_red_sea_pct_hull": 0.66,
     "freight_premium_usd_bbl": 1.52,
-    "trend_30d": "Upward",
+    "trend_30d": "Stable",
     "source_refs": [
       "Lloyd's market commentary",
       "Marine insurance broker publications",
