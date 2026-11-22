@@ -1,6 +1,6 @@
 {
   "meta": {
-    "last_updated": "2026-11-21T14:06:11.706Z",
+    "last_updated": "2026-11-22T01:52:42.573Z",
     "method": "Automated refresh from incidents + public market quotes; curated structural assets retained.",
     "notes": "Values are directional and should be validated against latest primary publications before external use.",
     "automation": {
@@ -148,7 +148,7 @@
     ]
   },
   "shipping_disruptions": {
-    "incidents": 8918,
+    "incidents": 8933,
     "products": [
       "CRUDE",
       "LNG",
@@ -159,7 +159,7 @@
       "GAS"
     ],
     "affected_capacity_mbd": 25,
-    "intensity_index_0_100": 15,
+    "intensity_index_0_100": 14,
     "source_refs": [
       "Dashboard incident feed (CENTCOM/UKMTO/public reporting)",
       "UKMTO advisories",
@@ -640,13 +640,14 @@
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time",
+      "Yahoo Finance fetch unavailable at run time",
       "Yahoo Finance fetch unavailable at run time"
     ]
   },
   "shipping_rates_trend": {
-    "vlcc_td3c_usd_day": 90244270,
-    "suezmax_td20_usd_day": 65826013,
-    "aframax_med_usd_day": 57331076,
+    "vlcc_td3c_usd_day": 85732057,
+    "suezmax_td20_usd_day": 62534712,
+    "aframax_med_usd_day": 54464522,
     "trend_30d": "Stable to lower",
     "source_refs": [
       "Baltic Exchange (benchmark conventions)",
@@ -655,9 +656,9 @@
     ]
   },
   "insurance_freight": {
-    "war_risk_hormuz_pct_hull": 0.85,
-    "war_risk_red_sea_pct_hull": 0.63,
-    "freight_premium_usd_bbl": 1.45,
+    "war_risk_hormuz_pct_hull": 0.84,
+    "war_risk_red_sea_pct_hull": 0.62,
+    "freight_premium_usd_bbl": 1.43,
     "trend_30d": "Stable",
     "source_refs": [
       "Lloyd's market commentary",
